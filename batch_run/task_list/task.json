@@ -1,0 +1,30 @@
+{
+    "llu": [
+        "32pad0_200_2.5_341_64",
+        "32pad3_200_2.5_341_64"
+    ],
+
+    "olden": [
+        "health/5-500-1",
+        "treeadd/18-1",
+        "tsp/128000-1"
+    ],
+
+    "spec06": [
+        "mcf/ref",
+        "gcc/166",
+        "gcc/g23",
+        "gcc/s04",
+        "soplex/pds",
+        "omnetpp/ref"
+    ],
+
+    "spec17": [
+        "omnetpp/ref",
+        "xalancbmk/ref"
+    ],
+
+    "spec00": [
+        "mcf/ref"
+    ]
+}

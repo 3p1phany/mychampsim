@@ -1,0 +1,3215 @@
+{
+ "spec06_astar_lakes_115400000000": {
+  "L2C_pref_miss": 46097,
+  "L2C_pref_total_num": 144423,
+  "L2C_pref_useless_num": 3162,
+  "L2C_pref_late_num": 1999,
+  "L2C_origin_miss": 223230
+ },
+ "spec06_astar_lakes_15000000000": {
+  "L2C_pref_miss": 183209,
+  "L2C_pref_total_num": 1111080,
+  "L2C_pref_useless_num": 68540,
+  "L2C_pref_late_num": 10444,
+  "L2C_origin_miss": 728012
+ },
+ "spec06_astar_lakes_1700000000": {
+  "L2C_pref_miss": 812,
+  "L2C_pref_total_num": 4958,
+  "L2C_pref_useless_num": 16,
+  "L2C_pref_late_num": 103,
+  "L2C_origin_miss": 17237
+ },
+ "spec06_astar_lakes_212900000000": {
+  "L2C_pref_miss": 307297,
+  "L2C_pref_total_num": 506454,
+  "L2C_pref_useless_num": 60531,
+  "L2C_pref_late_num": 20775,
+  "L2C_origin_miss": 1119920
+ },
+ "spec06_astar_lakes_220700000000": {
+  "L2C_pref_miss": 529092,
+  "L2C_pref_total_num": 3474952,
+  "L2C_pref_useless_num": 285107,
+  "L2C_pref_late_num": 8558,
+  "L2C_origin_miss": 1006509
+ },
+ "spec06_astar_lakes_245800000000": {
+  "L2C_pref_miss": 928570,
+  "L2C_pref_total_num": 4391864,
+  "L2C_pref_useless_num": 174373,
+  "L2C_pref_late_num": 142771,
+  "L2C_origin_miss": 3267080
+ },
+ "spec06_astar_lakes_4200000000": {
+  "L2C_pref_miss": 71709,
+  "L2C_pref_total_num": 42797,
+  "L2C_pref_useless_num": 693,
+  "L2C_pref_late_num": 8455,
+  "L2C_origin_miss": 290580
+ },
+ "spec06_astar_lakes_6900000000": {
+  "L2C_pref_miss": 69922,
+  "L2C_pref_total_num": 251445,
+  "L2C_pref_useless_num": 4839,
+  "L2C_pref_late_num": 41626,
+  "L2C_origin_miss": 381504
+ },
+ "spec06_gcc_166_1900000000": {
+  "L2C_pref_miss": 2462,
+  "L2C_pref_total_num": 905,
+  "L2C_pref_useless_num": 0,
+  "L2C_pref_late_num": 11,
+  "L2C_origin_miss": 4503
+ },
+ "spec06_gcc_166_19000000000": {
+  "L2C_pref_miss": 269702,
+  "L2C_pref_total_num": 699682,
+  "L2C_pref_useless_num": 29798,
+  "L2C_pref_late_num": 8068,
+  "L2C_origin_miss": 1408686
+ },
+ "spec06_gcc_166_27700000000": {
+  "L2C_pref_miss": 68153,
+  "L2C_pref_total_num": 438198,
+  "L2C_pref_useless_num": 2552,
+  "L2C_pref_late_num": 1251,
+  "L2C_origin_miss": 439062
+ },
+ "spec06_gcc_166_29900000000": {
+  "L2C_pref_miss": 9739,
+  "L2C_pref_total_num": 4804,
+  "L2C_pref_useless_num": 21,
+  "L2C_pref_late_num": 2,
+  "L2C_origin_miss": 14487
+ },
+ "spec06_gcc_166_31100000000": {
+  "L2C_pref_miss": 58937,
+  "L2C_pref_total_num": 1270761,
+  "L2C_pref_useless_num": 17948,
+  "L2C_pref_late_num": 9132,
+  "L2C_origin_miss": 656829
+ },
+ "spec06_gcc_166_3300000000": {
+  "L2C_pref_miss": 55954,
+  "L2C_pref_total_num": 20592,
+  "L2C_pref_useless_num": 21,
+  "L2C_pref_late_num": 4,
+  "L2C_origin_miss": 101915
+ },
+ "spec06_gcc_166_33400000000": {
+  "L2C_pref_miss": 38716,
+  "L2C_pref_total_num": 25926,
+  "L2C_pref_useless_num": 343,
+  "L2C_pref_late_num": 4913,
+  "L2C_origin_miss": 47024
+ },
+ "spec06_gcc_166_33600000000": {
+  "L2C_pref_miss": 215671,
+  "L2C_pref_total_num": 140671,
+  "L2C_pref_useless_num": 22598,
+  "L2C_pref_late_num": 4304,
+  "L2C_origin_miss": 364418
+ },
+ "spec06_gcc_166_33900000000": {
+  "L2C_pref_miss": 371816,
+  "L2C_pref_total_num": 1726409,
+  "L2C_pref_useless_num": 157102,
+  "L2C_pref_late_num": 89339,
+  "L2C_origin_miss": 1509038
+ },
+ "spec06_gcc_166_3700000000": {
+  "L2C_pref_miss": 45111,
+  "L2C_pref_total_num": 33983,
+  "L2C_pref_useless_num": 650,
+  "L2C_pref_late_num": 709,
+  "L2C_origin_miss": 106990
+ },
+ "spec06_gcc_166_41000000000": {
+  "L2C_pref_miss": 258496,
+  "L2C_pref_total_num": 321474,
+  "L2C_pref_useless_num": 79160,
+  "L2C_pref_late_num": 15710,
+  "L2C_origin_miss": 503315
+ },
+ "spec06_gcc_166_41500000000": {
+  "L2C_pref_miss": 53421,
+  "L2C_pref_total_num": 32652,
+  "L2C_pref_useless_num": 1166,
+  "L2C_pref_late_num": 978,
+  "L2C_origin_miss": 82387
+ },
+ "spec06_gcc_166_42300000000": {
+  "L2C_pref_miss": 418133,
+  "L2C_pref_total_num": 4489759,
+  "L2C_pref_useless_num": 322393,
+  "L2C_pref_late_num": 36469,
+  "L2C_origin_miss": 2759942
+ },
+ "spec06_gcc_166_43300000000": {
+  "L2C_pref_miss": 6211,
+  "L2C_pref_total_num": 15522,
+  "L2C_pref_useless_num": 11,
+  "L2C_pref_late_num": 589,
+  "L2C_origin_miss": 21363
+ },
+ "spec06_gcc_166_49300000000": {
+  "L2C_pref_miss": 28904,
+  "L2C_pref_total_num": 896916,
+  "L2C_pref_useless_num": 15477,
+  "L2C_pref_late_num": 384,
+  "L2C_origin_miss": 322091
+ },
+ "spec06_gcc_166_5500000000": {
+  "L2C_pref_miss": 11588,
+  "L2C_pref_total_num": 13525,
+  "L2C_pref_useless_num": 159,
+  "L2C_pref_late_num": 229,
+  "L2C_origin_miss": 24513
+ },
+ "spec06_gcc_166_57700000000": {
+  "L2C_pref_miss": 903692,
+  "L2C_pref_total_num": 19052875,
+  "L2C_pref_useless_num": 62833,
+  "L2C_pref_late_num": 793612,
+  "L2C_origin_miss": 9837642
+ },
+ "spec06_gcc_166_60200000000": {
+  "L2C_pref_miss": 138703,
+  "L2C_pref_total_num": 29978,
+  "L2C_pref_useless_num": 326,
+  "L2C_pref_late_num": 2679,
+  "L2C_origin_miss": 165406
+ },
+ "spec06_gcc_200_112700000000": {
+  "L2C_pref_miss": 6390,
+  "L2C_pref_total_num": 81309,
+  "L2C_pref_useless_num": 3712,
+  "L2C_pref_late_num": 696,
+  "L2C_origin_miss": 29874
+ },
+ "spec06_gcc_200_14100000000": {
+  "L2C_pref_miss": 81799,
+  "L2C_pref_total_num": 461197,
+  "L2C_pref_useless_num": 13949,
+  "L2C_pref_late_num": 4113,
+  "L2C_origin_miss": 360430
+ },
+ "spec06_gcc_200_141800000000": {
+  "L2C_pref_miss": 116333,
+  "L2C_pref_total_num": 148060,
+  "L2C_pref_useless_num": 5881,
+  "L2C_pref_late_num": 4497,
+  "L2C_origin_miss": 228817
+ },
+ "spec06_gcc_200_15800000000": {
+  "L2C_pref_miss": 1389,
+  "L2C_pref_total_num": 4113,
+  "L2C_pref_useless_num": 0,
+  "L2C_pref_late_num": 80,
+  "L2C_origin_miss": 5266
+ },
+ "spec06_gcc_200_17300000000": {
+  "L2C_pref_miss": 81230,
+  "L2C_pref_total_num": 206311,
+  "L2C_pref_useless_num": 2483,
+  "L2C_pref_late_num": 3536,
+  "L2C_origin_miss": 276300
+ },
+ "spec06_gcc_200_18400000000": {
+  "L2C_pref_miss": 63913,
+  "L2C_pref_total_num": 1008803,
+  "L2C_pref_useless_num": 77743,
+  "L2C_pref_late_num": 12985,
+  "L2C_origin_miss": 229755
+ },
+ "spec06_gcc_200_31200000000": {
+  "L2C_pref_miss": 297270,
+  "L2C_pref_total_num": 371761,
+  "L2C_pref_useless_num": 56257,
+  "L2C_pref_late_num": 12080,
+  "L2C_origin_miss": 445181
+ },
+ "spec06_gcc_200_3800000000": {
+  "L2C_pref_miss": 74373,
+  "L2C_pref_total_num": 765420,
+  "L2C_pref_useless_num": 25476,
+  "L2C_pref_late_num": 8708,
+  "L2C_origin_miss": 475856
+ },
+ "spec06_gcc_200_44000000000": {
+  "L2C_pref_miss": 45622,
+  "L2C_pref_total_num": 857576,
+  "L2C_pref_useless_num": 1609,
+  "L2C_pref_late_num": 2192,
+  "L2C_origin_miss": 500599
+ },
+ "spec06_gcc_200_51100000000": {
+  "L2C_pref_miss": 2880,
+  "L2C_pref_total_num": 10974,
+  "L2C_pref_useless_num": 11,
+  "L2C_pref_late_num": 52,
+  "L2C_origin_miss": 14343
+ },
+ "spec06_gcc_200_53800000000": {
+  "L2C_pref_miss": 139822,
+  "L2C_pref_total_num": 745935,
+  "L2C_pref_useless_num": 14246,
+  "L2C_pref_late_num": 15213,
+  "L2C_origin_miss": 505024
+ },
+ "spec06_gcc_200_59400000000": {
+  "L2C_pref_miss": 103713,
+  "L2C_pref_total_num": 249797,
+  "L2C_pref_useless_num": 6035,
+  "L2C_pref_late_num": 4961,
+  "L2C_origin_miss": 236176
+ },
+ "spec06_gcc_200_61000000000": {
+  "L2C_pref_miss": 87956,
+  "L2C_pref_total_num": 173279,
+  "L2C_pref_useless_num": 14647,
+  "L2C_pref_late_num": 9607,
+  "L2C_origin_miss": 205460
+ },
+ "spec06_gcc_200_63700000000": {
+  "L2C_pref_miss": 82249,
+  "L2C_pref_total_num": 323188,
+  "L2C_pref_useless_num": 8335,
+  "L2C_pref_late_num": 19850,
+  "L2C_origin_miss": 224487
+ },
+ "spec06_gcc_200_71000000000": {
+  "L2C_pref_miss": 6074,
+  "L2C_pref_total_num": 141871,
+  "L2C_pref_useless_num": 610,
+  "L2C_pref_late_num": 325,
+  "L2C_origin_miss": 108678
+ },
+ "spec06_gcc_200_83600000000": {
+  "L2C_pref_miss": 207603,
+  "L2C_pref_total_num": 266336,
+  "L2C_pref_useless_num": 25730,
+  "L2C_pref_late_num": 21329,
+  "L2C_origin_miss": 347173
+ },
+ "spec06_gcc_200_86600000000": {
+  "L2C_pref_miss": 352077,
+  "L2C_pref_total_num": 643960,
+  "L2C_pref_useless_num": 102739,
+  "L2C_pref_late_num": 26496,
+  "L2C_origin_miss": 610011
+ },
+ "spec06_gcc_200_86800000000": {
+  "L2C_pref_miss": 63364,
+  "L2C_pref_total_num": 83157,
+  "L2C_pref_useless_num": 603,
+  "L2C_pref_late_num": 18332,
+  "L2C_origin_miss": 86826
+ },
+ "spec06_gcc_200_88600000000": {
+  "L2C_pref_miss": 27656,
+  "L2C_pref_total_num": 50429,
+  "L2C_pref_useless_num": 301,
+  "L2C_pref_late_num": 8770,
+  "L2C_origin_miss": 43253
+ },
+ "spec06_gcc_c-typeck_21000000000": {
+  "L2C_pref_miss": 484542,
+  "L2C_pref_total_num": 2270983,
+  "L2C_pref_useless_num": 175849,
+  "L2C_pref_late_num": 85786,
+  "L2C_origin_miss": 1997619
+ },
+ "spec06_gcc_c-typeck_28900000000": {
+  "L2C_pref_miss": 43072,
+  "L2C_pref_total_num": 10465,
+  "L2C_pref_useless_num": 329,
+  "L2C_pref_late_num": 2121,
+  "L2C_origin_miss": 76888
+ },
+ "spec06_gcc_c-typeck_30100000000": {
+  "L2C_pref_miss": 21548,
+  "L2C_pref_total_num": 14099,
+  "L2C_pref_useless_num": 966,
+  "L2C_pref_late_num": 285,
+  "L2C_origin_miss": 939143
+ },
+ "spec06_gcc_c-typeck_31200000000": {
+  "L2C_pref_miss": 51813,
+  "L2C_pref_total_num": 75646,
+  "L2C_pref_useless_num": 11773,
+  "L2C_pref_late_num": 1819,
+  "L2C_origin_miss": 91921
+ },
+ "spec06_gcc_c-typeck_35100000000": {
+  "L2C_pref_miss": 10490,
+  "L2C_pref_total_num": 15861,
+  "L2C_pref_useless_num": 360,
+  "L2C_pref_late_num": 383,
+  "L2C_origin_miss": 24720
+ },
+ "spec06_gcc_c-typeck_3600000000": {
+  "L2C_pref_miss": 86626,
+  "L2C_pref_total_num": 1076713,
+  "L2C_pref_useless_num": 27248,
+  "L2C_pref_late_num": 37859,
+  "L2C_origin_miss": 600798
+ },
+ "spec06_gcc_c-typeck_43200000000": {
+  "L2C_pref_miss": 168777,
+  "L2C_pref_total_num": 273059,
+  "L2C_pref_useless_num": 45343,
+  "L2C_pref_late_num": 1850,
+  "L2C_origin_miss": 246142
+ },
+ "spec06_gcc_c-typeck_46400000000": {
+  "L2C_pref_miss": 526370,
+  "L2C_pref_total_num": 3197981,
+  "L2C_pref_useless_num": 113597,
+  "L2C_pref_late_num": 58495,
+  "L2C_origin_miss": 2987392
+ },
+ "spec06_gcc_c-typeck_51900000000": {
+  "L2C_pref_miss": 30786,
+  "L2C_pref_total_num": 995840,
+  "L2C_pref_useless_num": 14058,
+  "L2C_pref_late_num": 4370,
+  "L2C_origin_miss": 442004
+ },
+ "spec06_gcc_c-typeck_600000000": {
+  "L2C_pref_miss": 5147,
+  "L2C_pref_total_num": 2237,
+  "L2C_pref_useless_num": 0,
+  "L2C_pref_late_num": 9,
+  "L2C_origin_miss": 9920
+ },
+ "spec06_gcc_c-typeck_68600000000": {
+  "L2C_pref_miss": 73470,
+  "L2C_pref_total_num": 228789,
+  "L2C_pref_useless_num": 12564,
+  "L2C_pref_late_num": 7368,
+  "L2C_origin_miss": 3270837
+ },
+ "spec06_gcc_c-typeck_70600000000": {
+  "L2C_pref_miss": 20160,
+  "L2C_pref_total_num": 26132,
+  "L2C_pref_useless_num": 626,
+  "L2C_pref_late_num": 511,
+  "L2C_origin_miss": 44127
+ },
+ "spec06_gcc_c-typeck_81000000000": {
+  "L2C_pref_miss": 5183,
+  "L2C_pref_total_num": 11579,
+  "L2C_pref_useless_num": 46,
+  "L2C_pref_late_num": 354,
+  "L2C_origin_miss": 16202
+ },
+ "spec06_gcc_c-typeck_900000000": {
+  "L2C_pref_miss": 40702,
+  "L2C_pref_total_num": 55000,
+  "L2C_pref_useless_num": 3373,
+  "L2C_pref_late_num": 272,
+  "L2C_origin_miss": 192705
+ },
+ "spec06_gcc_c-typeck_91200000000": {
+  "L2C_pref_miss": 207171,
+  "L2C_pref_total_num": 1359706,
+  "L2C_pref_useless_num": 89011,
+  "L2C_pref_late_num": 51489,
+  "L2C_origin_miss": 672737
+ },
+ "spec06_gcc_c-typeck_92000000000": {
+  "L2C_pref_miss": 40398,
+  "L2C_pref_total_num": 108897,
+  "L2C_pref_useless_num": 2854,
+  "L2C_pref_late_num": 4112,
+  "L2C_origin_miss": 82193
+ },
+ "spec06_gcc_c-typeck_92900000000": {
+  "L2C_pref_miss": 123084,
+  "L2C_pref_total_num": 602254,
+  "L2C_pref_useless_num": 32942,
+  "L2C_pref_late_num": 9421,
+  "L2C_origin_miss": 337609
+ },
+ "spec06_gcc_c-typeck_9300000000": {
+  "L2C_pref_miss": 17993,
+  "L2C_pref_total_num": 288953,
+  "L2C_pref_useless_num": 7329,
+  "L2C_pref_late_num": 3741,
+  "L2C_origin_miss": 174853
+ },
+ "spec06_gcc_c-typeck_98800000000": {
+  "L2C_pref_miss": 435945,
+  "L2C_pref_total_num": 480918,
+  "L2C_pref_useless_num": 51431,
+  "L2C_pref_late_num": 46327,
+  "L2C_origin_miss": 671141
+ },
+ "spec06_gcc_cp-decl_12200000000": {
+  "L2C_pref_miss": 2741,
+  "L2C_pref_total_num": 7734,
+  "L2C_pref_useless_num": 1,
+  "L2C_pref_late_num": 115,
+  "L2C_origin_miss": 9009
+ },
+ "spec06_gcc_cp-decl_14700000000": {
+  "L2C_pref_miss": 31228,
+  "L2C_pref_total_num": 59177,
+  "L2C_pref_useless_num": 7804,
+  "L2C_pref_late_num": 643,
+  "L2C_origin_miss": 61130
+ },
+ "spec06_gcc_cp-decl_26700000000": {
+  "L2C_pref_miss": 26727,
+  "L2C_pref_total_num": 1148957,
+  "L2C_pref_useless_num": 3953,
+  "L2C_pref_late_num": 1115,
+  "L2C_origin_miss": 566868
+ },
+ "spec06_gcc_cp-decl_31900000000": {
+  "L2C_pref_miss": 30832,
+  "L2C_pref_total_num": 1043159,
+  "L2C_pref_useless_num": 6023,
+  "L2C_pref_late_num": 1583,
+  "L2C_origin_miss": 574330
+ },
+ "spec06_gcc_cp-decl_35700000000": {
+  "L2C_pref_miss": 26260,
+  "L2C_pref_total_num": 1028109,
+  "L2C_pref_useless_num": 3366,
+  "L2C_pref_late_num": 964,
+  "L2C_origin_miss": 541360
+ },
+ "spec06_gcc_cp-decl_45600000000": {
+  "L2C_pref_miss": 766497,
+  "L2C_pref_total_num": 473875,
+  "L2C_pref_useless_num": 32109,
+  "L2C_pref_late_num": 59708,
+  "L2C_origin_miss": 2002796
+ },
+ "spec06_gcc_cp-decl_53300000000": {
+  "L2C_pref_miss": 26733,
+  "L2C_pref_total_num": 264442,
+  "L2C_pref_useless_num": 5551,
+  "L2C_pref_late_num": 6178,
+  "L2C_origin_miss": 285991
+ },
+ "spec06_gcc_cp-decl_54600000000": {
+  "L2C_pref_miss": 3576,
+  "L2C_pref_total_num": 4012,
+  "L2C_pref_useless_num": 5,
+  "L2C_pref_late_num": 19,
+  "L2C_origin_miss": 7451
+ },
+ "spec06_gcc_cp-decl_5800000000": {
+  "L2C_pref_miss": 54585,
+  "L2C_pref_total_num": 19521,
+  "L2C_pref_useless_num": 5,
+  "L2C_pref_late_num": 9,
+  "L2C_origin_miss": 106866
+ },
+ "spec06_gcc_cp-decl_60700000000": {
+  "L2C_pref_miss": 312029,
+  "L2C_pref_total_num": 530311,
+  "L2C_pref_useless_num": 35606,
+  "L2C_pref_late_num": 28455,
+  "L2C_origin_miss": 599315
+ },
+ "spec06_gcc_cp-decl_62500000000": {
+  "L2C_pref_miss": 4012,
+  "L2C_pref_total_num": 1627,
+  "L2C_pref_useless_num": 0,
+  "L2C_pref_late_num": 7,
+  "L2C_origin_miss": 7537
+ },
+ "spec06_gcc_cp-decl_63000000000": {
+  "L2C_pref_miss": 31761,
+  "L2C_pref_total_num": 69007,
+  "L2C_pref_useless_num": 1047,
+  "L2C_pref_late_num": 2276,
+  "L2C_origin_miss": 93607
+ },
+ "spec06_gcc_cp-decl_69500000000": {
+  "L2C_pref_miss": 247913,
+  "L2C_pref_total_num": 846616,
+  "L2C_pref_useless_num": 48760,
+  "L2C_pref_late_num": 16615,
+  "L2C_origin_miss": 700201
+ },
+ "spec06_gcc_cp-decl_74200000000": {
+  "L2C_pref_miss": 73105,
+  "L2C_pref_total_num": 277836,
+  "L2C_pref_useless_num": 12463,
+  "L2C_pref_late_num": 12032,
+  "L2C_origin_miss": 185632
+ },
+ "spec06_gcc_cp-decl_74400000000": {
+  "L2C_pref_miss": 21899,
+  "L2C_pref_total_num": 385356,
+  "L2C_pref_useless_num": 22886,
+  "L2C_pref_late_num": 2113,
+  "L2C_origin_miss": 153359
+ },
+ "spec06_gcc_cp-decl_77100000000": {
+  "L2C_pref_miss": 45625,
+  "L2C_pref_total_num": 41981,
+  "L2C_pref_useless_num": 848,
+  "L2C_pref_late_num": 6645,
+  "L2C_origin_miss": 63527
+ },
+ "spec06_gcc_cp-decl_900000000": {
+  "L2C_pref_miss": 316684,
+  "L2C_pref_total_num": 488077,
+  "L2C_pref_useless_num": 80092,
+  "L2C_pref_late_num": 11774,
+  "L2C_origin_miss": 626615
+ },
+ "spec06_gcc_expr2_106400000000": {
+  "L2C_pref_miss": 491169,
+  "L2C_pref_total_num": 544433,
+  "L2C_pref_useless_num": 88466,
+  "L2C_pref_late_num": 31235,
+  "L2C_origin_miss": 836173
+ },
+ "spec06_gcc_expr2_107500000000": {
+  "L2C_pref_miss": 343431,
+  "L2C_pref_total_num": 202584,
+  "L2C_pref_useless_num": 23734,
+  "L2C_pref_late_num": 6090,
+  "L2C_origin_miss": 504540
+ },
+ "spec06_gcc_expr2_110700000000": {
+  "L2C_pref_miss": 206346,
+  "L2C_pref_total_num": 266172,
+  "L2C_pref_useless_num": 11853,
+  "L2C_pref_late_num": 7431,
+  "L2C_origin_miss": 369718
+ },
+ "spec06_gcc_expr2_111500000000": {
+  "L2C_pref_miss": 48046,
+  "L2C_pref_total_num": 164094,
+  "L2C_pref_useless_num": 1664,
+  "L2C_pref_late_num": 19032,
+  "L2C_origin_miss": 103700
+ },
+ "spec06_gcc_expr2_12200000000": {
+  "L2C_pref_miss": 184401,
+  "L2C_pref_total_num": 2041321,
+  "L2C_pref_useless_num": 71826,
+  "L2C_pref_late_num": 33545,
+  "L2C_origin_miss": 1214455
+ },
+ "spec06_gcc_expr2_1300000000": {
+  "L2C_pref_miss": 4226,
+  "L2C_pref_total_num": 1865,
+  "L2C_pref_useless_num": 0,
+  "L2C_pref_late_num": 14,
+  "L2C_origin_miss": 7815
+ },
+ "spec06_gcc_expr2_14500000000": {
+  "L2C_pref_miss": 7885,
+  "L2C_pref_total_num": 234042,
+  "L2C_pref_useless_num": 1357,
+  "L2C_pref_late_num": 702,
+  "L2C_origin_miss": 155644
+ },
+ "spec06_gcc_expr2_18700000000": {
+  "L2C_pref_miss": 3432745,
+  "L2C_pref_total_num": 8887112,
+  "L2C_pref_useless_num": 270643,
+  "L2C_pref_late_num": 2409396,
+  "L2C_origin_miss": 6407434
+ },
+ "spec06_gcc_expr2_19500000000": {
+  "L2C_pref_miss": 599204,
+  "L2C_pref_total_num": 596978,
+  "L2C_pref_useless_num": 67344,
+  "L2C_pref_late_num": 13282,
+  "L2C_origin_miss": 1058790
+ },
+ "spec06_gcc_expr2_27000000000": {
+  "L2C_pref_miss": 58934,
+  "L2C_pref_total_num": 12810,
+  "L2C_pref_useless_num": 1140,
+  "L2C_pref_late_num": 2015,
+  "L2C_origin_miss": 106580
+ },
+ "spec06_gcc_expr2_28500000000": {
+  "L2C_pref_miss": 11526,
+  "L2C_pref_total_num": 24331,
+  "L2C_pref_useless_num": 1531,
+  "L2C_pref_late_num": 763,
+  "L2C_origin_miss": 1088872
+ },
+ "spec06_gcc_expr2_29800000000": {
+  "L2C_pref_miss": 40409,
+  "L2C_pref_total_num": 59438,
+  "L2C_pref_useless_num": 7494,
+  "L2C_pref_late_num": 2586,
+  "L2C_origin_miss": 80009
+ },
+ "spec06_gcc_expr2_39400000000": {
+  "L2C_pref_miss": 5260,
+  "L2C_pref_total_num": 9629,
+  "L2C_pref_useless_num": 37,
+  "L2C_pref_late_num": 227,
+  "L2C_origin_miss": 14823
+ },
+ "spec06_gcc_expr2_4300000000": {
+  "L2C_pref_miss": 121687,
+  "L2C_pref_total_num": 1224596,
+  "L2C_pref_useless_num": 99841,
+  "L2C_pref_late_num": 12397,
+  "L2C_origin_miss": 494136
+ },
+ "spec06_gcc_expr2_44900000000": {
+  "L2C_pref_miss": 164000,
+  "L2C_pref_total_num": 244293,
+  "L2C_pref_useless_num": 45007,
+  "L2C_pref_late_num": 3652,
+  "L2C_origin_miss": 231714
+ },
+ "spec06_gcc_expr2_46800000000": {
+  "L2C_pref_miss": 640069,
+  "L2C_pref_total_num": 2763075,
+  "L2C_pref_useless_num": 71517,
+  "L2C_pref_late_num": 67548,
+  "L2C_origin_miss": 3085030
+ },
+ "spec06_gcc_expr2_61000000000": {
+  "L2C_pref_miss": 182666,
+  "L2C_pref_total_num": 2528591,
+  "L2C_pref_useless_num": 26692,
+  "L2C_pref_late_num": 69300,
+  "L2C_origin_miss": 1482981
+ },
+ "spec06_gcc_expr2_73000000000": {
+  "L2C_pref_miss": 47220,
+  "L2C_pref_total_num": 249516,
+  "L2C_pref_useless_num": 16198,
+  "L2C_pref_late_num": 7463,
+  "L2C_origin_miss": 4090634
+ },
+ "spec06_gcc_expr2_80500000000": {
+  "L2C_pref_miss": 385070,
+  "L2C_pref_total_num": 619847,
+  "L2C_pref_useless_num": 77321,
+  "L2C_pref_late_num": 20831,
+  "L2C_origin_miss": 796346
+ },
+ "spec06_gcc_expr2_97400000000": {
+  "L2C_pref_miss": 1960,
+  "L2C_pref_total_num": 2234,
+  "L2C_pref_useless_num": 5,
+  "L2C_pref_late_num": 6,
+  "L2C_origin_miss": 4114
+ },
+ "spec06_gcc_expr_13000000000": {
+  "L2C_pref_miss": 42012,
+  "L2C_pref_total_num": 66839,
+  "L2C_pref_useless_num": 8992,
+  "L2C_pref_late_num": 2431,
+  "L2C_origin_miss": 85807
+ },
+ "spec06_gcc_expr_18700000000": {
+  "L2C_pref_miss": 5511,
+  "L2C_pref_total_num": 15899,
+  "L2C_pref_useless_num": 61,
+  "L2C_pref_late_num": 262,
+  "L2C_origin_miss": 21003
+ },
+ "spec06_gcc_expr_24300000000": {
+  "L2C_pref_miss": 230373,
+  "L2C_pref_total_num": 724758,
+  "L2C_pref_useless_num": 72945,
+  "L2C_pref_late_num": 34498,
+  "L2C_origin_miss": 532977
+ },
+ "spec06_gcc_expr_26800000000": {
+  "L2C_pref_miss": 615710,
+  "L2C_pref_total_num": 2911405,
+  "L2C_pref_useless_num": 73356,
+  "L2C_pref_late_num": 76013,
+  "L2C_origin_miss": 3145392
+ },
+ "spec06_gcc_expr_3000000000": {
+  "L2C_pref_miss": 563452,
+  "L2C_pref_total_num": 127129,
+  "L2C_pref_useless_num": 1189,
+  "L2C_pref_late_num": 6664,
+  "L2C_origin_miss": 659050
+ },
+ "spec06_gcc_expr_30800000000": {
+  "L2C_pref_miss": 98514,
+  "L2C_pref_total_num": 171289,
+  "L2C_pref_useless_num": 32920,
+  "L2C_pref_late_num": 3095,
+  "L2C_origin_miss": 140592
+ },
+ "spec06_gcc_expr_3900000000": {
+  "L2C_pref_miss": 286967,
+  "L2C_pref_total_num": 850899,
+  "L2C_pref_useless_num": 78978,
+  "L2C_pref_late_num": 39131,
+  "L2C_origin_miss": 1243766
+ },
+ "spec06_gcc_expr_41400000000": {
+  "L2C_pref_miss": 129551,
+  "L2C_pref_total_num": 1548281,
+  "L2C_pref_useless_num": 12677,
+  "L2C_pref_late_num": 44816,
+  "L2C_origin_miss": 905707
+ },
+ "spec06_gcc_expr_51300000000": {
+  "L2C_pref_miss": 72881,
+  "L2C_pref_total_num": 164757,
+  "L2C_pref_useless_num": 17737,
+  "L2C_pref_late_num": 5958,
+  "L2C_origin_miss": 4341564
+ },
+ "spec06_gcc_expr_5700000000": {
+  "L2C_pref_miss": 652,
+  "L2C_pref_total_num": 944,
+  "L2C_pref_useless_num": 0,
+  "L2C_pref_late_num": 21,
+  "L2C_origin_miss": 3113
+ },
+ "spec06_gcc_expr_57800000000": {
+  "L2C_pref_miss": 38761,
+  "L2C_pref_total_num": 35866,
+  "L2C_pref_useless_num": 1214,
+  "L2C_pref_late_num": 1445,
+  "L2C_origin_miss": 69566
+ },
+ "spec06_gcc_expr_64000000000": {
+  "L2C_pref_miss": 3331,
+  "L2C_pref_total_num": 1271,
+  "L2C_pref_useless_num": 4,
+  "L2C_pref_late_num": 3,
+  "L2C_origin_miss": 4500
+ },
+ "spec06_gcc_expr_74600000000": {
+  "L2C_pref_miss": 1271,
+  "L2C_pref_total_num": 11562,
+  "L2C_pref_useless_num": 52,
+  "L2C_pref_late_num": 337,
+  "L2C_origin_miss": 7538
+ },
+ "spec06_gcc_expr_79800000000": {
+  "L2C_pref_miss": 190273,
+  "L2C_pref_total_num": 193668,
+  "L2C_pref_useless_num": 8455,
+  "L2C_pref_late_num": 13058,
+  "L2C_origin_miss": 365577
+ },
+ "spec06_gcc_expr_82600000000": {
+  "L2C_pref_miss": 111878,
+  "L2C_pref_total_num": 357315,
+  "L2C_pref_useless_num": 13380,
+  "L2C_pref_late_num": 7916,
+  "L2C_origin_miss": 240415
+ },
+ "spec06_gcc_expr_83500000000": {
+  "L2C_pref_miss": 310521,
+  "L2C_pref_total_num": 476627,
+  "L2C_pref_useless_num": 36328,
+  "L2C_pref_late_num": 50948,
+  "L2C_origin_miss": 577269
+ },
+ "spec06_gcc_expr_84300000000": {
+  "L2C_pref_miss": 240359,
+  "L2C_pref_total_num": 163018,
+  "L2C_pref_useless_num": 16684,
+  "L2C_pref_late_num": 6054,
+  "L2C_origin_miss": 362537
+ },
+ "spec06_gcc_expr_84700000000": {
+  "L2C_pref_miss": 49237,
+  "L2C_pref_total_num": 210723,
+  "L2C_pref_useless_num": 5644,
+  "L2C_pref_late_num": 11536,
+  "L2C_origin_miss": 107926
+ },
+ "spec06_gcc_expr_8500000000": {
+  "L2C_pref_miss": 450528,
+  "L2C_pref_total_num": 66529,
+  "L2C_pref_useless_num": 3412,
+  "L2C_pref_late_num": 6724,
+  "L2C_origin_miss": 560307
+ },
+ "spec06_gcc_expr_9800000000": {
+  "L2C_pref_miss": 59217,
+  "L2C_pref_total_num": 5767,
+  "L2C_pref_useless_num": 428,
+  "L2C_pref_late_num": 1013,
+  "L2C_origin_miss": 101182
+ },
+ "spec06_gcc_g23_103800000000": {
+  "L2C_pref_miss": 875711,
+  "L2C_pref_total_num": 18149537,
+  "L2C_pref_useless_num": 93033,
+  "L2C_pref_late_num": 752281,
+  "L2C_origin_miss": 10300036
+ },
+ "spec06_gcc_g23_114000000000": {
+  "L2C_pref_miss": 11661,
+  "L2C_pref_total_num": 3810,
+  "L2C_pref_useless_num": 0,
+  "L2C_pref_late_num": 0,
+  "L2C_origin_miss": 15507
+ },
+ "spec06_gcc_g23_120700000000": {
+  "L2C_pref_miss": 26407,
+  "L2C_pref_total_num": 24089,
+  "L2C_pref_useless_num": 5307,
+  "L2C_pref_late_num": 291,
+  "L2C_origin_miss": 249829
+ },
+ "spec06_gcc_g23_13200000000": {
+  "L2C_pref_miss": 571502,
+  "L2C_pref_total_num": 29582,
+  "L2C_pref_useless_num": 645,
+  "L2C_pref_late_num": 2095,
+  "L2C_origin_miss": 640118
+ },
+ "spec06_gcc_g23_145600000000": {
+  "L2C_pref_miss": 5378,
+  "L2C_pref_total_num": 7273,
+  "L2C_pref_useless_num": 1279,
+  "L2C_pref_late_num": 117,
+  "L2C_origin_miss": 2018545
+ },
+ "spec06_gcc_g23_145900000000": {
+  "L2C_pref_miss": 7438,
+  "L2C_pref_total_num": 7419,
+  "L2C_pref_useless_num": 1632,
+  "L2C_pref_late_num": 104,
+  "L2C_origin_miss": 1974741
+ },
+ "spec06_gcc_g23_154500000000": {
+  "L2C_pref_miss": 37038,
+  "L2C_pref_total_num": 48705,
+  "L2C_pref_useless_num": 575,
+  "L2C_pref_late_num": 10564,
+  "L2C_origin_miss": 53442
+ },
+ "spec06_gcc_g23_154600000000": {
+  "L2C_pref_miss": 277587,
+  "L2C_pref_total_num": 545801,
+  "L2C_pref_useless_num": 105589,
+  "L2C_pref_late_num": 58538,
+  "L2C_origin_miss": 587445
+ },
+ "spec06_gcc_g23_29500000000": {
+  "L2C_pref_miss": 564817,
+  "L2C_pref_total_num": 78926,
+  "L2C_pref_useless_num": 1424,
+  "L2C_pref_late_num": 4578,
+  "L2C_origin_miss": 690721
+ },
+ "spec06_gcc_g23_35200000000": {
+  "L2C_pref_miss": 412070,
+  "L2C_pref_total_num": 442501,
+  "L2C_pref_useless_num": 15824,
+  "L2C_pref_late_num": 96710,
+  "L2C_origin_miss": 749304
+ },
+ "spec06_gcc_g23_38000000000": {
+  "L2C_pref_miss": 1107,
+  "L2C_pref_total_num": 404,
+  "L2C_pref_useless_num": 0,
+  "L2C_pref_late_num": 4,
+  "L2C_origin_miss": 6155
+ },
+ "spec06_gcc_g23_45400000000": {
+  "L2C_pref_miss": 41887,
+  "L2C_pref_total_num": 19928,
+  "L2C_pref_useless_num": 5,
+  "L2C_pref_late_num": 2266,
+  "L2C_origin_miss": 82174
+ },
+ "spec06_gcc_g23_46900000000": {
+  "L2C_pref_miss": 56328,
+  "L2C_pref_total_num": 17962,
+  "L2C_pref_useless_num": 665,
+  "L2C_pref_late_num": 3376,
+  "L2C_origin_miss": 101370
+ },
+ "spec06_gcc_g23_49700000000": {
+  "L2C_pref_miss": 8154,
+  "L2C_pref_total_num": 30271,
+  "L2C_pref_useless_num": 4180,
+  "L2C_pref_late_num": 607,
+  "L2C_origin_miss": 1060798
+ },
+ "spec06_gcc_g23_52200000000": {
+  "L2C_pref_miss": 5718,
+  "L2C_pref_total_num": 15833,
+  "L2C_pref_useless_num": 12,
+  "L2C_pref_late_num": 106,
+  "L2C_origin_miss": 22185
+ },
+ "spec06_gcc_g23_65000000000": {
+  "L2C_pref_miss": 17571,
+  "L2C_pref_total_num": 28593,
+  "L2C_pref_useless_num": 2063,
+  "L2C_pref_late_num": 787,
+  "L2C_origin_miss": 36924
+ },
+ "spec06_gcc_g23_76000000000": {
+  "L2C_pref_miss": 1121808,
+  "L2C_pref_total_num": 2028270,
+  "L2C_pref_useless_num": 65762,
+  "L2C_pref_late_num": 90560,
+  "L2C_origin_miss": 3026677
+ },
+ "spec06_gcc_g23_93200000000": {
+  "L2C_pref_miss": 406241,
+  "L2C_pref_total_num": 699472,
+  "L2C_pref_useless_num": 50845,
+  "L2C_pref_late_num": 25549,
+  "L2C_origin_miss": 716657
+ },
+ "spec06_gcc_s04_1000000000": {
+  "L2C_pref_miss": 308070,
+  "L2C_pref_total_num": 99564,
+  "L2C_pref_useless_num": 14123,
+  "L2C_pref_late_num": 3786,
+  "L2C_origin_miss": 477001
+ },
+ "spec06_gcc_s04_100200000000": {
+  "L2C_pref_miss": 1595773,
+  "L2C_pref_total_num": 13685373,
+  "L2C_pref_useless_num": 9042,
+  "L2C_pref_late_num": 834244,
+  "L2C_origin_miss": 9855855
+ },
+ "spec06_gcc_s04_10200000000": {
+  "L2C_pref_miss": 39606,
+  "L2C_pref_total_num": 15847,
+  "L2C_pref_useless_num": 3,
+  "L2C_pref_late_num": 76,
+  "L2C_origin_miss": 73206
+ },
+ "spec06_gcc_s04_102400000000": {
+  "L2C_pref_miss": 222170,
+  "L2C_pref_total_num": 12497,
+  "L2C_pref_useless_num": 1988,
+  "L2C_pref_late_num": 800,
+  "L2C_origin_miss": 359140
+ },
+ "spec06_gcc_s04_109300000000": {
+  "L2C_pref_miss": 38117,
+  "L2C_pref_total_num": 41426,
+  "L2C_pref_useless_num": 8144,
+  "L2C_pref_late_num": 364,
+  "L2C_origin_miss": 305864
+ },
+ "spec06_gcc_s04_118500000000": {
+  "L2C_pref_miss": 168866,
+  "L2C_pref_total_num": 1211079,
+  "L2C_pref_useless_num": 51264,
+  "L2C_pref_late_num": 29829,
+  "L2C_origin_miss": 696819
+ },
+ "spec06_gcc_s04_120000000000": {
+  "L2C_pref_miss": 9902,
+  "L2C_pref_total_num": 171890,
+  "L2C_pref_useless_num": 898,
+  "L2C_pref_late_num": 1304,
+  "L2C_origin_miss": 135355
+ },
+ "spec06_gcc_s04_120500000000": {
+  "L2C_pref_miss": 167115,
+  "L2C_pref_total_num": 723640,
+  "L2C_pref_useless_num": 25913,
+  "L2C_pref_late_num": 19219,
+  "L2C_origin_miss": 493205
+ },
+ "spec06_gcc_s04_121100000000": {
+  "L2C_pref_miss": 18286,
+  "L2C_pref_total_num": 59550,
+  "L2C_pref_useless_num": 568,
+  "L2C_pref_late_num": 464,
+  "L2C_origin_miss": 54833
+ },
+ "spec06_gcc_s04_14100000000": {
+  "L2C_pref_miss": 4457,
+  "L2C_pref_total_num": 19988,
+  "L2C_pref_useless_num": 2862,
+  "L2C_pref_late_num": 342,
+  "L2C_origin_miss": 934691
+ },
+ "spec06_gcc_s04_14300000000": {
+  "L2C_pref_miss": 28346,
+  "L2C_pref_total_num": 27533,
+  "L2C_pref_useless_num": 537,
+  "L2C_pref_late_num": 331,
+  "L2C_origin_miss": 54174
+ },
+ "spec06_gcc_s04_2600000000": {
+  "L2C_pref_miss": 406394,
+  "L2C_pref_total_num": 1865390,
+  "L2C_pref_useless_num": 141401,
+  "L2C_pref_late_num": 78017,
+  "L2C_origin_miss": 1806360
+ },
+ "spec06_gcc_s04_32800000000": {
+  "L2C_pref_miss": 565,
+  "L2C_pref_total_num": 2323,
+  "L2C_pref_useless_num": 0,
+  "L2C_pref_late_num": 11,
+  "L2C_origin_miss": 2368
+ },
+ "spec06_gcc_s04_51000000000": {
+  "L2C_pref_miss": 131361,
+  "L2C_pref_total_num": 193148,
+  "L2C_pref_useless_num": 31843,
+  "L2C_pref_late_num": 3241,
+  "L2C_origin_miss": 189913
+ },
+ "spec06_gcc_s04_53200000000": {
+  "L2C_pref_miss": 586859,
+  "L2C_pref_total_num": 3041392,
+  "L2C_pref_useless_num": 63155,
+  "L2C_pref_late_num": 41481,
+  "L2C_origin_miss": 3050040
+ },
+ "spec06_gcc_s04_6300000000": {
+  "L2C_pref_miss": 1365,
+  "L2C_pref_total_num": 578,
+  "L2C_pref_useless_num": 0,
+  "L2C_pref_late_num": 11,
+  "L2C_origin_miss": 3737
+ },
+ "spec06_gcc_s04_72500000000": {
+  "L2C_pref_miss": 35042,
+  "L2C_pref_total_num": 1434176,
+  "L2C_pref_useless_num": 19459,
+  "L2C_pref_late_num": 4286,
+  "L2C_origin_miss": 674576
+ },
+ "spec06_gcc_s04_80200000000": {
+  "L2C_pref_miss": 832575,
+  "L2C_pref_total_num": 191407,
+  "L2C_pref_useless_num": 21157,
+  "L2C_pref_late_num": 27126,
+  "L2C_origin_miss": 2317104
+ },
+ "spec06_gcc_s04_80500000000": {
+  "L2C_pref_miss": 92919,
+  "L2C_pref_total_num": 19111,
+  "L2C_pref_useless_num": 1231,
+  "L2C_pref_late_num": 151,
+  "L2C_origin_miss": 1388774
+ },
+ "spec06_gcc_s04_84300000000": {
+  "L2C_pref_miss": 237343,
+  "L2C_pref_total_num": 652227,
+  "L2C_pref_useless_num": 102000,
+  "L2C_pref_late_num": 24401,
+  "L2C_origin_miss": 2810746
+ },
+ "spec06_gcc_s04_93600000000": {
+  "L2C_pref_miss": 171476,
+  "L2C_pref_total_num": 193644,
+  "L2C_pref_useless_num": 47490,
+  "L2C_pref_late_num": 2238,
+  "L2C_origin_miss": 220200
+ },
+ "spec06_gcc_scilab_14400000000": {
+  "L2C_pref_miss": 75278,
+  "L2C_pref_total_num": 247741,
+  "L2C_pref_useless_num": 6503,
+  "L2C_pref_late_num": 4202,
+  "L2C_origin_miss": 162891
+ },
+ "spec06_gcc_scilab_18900000000": {
+  "L2C_pref_miss": 56583,
+  "L2C_pref_total_num": 148589,
+  "L2C_pref_useless_num": 5217,
+  "L2C_pref_late_num": 4029,
+  "L2C_origin_miss": 104115
+ },
+ "spec06_gcc_scilab_24100000000": {
+  "L2C_pref_miss": 54192,
+  "L2C_pref_total_num": 778978,
+  "L2C_pref_useless_num": 4181,
+  "L2C_pref_late_num": 4529,
+  "L2C_origin_miss": 477694
+ },
+ "spec06_gcc_scilab_24600000000": {
+  "L2C_pref_miss": 90766,
+  "L2C_pref_total_num": 271302,
+  "L2C_pref_useless_num": 19897,
+  "L2C_pref_late_num": 8532,
+  "L2C_origin_miss": 221993
+ },
+ "spec06_gcc_scilab_32400000000": {
+  "L2C_pref_miss": 10556,
+  "L2C_pref_total_num": 24990,
+  "L2C_pref_useless_num": 117,
+  "L2C_pref_late_num": 281,
+  "L2C_origin_miss": 37972
+ },
+ "spec06_gcc_scilab_34500000000": {
+  "L2C_pref_miss": 44940,
+  "L2C_pref_total_num": 647910,
+  "L2C_pref_useless_num": 19195,
+  "L2C_pref_late_num": 5246,
+  "L2C_origin_miss": 325346
+ },
+ "spec06_gcc_scilab_35100000000": {
+  "L2C_pref_miss": 36982,
+  "L2C_pref_total_num": 261982,
+  "L2C_pref_useless_num": 5688,
+  "L2C_pref_late_num": 1523,
+  "L2C_origin_miss": 141520
+ },
+ "spec06_gcc_scilab_36700000000": {
+  "L2C_pref_miss": 346369,
+  "L2C_pref_total_num": 371774,
+  "L2C_pref_useless_num": 64150,
+  "L2C_pref_late_num": 18975,
+  "L2C_origin_miss": 500700
+ },
+ "spec06_gcc_scilab_39100000000": {
+  "L2C_pref_miss": 27020,
+  "L2C_pref_total_num": 23311,
+  "L2C_pref_useless_num": 240,
+  "L2C_pref_late_num": 5153,
+  "L2C_origin_miss": 34327
+ },
+ "spec06_gcc_scilab_41000000000": {
+  "L2C_pref_miss": 36290,
+  "L2C_pref_total_num": 95777,
+  "L2C_pref_useless_num": 1953,
+  "L2C_pref_late_num": 1492,
+  "L2C_origin_miss": 76717
+ },
+ "spec06_gcc_scilab_44100000000": {
+  "L2C_pref_miss": 26893,
+  "L2C_pref_total_num": 101263,
+  "L2C_pref_useless_num": 2405,
+  "L2C_pref_late_num": 745,
+  "L2C_origin_miss": 75143
+ },
+ "spec06_gcc_scilab_46300000000": {
+  "L2C_pref_miss": 54013,
+  "L2C_pref_total_num": 45193,
+  "L2C_pref_useless_num": 527,
+  "L2C_pref_late_num": 9192,
+  "L2C_origin_miss": 68939
+ },
+ "spec06_gcc_scilab_9600000000": {
+  "L2C_pref_miss": 137547,
+  "L2C_pref_total_num": 320970,
+  "L2C_pref_useless_num": 55506,
+  "L2C_pref_late_num": 13784,
+  "L2C_origin_miss": 263331
+ },
+ "spec06_mcf_ref_0": {
+  "L2C_pref_miss": 28456,
+  "L2C_pref_total_num": 152051,
+  "L2C_pref_useless_num": 33162,
+  "L2C_pref_late_num": 49,
+  "L2C_origin_miss": 68838
+ },
+ "spec06_mcf_ref_101600000000": {
+  "L2C_pref_miss": 415768,
+  "L2C_pref_total_num": 39812,
+  "L2C_pref_useless_num": 7484,
+  "L2C_pref_late_num": 1009,
+  "L2C_origin_miss": 5029687
+ },
+ "spec06_mcf_ref_15500000000": {
+  "L2C_pref_miss": 1828068,
+  "L2C_pref_total_num": 528738,
+  "L2C_pref_useless_num": 163068,
+  "L2C_pref_late_num": 17425,
+  "L2C_origin_miss": 3209072
+ },
+ "spec06_mcf_ref_170300000000": {
+  "L2C_pref_miss": 381616,
+  "L2C_pref_total_num": 59276,
+  "L2C_pref_useless_num": 10119,
+  "L2C_pref_late_num": 1207,
+  "L2C_origin_miss": 6753499
+ },
+ "spec06_mcf_ref_175500000000": {
+  "L2C_pref_miss": 258055,
+  "L2C_pref_total_num": 58242,
+  "L2C_pref_useless_num": 6183,
+  "L2C_pref_late_num": 1778,
+  "L2C_origin_miss": 8708205
+ },
+ "spec06_mcf_ref_198000000000": {
+  "L2C_pref_miss": 3356969,
+  "L2C_pref_total_num": 16665157,
+  "L2C_pref_useless_num": 2981858,
+  "L2C_pref_late_num": 98968,
+  "L2C_origin_miss": 10424257
+ },
+ "spec06_mcf_ref_204300000000": {
+  "L2C_pref_miss": 15270936,
+  "L2C_pref_total_num": 49833,
+  "L2C_pref_useless_num": 39998,
+  "L2C_pref_late_num": 953,
+  "L2C_origin_miss": 19576743
+ },
+ "spec06_mcf_ref_20600000000": {
+  "L2C_pref_miss": 1751298,
+  "L2C_pref_total_num": 470422,
+  "L2C_pref_useless_num": 161075,
+  "L2C_pref_late_num": 13303,
+  "L2C_origin_miss": 4278244
+ },
+ "spec06_mcf_ref_206800000000": {
+  "L2C_pref_miss": 864723,
+  "L2C_pref_total_num": 33951,
+  "L2C_pref_useless_num": 470,
+  "L2C_pref_late_num": 225,
+  "L2C_origin_miss": 13917966
+ },
+ "spec06_mcf_ref_212700000000": {
+  "L2C_pref_miss": 662588,
+  "L2C_pref_total_num": 104975,
+  "L2C_pref_useless_num": 17517,
+  "L2C_pref_late_num": 1845,
+  "L2C_origin_miss": 12228861
+ },
+ "spec06_mcf_ref_225300000000": {
+  "L2C_pref_miss": 2327616,
+  "L2C_pref_total_num": 21431020,
+  "L2C_pref_useless_num": 3492274,
+  "L2C_pref_late_num": 238475,
+  "L2C_origin_miss": 6819675
+ },
+ "spec06_mcf_ref_234000000000": {
+  "L2C_pref_miss": 3584278,
+  "L2C_pref_total_num": 23774609,
+  "L2C_pref_useless_num": 4205319,
+  "L2C_pref_late_num": 149701,
+  "L2C_origin_miss": 10054453
+ },
+ "spec06_mcf_ref_241400000000": {
+  "L2C_pref_miss": 3849994,
+  "L2C_pref_total_num": 13712817,
+  "L2C_pref_useless_num": 2313743,
+  "L2C_pref_late_num": 8436,
+  "L2C_origin_miss": 11870776
+ },
+ "spec06_mcf_ref_249300000000": {
+  "L2C_pref_miss": 6950085,
+  "L2C_pref_total_num": 5177933,
+  "L2C_pref_useless_num": 710423,
+  "L2C_pref_late_num": 11037,
+  "L2C_origin_miss": 13599004
+ },
+ "spec06_mcf_ref_253400000000": {
+  "L2C_pref_miss": 179459,
+  "L2C_pref_total_num": 57187,
+  "L2C_pref_useless_num": 465,
+  "L2C_pref_late_num": 3388,
+  "L2C_origin_miss": 24934193
+ },
+ "spec06_mcf_ref_272200000000": {
+  "L2C_pref_miss": 2018973,
+  "L2C_pref_total_num": 7130297,
+  "L2C_pref_useless_num": 1209146,
+  "L2C_pref_late_num": 31542,
+  "L2C_origin_miss": 10822808
+ },
+ "spec06_mcf_ref_32000000000": {
+  "L2C_pref_miss": 2718184,
+  "L2C_pref_total_num": 10994600,
+  "L2C_pref_useless_num": 2242633,
+  "L2C_pref_late_num": 32788,
+  "L2C_origin_miss": 10898667
+ },
+ "spec06_mcf_ref_55300000000": {
+  "L2C_pref_miss": 2998695,
+  "L2C_pref_total_num": 26619512,
+  "L2C_pref_useless_num": 4505707,
+  "L2C_pref_late_num": 306345,
+  "L2C_origin_miss": 8370675
+ },
+ "spec06_mcf_ref_68200000000": {
+  "L2C_pref_miss": 3710703,
+  "L2C_pref_total_num": 26087941,
+  "L2C_pref_useless_num": 4617347,
+  "L2C_pref_late_num": 261203,
+  "L2C_origin_miss": 9348716
+ },
+ "spec06_omnetpp_ref_15400000000": {
+  "L2C_pref_miss": 8855543,
+  "L2C_pref_total_num": 586933,
+  "L2C_pref_useless_num": 31426,
+  "L2C_pref_late_num": 62932,
+  "L2C_origin_miss": 9874826
+ },
+ "spec06_omnetpp_ref_179800000000": {
+  "L2C_pref_miss": 478091,
+  "L2C_pref_total_num": 4071433,
+  "L2C_pref_useless_num": 427839,
+  "L2C_pref_late_num": 21533,
+  "L2C_origin_miss": 1694296
+ },
+ "spec06_omnetpp_ref_236400000000": {
+  "L2C_pref_miss": 432136,
+  "L2C_pref_total_num": 4036680,
+  "L2C_pref_useless_num": 370514,
+  "L2C_pref_late_num": 19806,
+  "L2C_origin_miss": 1689517
+ },
+ "spec06_omnetpp_ref_361400000000": {
+  "L2C_pref_miss": 480317,
+  "L2C_pref_total_num": 3806283,
+  "L2C_pref_useless_num": 387405,
+  "L2C_pref_late_num": 21493,
+  "L2C_origin_miss": 1594626
+ },
+ "spec06_omnetpp_ref_4900000000": {
+  "L2C_pref_miss": 11246335,
+  "L2C_pref_total_num": 480901,
+  "L2C_pref_useless_num": 3930,
+  "L2C_pref_late_num": 99792,
+  "L2C_origin_miss": 12854122
+ },
+ "spec06_omnetpp_ref_566800000000": {
+  "L2C_pref_miss": 11266829,
+  "L2C_pref_total_num": 500365,
+  "L2C_pref_useless_num": 13024,
+  "L2C_pref_late_num": 81636,
+  "L2C_origin_miss": 12883658
+ },
+ "spec06_omnetpp_ref_567800000000": {
+  "L2C_pref_miss": 455918,
+  "L2C_pref_total_num": 3931,
+  "L2C_pref_useless_num": 638,
+  "L2C_pref_late_num": 69,
+  "L2C_origin_miss": 482435
+ },
+ "spec06_omnetpp_ref_9200000000": {
+  "L2C_pref_miss": 1779250,
+  "L2C_pref_total_num": 120468,
+  "L2C_pref_useless_num": 12138,
+  "L2C_pref_late_num": 14483,
+  "L2C_origin_miss": 2046905
+ },
+ "spec06_perlbench_diffmail_175900000000": {
+  "L2C_pref_miss": 0,
+  "L2C_pref_total_num": 0,
+  "L2C_pref_useless_num": 0,
+  "L2C_pref_late_num": 0,
+  "L2C_origin_miss": 0
+ },
+ "spec06_perlbench_diffmail_349800000000": {
+  "L2C_pref_miss": 186508,
+  "L2C_pref_total_num": 76115,
+  "L2C_pref_useless_num": 3493,
+  "L2C_pref_late_num": 2939,
+  "L2C_origin_miss": 316468
+ },
+ "spec06_perlbench_diffmail_3500000000": {
+  "L2C_pref_miss": 17778,
+  "L2C_pref_total_num": 82446,
+  "L2C_pref_useless_num": 11699,
+  "L2C_pref_late_num": 29,
+  "L2C_origin_miss": 46619
+ },
+ "spec06_perlbench_diffmail_437000000000": {
+  "L2C_pref_miss": 0,
+  "L2C_pref_total_num": 0,
+  "L2C_pref_useless_num": 0,
+  "L2C_pref_late_num": 0,
+  "L2C_origin_miss": 0
+ },
+ "spec06_perlbench_diffmail_451100000000": {
+  "L2C_pref_miss": 133876,
+  "L2C_pref_total_num": 28659,
+  "L2C_pref_useless_num": 8,
+  "L2C_pref_late_num": 0,
+  "L2C_origin_miss": 162529
+ },
+ "spec06_soplex_pds_11400000000": {
+  "L2C_pref_miss": 360563,
+  "L2C_pref_total_num": 1827596,
+  "L2C_pref_useless_num": 103776,
+  "L2C_pref_late_num": 61157,
+  "L2C_origin_miss": 1931225
+ },
+ "spec06_soplex_pds_129400000000": {
+  "L2C_pref_miss": 966007,
+  "L2C_pref_total_num": 4280620,
+  "L2C_pref_useless_num": 203562,
+  "L2C_pref_late_num": 187703,
+  "L2C_origin_miss": 3390991
+ },
+ "spec06_soplex_pds_141400000000": {
+  "L2C_pref_miss": 947404,
+  "L2C_pref_total_num": 4309278,
+  "L2C_pref_useless_num": 214358,
+  "L2C_pref_late_num": 155100,
+  "L2C_origin_miss": 3304731
+ },
+ "spec06_soplex_pds_156500000000": {
+  "L2C_pref_miss": 1008773,
+  "L2C_pref_total_num": 4397508,
+  "L2C_pref_useless_num": 246464,
+  "L2C_pref_late_num": 154232,
+  "L2C_origin_miss": 3333024
+ },
+ "spec06_soplex_pds_178400000000": {
+  "L2C_pref_miss": 1318868,
+  "L2C_pref_total_num": 4566796,
+  "L2C_pref_useless_num": 260364,
+  "L2C_pref_late_num": 189520,
+  "L2C_origin_miss": 3661935
+ },
+ "spec06_soplex_pds_193600000000": {
+  "L2C_pref_miss": 958829,
+  "L2C_pref_total_num": 4650857,
+  "L2C_pref_useless_num": 216926,
+  "L2C_pref_late_num": 128411,
+  "L2C_origin_miss": 3568887
+ },
+ "spec06_soplex_pds_200000000": {
+  "L2C_pref_miss": 167966,
+  "L2C_pref_total_num": 784830,
+  "L2C_pref_useless_num": 84409,
+  "L2C_pref_late_num": 14416,
+  "L2C_origin_miss": 87530
+ },
+ "spec06_soplex_pds_203500000000": {
+  "L2C_pref_miss": 926264,
+  "L2C_pref_total_num": 4160496,
+  "L2C_pref_useless_num": 206972,
+  "L2C_pref_late_num": 138627,
+  "L2C_origin_miss": 3266316
+ },
+ "spec06_soplex_pds_23800000000": {
+  "L2C_pref_miss": 935910,
+  "L2C_pref_total_num": 3065740,
+  "L2C_pref_useless_num": 137239,
+  "L2C_pref_late_num": 196165,
+  "L2C_origin_miss": 2623340
+ },
+ "spec06_soplex_pds_254500000000": {
+  "L2C_pref_miss": 1049278,
+  "L2C_pref_total_num": 4699315,
+  "L2C_pref_useless_num": 236933,
+  "L2C_pref_late_num": 150548,
+  "L2C_origin_miss": 3515536
+ },
+ "spec06_soplex_pds_274500000000": {
+  "L2C_pref_miss": 1120681,
+  "L2C_pref_total_num": 4880515,
+  "L2C_pref_useless_num": 236900,
+  "L2C_pref_late_num": 176435,
+  "L2C_origin_miss": 3688004
+ },
+ "spec06_soplex_pds_280100000000": {
+  "L2C_pref_miss": 754285,
+  "L2C_pref_total_num": 3050259,
+  "L2C_pref_useless_num": 274803,
+  "L2C_pref_late_num": 70893,
+  "L2C_origin_miss": 2028218
+ },
+ "spec06_soplex_pds_3800000000": {
+  "L2C_pref_miss": 66183,
+  "L2C_pref_total_num": 102630,
+  "L2C_pref_useless_num": 11171,
+  "L2C_pref_late_num": 12994,
+  "L2C_origin_miss": 352312
+ },
+ "spec06_soplex_pds_47500000000": {
+  "L2C_pref_miss": 685755,
+  "L2C_pref_total_num": 3300869,
+  "L2C_pref_useless_num": 140950,
+  "L2C_pref_late_num": 154991,
+  "L2C_origin_miss": 2615300
+ },
+ "spec06_soplex_pds_60000000000": {
+  "L2C_pref_miss": 1200323,
+  "L2C_pref_total_num": 3446417,
+  "L2C_pref_useless_num": 124199,
+  "L2C_pref_late_num": 282916,
+  "L2C_origin_miss": 3195234
+ },
+ "spec06_soplex_pds_64700000000": {
+  "L2C_pref_miss": 736960,
+  "L2C_pref_total_num": 2658903,
+  "L2C_pref_useless_num": 150817,
+  "L2C_pref_late_num": 96089,
+  "L2C_origin_miss": 2169445
+ },
+ "spec06_soplex_pds_66400000000": {
+  "L2C_pref_miss": 839728,
+  "L2C_pref_total_num": 3217267,
+  "L2C_pref_useless_num": 124758,
+  "L2C_pref_late_num": 194787,
+  "L2C_origin_miss": 2696320
+ },
+ "spec06_soplex_pds_98400000000": {
+  "L2C_pref_miss": 863896,
+  "L2C_pref_total_num": 3235755,
+  "L2C_pref_useless_num": 183470,
+  "L2C_pref_late_num": 158194,
+  "L2C_origin_miss": 2312177
+ },
+ "spec06_xalancbmk_ref_158100000000": {
+  "L2C_pref_miss": 4135,
+  "L2C_pref_total_num": 6917978,
+  "L2C_pref_useless_num": 2506,
+  "L2C_pref_late_num": 4,
+  "L2C_origin_miss": 3819391
+ },
+ "spec06_xalancbmk_ref_181800000000": {
+  "L2C_pref_miss": 2049,
+  "L2C_pref_total_num": 5919368,
+  "L2C_pref_useless_num": 5042,
+  "L2C_pref_late_num": 0,
+  "L2C_origin_miss": 3336921
+ },
+ "spec06_xalancbmk_ref_209600000000": {
+  "L2C_pref_miss": 3330,
+  "L2C_pref_total_num": 5345005,
+  "L2C_pref_useless_num": 2832,
+  "L2C_pref_late_num": 64,
+  "L2C_origin_miss": 3116655
+ },
+ "spec06_xalancbmk_ref_242200000000": {
+  "L2C_pref_miss": 3214,
+  "L2C_pref_total_num": 2957074,
+  "L2C_pref_useless_num": 2822,
+  "L2C_pref_late_num": 0,
+  "L2C_origin_miss": 1776079
+ },
+ "spec06_xalancbmk_ref_342300000000": {
+  "L2C_pref_miss": 15388,
+  "L2C_pref_total_num": 28463,
+  "L2C_pref_useless_num": 144,
+  "L2C_pref_late_num": 510,
+  "L2C_origin_miss": 42246
+ },
+ "spec06_xalancbmk_ref_36600000000": {
+  "L2C_pref_miss": 175455,
+  "L2C_pref_total_num": 5520582,
+  "L2C_pref_useless_num": 54549,
+  "L2C_pref_late_num": 15272,
+  "L2C_origin_miss": 2934144
+ },
+ "spec06_xalancbmk_ref_411800000000": {
+  "L2C_pref_miss": 1587,
+  "L2C_pref_total_num": 1726,
+  "L2C_pref_useless_num": 3,
+  "L2C_pref_late_num": 0,
+  "L2C_origin_miss": 3626
+ },
+ "spec06_xalancbmk_ref_418000000000": {
+  "L2C_pref_miss": 61952,
+  "L2C_pref_total_num": 161884,
+  "L2C_pref_useless_num": 7863,
+  "L2C_pref_late_num": 7343,
+  "L2C_origin_miss": 132511
+ },
+ "spec06_xalancbmk_ref_45500000000": {
+  "L2C_pref_miss": 162075,
+  "L2C_pref_total_num": 5133375,
+  "L2C_pref_useless_num": 46388,
+  "L2C_pref_late_num": 11921,
+  "L2C_origin_miss": 2786876
+ },
+ "spec06_xalancbmk_ref_496800000000": {
+  "L2C_pref_miss": 54729,
+  "L2C_pref_total_num": 167170,
+  "L2C_pref_useless_num": 7301,
+  "L2C_pref_late_num": 7835,
+  "L2C_origin_miss": 125565
+ },
+ "spec06_xalancbmk_ref_544200000000": {
+  "L2C_pref_miss": 24875,
+  "L2C_pref_total_num": 82775,
+  "L2C_pref_useless_num": 3589,
+  "L2C_pref_late_num": 2592,
+  "L2C_origin_miss": 66398
+ },
+ "spec06_xalancbmk_ref_560300000000": {
+  "L2C_pref_miss": 57707,
+  "L2C_pref_total_num": 64673,
+  "L2C_pref_useless_num": 3791,
+  "L2C_pref_late_num": 4213,
+  "L2C_origin_miss": 91360
+ },
+ "spec06_xalancbmk_ref_572700000000": {
+  "L2C_pref_miss": 20038,
+  "L2C_pref_total_num": 32643,
+  "L2C_pref_useless_num": 718,
+  "L2C_pref_late_num": 811,
+  "L2C_origin_miss": 50443
+ },
+ "spec06_xalancbmk_ref_585000000000": {
+  "L2C_pref_miss": 43047,
+  "L2C_pref_total_num": 125555,
+  "L2C_pref_useless_num": 5589,
+  "L2C_pref_late_num": 5415,
+  "L2C_origin_miss": 101703
+ },
+ "spec06_xalancbmk_ref_586900000000": {
+  "L2C_pref_miss": 40014,
+  "L2C_pref_total_num": 124901,
+  "L2C_pref_useless_num": 5383,
+  "L2C_pref_late_num": 4956,
+  "L2C_origin_miss": 96931
+ },
+ "spec06_xalancbmk_ref_587700000000": {
+  "L2C_pref_miss": 53593,
+  "L2C_pref_total_num": 62782,
+  "L2C_pref_useless_num": 3222,
+  "L2C_pref_late_num": 5038,
+  "L2C_origin_miss": 91599
+ },
+ "spec06_xalancbmk_ref_707200000000": {
+  "L2C_pref_miss": 79237,
+  "L2C_pref_total_num": 202180,
+  "L2C_pref_useless_num": 9977,
+  "L2C_pref_late_num": 10694,
+  "L2C_origin_miss": 153027
+ },
+ "spec06_xalancbmk_ref_7500000000": {
+  "L2C_pref_miss": 190942,
+  "L2C_pref_total_num": 5047946,
+  "L2C_pref_useless_num": 59052,
+  "L2C_pref_late_num": 18956,
+  "L2C_origin_miss": 2682533
+ },
+ "spec06_xalancbmk_ref_813800000000": {
+  "L2C_pref_miss": 63448,
+  "L2C_pref_total_num": 201446,
+  "L2C_pref_useless_num": 9866,
+  "L2C_pref_late_num": 8765,
+  "L2C_origin_miss": 138515
+ },
+ "spec06_xalancbmk_ref_90500000000": {
+  "L2C_pref_miss": 254897,
+  "L2C_pref_total_num": 6759562,
+  "L2C_pref_useless_num": 148818,
+  "L2C_pref_late_num": 21519,
+  "L2C_origin_miss": 3340595
+ },
+ "spec17_cactuBSSN_ref_1313100000000": {
+  "L2C_pref_miss": 340651,
+  "L2C_pref_total_num": 173282,
+  "L2C_pref_useless_num": 2,
+  "L2C_pref_late_num": 3568,
+  "L2C_origin_miss": 873637
+ },
+ "spec17_cactuBSSN_ref_1364900000000": {
+  "L2C_pref_miss": 2226,
+  "L2C_pref_total_num": 355,
+  "L2C_pref_useless_num": 125,
+  "L2C_pref_late_num": 2,
+  "L2C_origin_miss": 2055079
+ },
+ "spec17_cactuBSSN_ref_1433000000000": {
+  "L2C_pref_miss": 288774,
+  "L2C_pref_total_num": 220909,
+  "L2C_pref_useless_num": 40641,
+  "L2C_pref_late_num": 3085,
+  "L2C_origin_miss": 1451738
+ },
+ "spec17_cactuBSSN_ref_1444900000000": {
+  "L2C_pref_miss": 12602,
+  "L2C_pref_total_num": 13440,
+  "L2C_pref_useless_num": 4620,
+  "L2C_pref_late_num": 30,
+  "L2C_origin_miss": 2837938
+ },
+ "spec17_cactuBSSN_ref_15400000000": {
+  "L2C_pref_miss": 468288,
+  "L2C_pref_total_num": 274054,
+  "L2C_pref_useless_num": 35450,
+  "L2C_pref_late_num": 1944,
+  "L2C_origin_miss": 583363
+ },
+ "spec17_cactuBSSN_ref_1541500000000": {
+  "L2C_pref_miss": 119760,
+  "L2C_pref_total_num": 21245,
+  "L2C_pref_useless_num": 2117,
+  "L2C_pref_late_num": 266,
+  "L2C_origin_miss": 2565587
+ },
+ "spec17_cactuBSSN_ref_1611000000000": {
+  "L2C_pref_miss": 1665,
+  "L2C_pref_total_num": 1511,
+  "L2C_pref_useless_num": 342,
+  "L2C_pref_late_num": 72,
+  "L2C_origin_miss": 1733397
+ },
+ "spec17_cactuBSSN_ref_1611100000000": {
+  "L2C_pref_miss": 543113,
+  "L2C_pref_total_num": 18167,
+  "L2C_pref_useless_num": 3616,
+  "L2C_pref_late_num": 5881,
+  "L2C_origin_miss": 1748618
+ },
+ "spec17_cactuBSSN_ref_1760900000000": {
+  "L2C_pref_miss": 416482,
+  "L2C_pref_total_num": 125913,
+  "L2C_pref_useless_num": 4725,
+  "L2C_pref_late_num": 4081,
+  "L2C_origin_miss": 494480
+ },
+ "spec17_cactuBSSN_ref_1782200000000": {
+  "L2C_pref_miss": 135968,
+  "L2C_pref_total_num": 300169,
+  "L2C_pref_useless_num": 115,
+  "L2C_pref_late_num": 33,
+  "L2C_origin_miss": 731228
+ },
+ "spec17_cactuBSSN_ref_1800000000": {
+  "L2C_pref_miss": 65025,
+  "L2C_pref_total_num": 789832,
+  "L2C_pref_useless_num": 75,
+  "L2C_pref_late_num": 0,
+  "L2C_origin_miss": 512385
+ },
+ "spec17_cactuBSSN_ref_1811100000000": {
+  "L2C_pref_miss": 2544,
+  "L2C_pref_total_num": 1046,
+  "L2C_pref_useless_num": 47,
+  "L2C_pref_late_num": 170,
+  "L2C_origin_miss": 136586
+ },
+ "spec17_cactuBSSN_ref_1943400000000": {
+  "L2C_pref_miss": 226696,
+  "L2C_pref_total_num": 596930,
+  "L2C_pref_useless_num": 31199,
+  "L2C_pref_late_num": 5587,
+  "L2C_origin_miss": 549357
+ },
+ "spec17_cactuBSSN_ref_2091700000000": {
+  "L2C_pref_miss": 501,
+  "L2C_pref_total_num": 75,
+  "L2C_pref_useless_num": 0,
+  "L2C_pref_late_num": 1,
+  "L2C_origin_miss": 185020
+ },
+ "spec17_cactuBSSN_ref_2106200000000": {
+  "L2C_pref_miss": 207424,
+  "L2C_pref_total_num": 93750,
+  "L2C_pref_useless_num": 1255,
+  "L2C_pref_late_num": 5119,
+  "L2C_origin_miss": 274140
+ },
+ "spec17_cactuBSSN_ref_2126200000000": {
+  "L2C_pref_miss": 3003,
+  "L2C_pref_total_num": 626,
+  "L2C_pref_useless_num": 216,
+  "L2C_pref_late_num": 3,
+  "L2C_origin_miss": 2551543
+ },
+ "spec17_cactuBSSN_ref_2169400000000": {
+  "L2C_pref_miss": 68257,
+  "L2C_pref_total_num": 87008,
+  "L2C_pref_useless_num": 20,
+  "L2C_pref_late_num": 3,
+  "L2C_origin_miss": 131979
+ },
+ "spec17_cactuBSSN_ref_2262700000000": {
+  "L2C_pref_miss": 285340,
+  "L2C_pref_total_num": 106359,
+  "L2C_pref_useless_num": 10565,
+  "L2C_pref_late_num": 78,
+  "L2C_origin_miss": 1612197
+ },
+ "spec17_cactuBSSN_ref_2275700000000": {
+  "L2C_pref_miss": 109977,
+  "L2C_pref_total_num": 747022,
+  "L2C_pref_useless_num": 84,
+  "L2C_pref_late_num": 0,
+  "L2C_origin_miss": 532166
+ },
+ "spec17_cactuBSSN_ref_2572400000000": {
+  "L2C_pref_miss": 43627,
+  "L2C_pref_total_num": 41041,
+  "L2C_pref_useless_num": 211,
+  "L2C_pref_late_num": 120,
+  "L2C_origin_miss": 201588
+ },
+ "spec17_cactuBSSN_ref_2773100000000": {
+  "L2C_pref_miss": 442359,
+  "L2C_pref_total_num": 335,
+  "L2C_pref_useless_num": 66,
+  "L2C_pref_late_num": 15,
+  "L2C_origin_miss": 2519728
+ },
+ "spec17_cactuBSSN_ref_2904000000000": {
+  "L2C_pref_miss": 48534,
+  "L2C_pref_total_num": 22517,
+  "L2C_pref_useless_num": 155,
+  "L2C_pref_late_num": 16,
+  "L2C_origin_miss": 2030381
+ },
+ "spec17_cactuBSSN_ref_3163400000000": {
+  "L2C_pref_miss": 363222,
+  "L2C_pref_total_num": 31150,
+  "L2C_pref_useless_num": 1930,
+  "L2C_pref_late_num": 856,
+  "L2C_origin_miss": 375597
+ },
+ "spec17_cactuBSSN_ref_42600000000": {
+  "L2C_pref_miss": 660923,
+  "L2C_pref_total_num": 165,
+  "L2C_pref_useless_num": 48,
+  "L2C_pref_late_num": 0,
+  "L2C_origin_miss": 1137263
+ },
+ "spec17_cactuBSSN_ref_499500000000": {
+  "L2C_pref_miss": 438024,
+  "L2C_pref_total_num": 105630,
+  "L2C_pref_useless_num": 1539,
+  "L2C_pref_late_num": 3099,
+  "L2C_origin_miss": 873703
+ },
+ "spec17_cactuBSSN_ref_649200000000": {
+  "L2C_pref_miss": 2116,
+  "L2C_pref_total_num": 43,
+  "L2C_pref_useless_num": 4,
+  "L2C_pref_late_num": 5,
+  "L2C_origin_miss": 1006124
+ },
+ "spec17_cactuBSSN_ref_953400000000": {
+  "L2C_pref_miss": 394283,
+  "L2C_pref_total_num": 757633,
+  "L2C_pref_useless_num": 28512,
+  "L2C_pref_late_num": 9752,
+  "L2C_origin_miss": 726099
+ },
+ "spec17_gcc_pp-O2_105900000000": {
+  "L2C_pref_miss": 66242,
+  "L2C_pref_total_num": 512861,
+  "L2C_pref_useless_num": 3405,
+  "L2C_pref_late_num": 16247,
+  "L2C_origin_miss": 297742
+ },
+ "spec17_gcc_pp-O2_12300000000": {
+  "L2C_pref_miss": 140888,
+  "L2C_pref_total_num": 411317,
+  "L2C_pref_useless_num": 16647,
+  "L2C_pref_late_num": 4197,
+  "L2C_origin_miss": 278743
+ },
+ "spec17_gcc_pp-O2_137200000000": {
+  "L2C_pref_miss": 1288164,
+  "L2C_pref_total_num": 9514096,
+  "L2C_pref_useless_num": 2566725,
+  "L2C_pref_late_num": 77517,
+  "L2C_origin_miss": 2338176
+ },
+ "spec17_gcc_pp-O2_176400000000": {
+  "L2C_pref_miss": 100207,
+  "L2C_pref_total_num": 282235,
+  "L2C_pref_useless_num": 12145,
+  "L2C_pref_late_num": 3968,
+  "L2C_origin_miss": 220595
+ },
+ "spec17_gcc_pp-O2_177300000000": {
+  "L2C_pref_miss": 136519,
+  "L2C_pref_total_num": 55354,
+  "L2C_pref_useless_num": 3447,
+  "L2C_pref_late_num": 2462,
+  "L2C_origin_miss": 152497
+ },
+ "spec17_gcc_pp-O2_220600000000": {
+  "L2C_pref_miss": 145185,
+  "L2C_pref_total_num": 79295,
+  "L2C_pref_useless_num": 4097,
+  "L2C_pref_late_num": 3669,
+  "L2C_origin_miss": 171281
+ },
+ "spec17_gcc_pp-O2_223500000000": {
+  "L2C_pref_miss": 73386,
+  "L2C_pref_total_num": 43156,
+  "L2C_pref_useless_num": 2652,
+  "L2C_pref_late_num": 2261,
+  "L2C_origin_miss": 85252
+ },
+ "spec17_gcc_pp-O2_230300000000": {
+  "L2C_pref_miss": 289914,
+  "L2C_pref_total_num": 1308245,
+  "L2C_pref_useless_num": 92032,
+  "L2C_pref_late_num": 15634,
+  "L2C_origin_miss": 725939
+ },
+ "spec17_gcc_pp-O2_256900000000": {
+  "L2C_pref_miss": 102112,
+  "L2C_pref_total_num": 800247,
+  "L2C_pref_useless_num": 32247,
+  "L2C_pref_late_num": 9386,
+  "L2C_origin_miss": 416256
+ },
+ "spec17_gcc_pp-O2_261900000000": {
+  "L2C_pref_miss": 154210,
+  "L2C_pref_total_num": 902547,
+  "L2C_pref_useless_num": 49551,
+  "L2C_pref_late_num": 23258,
+  "L2C_origin_miss": 545141
+ },
+ "spec17_gcc_pp-O2_35200000000": {
+  "L2C_pref_miss": 30506,
+  "L2C_pref_total_num": 36502,
+  "L2C_pref_useless_num": 976,
+  "L2C_pref_late_num": 657,
+  "L2C_origin_miss": 54627
+ },
+ "spec17_gcc_pp-O2_56100000000": {
+  "L2C_pref_miss": 857772,
+  "L2C_pref_total_num": 2150049,
+  "L2C_pref_useless_num": 232984,
+  "L2C_pref_late_num": 187747,
+  "L2C_origin_miss": 643184
+ },
+ "spec17_gcc_pp-O2_58000000000": {
+  "L2C_pref_miss": 4424,
+  "L2C_pref_total_num": 10643,
+  "L2C_pref_useless_num": 246,
+  "L2C_pref_late_num": 762,
+  "L2C_origin_miss": 6013
+ },
+ "spec17_gcc_pp-O2_73500000000": {
+  "L2C_pref_miss": 1564484,
+  "L2C_pref_total_num": 2161332,
+  "L2C_pref_useless_num": 230803,
+  "L2C_pref_late_num": 50367,
+  "L2C_origin_miss": 3870043
+ },
+ "spec17_gcc_pp-O2_73900000000": {
+  "L2C_pref_miss": 447955,
+  "L2C_pref_total_num": 1498365,
+  "L2C_pref_useless_num": 97095,
+  "L2C_pref_late_num": 30582,
+  "L2C_origin_miss": 2119256
+ },
+ "spec17_gcc_pp-O2_74800000000": {
+  "L2C_pref_miss": 234,
+  "L2C_pref_total_num": 1284,
+  "L2C_pref_useless_num": 0,
+  "L2C_pref_late_num": 19,
+  "L2C_origin_miss": 1253
+ },
+ "spec17_gcc_pp-O2_76500000000": {
+  "L2C_pref_miss": 359480,
+  "L2C_pref_total_num": 1044011,
+  "L2C_pref_useless_num": 96590,
+  "L2C_pref_late_num": 35448,
+  "L2C_origin_miss": 909181
+ },
+ "spec17_gcc_pp-O2_86600000000": {
+  "L2C_pref_miss": 54605,
+  "L2C_pref_total_num": 488871,
+  "L2C_pref_useless_num": 8856,
+  "L2C_pref_late_num": 1406,
+  "L2C_origin_miss": 288760
+ },
+ "spec17_gcc_pp-O2_88500000000": {
+  "L2C_pref_miss": 167010,
+  "L2C_pref_total_num": 739201,
+  "L2C_pref_useless_num": 28311,
+  "L2C_pref_late_num": 16501,
+  "L2C_origin_miss": 615451
+ },
+ "spec17_gcc_pp-O3_0": {
+  "L2C_pref_miss": 22233,
+  "L2C_pref_total_num": 14289,
+  "L2C_pref_useless_num": 619,
+  "L2C_pref_late_num": 279,
+  "L2C_origin_miss": 35295
+ },
+ "spec17_gcc_pp-O3_100400000000": {
+  "L2C_pref_miss": 8542,
+  "L2C_pref_total_num": 95972,
+  "L2C_pref_useless_num": 1955,
+  "L2C_pref_late_num": 2911,
+  "L2C_origin_miss": 32296
+ },
+ "spec17_gcc_pp-O3_102900000000": {
+  "L2C_pref_miss": 1247769,
+  "L2C_pref_total_num": 8488819,
+  "L2C_pref_useless_num": 1427973,
+  "L2C_pref_late_num": 50869,
+  "L2C_origin_miss": 2514595
+ },
+ "spec17_gcc_pp-O3_106100000000": {
+  "L2C_pref_miss": 334091,
+  "L2C_pref_total_num": 800309,
+  "L2C_pref_useless_num": 58781,
+  "L2C_pref_late_num": 39529,
+  "L2C_origin_miss": 705123
+ },
+ "spec17_gcc_pp-O3_168800000000": {
+  "L2C_pref_miss": 111399,
+  "L2C_pref_total_num": 353448,
+  "L2C_pref_useless_num": 9857,
+  "L2C_pref_late_num": 7635,
+  "L2C_origin_miss": 299476
+ },
+ "spec17_gcc_pp-O3_174200000000": {
+  "L2C_pref_miss": 151403,
+  "L2C_pref_total_num": 528111,
+  "L2C_pref_useless_num": 40728,
+  "L2C_pref_late_num": 2734,
+  "L2C_origin_miss": 276880
+ },
+ "spec17_gcc_pp-O3_18000000000": {
+  "L2C_pref_miss": 1660609,
+  "L2C_pref_total_num": 156500,
+  "L2C_pref_useless_num": 30672,
+  "L2C_pref_late_num": 1426,
+  "L2C_origin_miss": 1903473
+ },
+ "spec17_gcc_pp-O3_180200000000": {
+  "L2C_pref_miss": 88095,
+  "L2C_pref_total_num": 86391,
+  "L2C_pref_useless_num": 6167,
+  "L2C_pref_late_num": 1902,
+  "L2C_origin_miss": 107586
+ },
+ "spec17_gcc_pp-O3_185900000000": {
+  "L2C_pref_miss": 106031,
+  "L2C_pref_total_num": 39084,
+  "L2C_pref_useless_num": 1555,
+  "L2C_pref_late_num": 1825,
+  "L2C_origin_miss": 123115
+ },
+ "spec17_gcc_pp-O3_191900000000": {
+  "L2C_pref_miss": 233779,
+  "L2C_pref_total_num": 899186,
+  "L2C_pref_useless_num": 39000,
+  "L2C_pref_late_num": 6884,
+  "L2C_origin_miss": 580327
+ },
+ "spec17_gcc_pp-O3_203000000000": {
+  "L2C_pref_miss": 117270,
+  "L2C_pref_total_num": 548588,
+  "L2C_pref_useless_num": 26604,
+  "L2C_pref_late_num": 7419,
+  "L2C_origin_miss": 429164
+ },
+ "spec17_gcc_pp-O3_216500000000": {
+  "L2C_pref_miss": 306717,
+  "L2C_pref_total_num": 1410493,
+  "L2C_pref_useless_num": 92196,
+  "L2C_pref_late_num": 8603,
+  "L2C_origin_miss": 726268
+ },
+ "spec17_gcc_pp-O3_25400000000": {
+  "L2C_pref_miss": 239263,
+  "L2C_pref_total_num": 59514,
+  "L2C_pref_useless_num": 5163,
+  "L2C_pref_late_num": 1063,
+  "L2C_origin_miss": 250025
+ },
+ "spec17_gcc_pp-O3_6100000000": {
+  "L2C_pref_miss": 24487,
+  "L2C_pref_total_num": 67694,
+  "L2C_pref_useless_num": 3081,
+  "L2C_pref_late_num": 959,
+  "L2C_origin_miss": 60826
+ },
+ "spec17_gcc_pp-O3_79700000000": {
+  "L2C_pref_miss": 324949,
+  "L2C_pref_total_num": 1738387,
+  "L2C_pref_useless_num": 122983,
+  "L2C_pref_late_num": 15216,
+  "L2C_origin_miss": 1121038
+ },
+ "spec17_gcc_pp-O3_82400000000": {
+  "L2C_pref_miss": 313120,
+  "L2C_pref_total_num": 1353388,
+  "L2C_pref_useless_num": 113407,
+  "L2C_pref_late_num": 19475,
+  "L2C_origin_miss": 996034
+ },
+ "spec17_gcc_pp-O3_84300000000": {
+  "L2C_pref_miss": 7,
+  "L2C_pref_total_num": 33,
+  "L2C_pref_useless_num": 0,
+  "L2C_pref_late_num": 0,
+  "L2C_origin_miss": 35
+ },
+ "spec17_gcc_pp-O3_84800000000": {
+  "L2C_pref_miss": 1232157,
+  "L2C_pref_total_num": 2756059,
+  "L2C_pref_useless_num": 194172,
+  "L2C_pref_late_num": 83785,
+  "L2C_origin_miss": 3625493
+ },
+ "spec17_gcc_pp-O3_88200000000": {
+  "L2C_pref_miss": 91812,
+  "L2C_pref_total_num": 61886,
+  "L2C_pref_useless_num": 2821,
+  "L2C_pref_late_num": 549,
+  "L2C_origin_miss": 161354
+ },
+ "spec17_gcc_ref32-O3_105700000000": {
+  "L2C_pref_miss": 410035,
+  "L2C_pref_total_num": 3097902,
+  "L2C_pref_useless_num": 306649,
+  "L2C_pref_late_num": 34667,
+  "L2C_origin_miss": 1554008
+ },
+ "spec17_gcc_ref32-O3_110200000000": {
+  "L2C_pref_miss": 553676,
+  "L2C_pref_total_num": 1911349,
+  "L2C_pref_useless_num": 164677,
+  "L2C_pref_late_num": 36145,
+  "L2C_origin_miss": 1546075
+ },
+ "spec17_gcc_ref32-O3_113500000000": {
+  "L2C_pref_miss": 283250,
+  "L2C_pref_total_num": 69526,
+  "L2C_pref_useless_num": 4955,
+  "L2C_pref_late_num": 2031,
+  "L2C_origin_miss": 188677
+ },
+ "spec17_gcc_ref32-O3_131300000000": {
+  "L2C_pref_miss": 851399,
+  "L2C_pref_total_num": 189456,
+  "L2C_pref_useless_num": 21219,
+  "L2C_pref_late_num": 5030,
+  "L2C_origin_miss": 889818
+ },
+ "spec17_gcc_ref32-O3_131900000000": {
+  "L2C_pref_miss": 1782117,
+  "L2C_pref_total_num": 281280,
+  "L2C_pref_useless_num": 28296,
+  "L2C_pref_late_num": 4853,
+  "L2C_origin_miss": 1889515
+ },
+ "spec17_gcc_ref32-O3_162700000000": {
+  "L2C_pref_miss": 156316,
+  "L2C_pref_total_num": 30101,
+  "L2C_pref_useless_num": 1698,
+  "L2C_pref_late_num": 300,
+  "L2C_origin_miss": 184385
+ },
+ "spec17_gcc_ref32-O3_203300000000": {
+  "L2C_pref_miss": 723777,
+  "L2C_pref_total_num": 2091598,
+  "L2C_pref_useless_num": 128789,
+  "L2C_pref_late_num": 66965,
+  "L2C_origin_miss": 1824363
+ },
+ "spec17_gcc_ref32-O3_209000000000": {
+  "L2C_pref_miss": 1002677,
+  "L2C_pref_total_num": 1814604,
+  "L2C_pref_useless_num": 161449,
+  "L2C_pref_late_num": 73481,
+  "L2C_origin_miss": 2341457
+ },
+ "spec17_gcc_ref32-O3_216800000000": {
+  "L2C_pref_miss": 1453575,
+  "L2C_pref_total_num": 242076,
+  "L2C_pref_useless_num": 28083,
+  "L2C_pref_late_num": 5450,
+  "L2C_origin_miss": 1582970
+ },
+ "spec17_gcc_ref32-O3_21700000000": {
+  "L2C_pref_miss": 60740,
+  "L2C_pref_total_num": 85177,
+  "L2C_pref_useless_num": 3625,
+  "L2C_pref_late_num": 1112,
+  "L2C_origin_miss": 92296
+ },
+ "spec17_gcc_ref32-O3_225000000000": {
+  "L2C_pref_miss": 66732,
+  "L2C_pref_total_num": 671377,
+  "L2C_pref_useless_num": 24227,
+  "L2C_pref_late_num": 689,
+  "L2C_origin_miss": 381245
+ },
+ "spec17_gcc_ref32-O3_234300000000": {
+  "L2C_pref_miss": 456766,
+  "L2C_pref_total_num": 546687,
+  "L2C_pref_useless_num": 36779,
+  "L2C_pref_late_num": 31684,
+  "L2C_origin_miss": 881665
+ },
+ "spec17_gcc_ref32-O3_269300000000": {
+  "L2C_pref_miss": 133941,
+  "L2C_pref_total_num": 25022,
+  "L2C_pref_useless_num": 1206,
+  "L2C_pref_late_num": 139,
+  "L2C_origin_miss": 394562
+ },
+ "spec17_gcc_ref32-O3_278000000000": {
+  "L2C_pref_miss": 350806,
+  "L2C_pref_total_num": 28039,
+  "L2C_pref_useless_num": 2074,
+  "L2C_pref_late_num": 5639,
+  "L2C_origin_miss": 395986
+ },
+ "spec17_gcc_ref32-O3_286600000000": {
+  "L2C_pref_miss": 108940,
+  "L2C_pref_total_num": 24402,
+  "L2C_pref_useless_num": 538,
+  "L2C_pref_late_num": 605,
+  "L2C_origin_miss": 194762
+ },
+ "spec17_gcc_ref32-O3_289100000000": {
+  "L2C_pref_miss": 1330583,
+  "L2C_pref_total_num": 3376121,
+  "L2C_pref_useless_num": 471935,
+  "L2C_pref_late_num": 23288,
+  "L2C_origin_miss": 2754411
+ },
+ "spec17_gcc_ref32-O3_301700000000": {
+  "L2C_pref_miss": 1282764,
+  "L2C_pref_total_num": 260971,
+  "L2C_pref_useless_num": 23677,
+  "L2C_pref_late_num": 5969,
+  "L2C_origin_miss": 1390812
+ },
+ "spec17_gcc_ref32-O3_37800000000": {
+  "L2C_pref_miss": 959032,
+  "L2C_pref_total_num": 3571133,
+  "L2C_pref_useless_num": 548072,
+  "L2C_pref_late_num": 24109,
+  "L2C_origin_miss": 1955747
+ },
+ "spec17_gcc_ref32-O3_67700000000": {
+  "L2C_pref_miss": 533526,
+  "L2C_pref_total_num": 2354935,
+  "L2C_pref_useless_num": 204675,
+  "L2C_pref_late_num": 35702,
+  "L2C_origin_miss": 1602269
+ },
+ "spec17_gcc_ref32-O5_111700000000": {
+  "L2C_pref_miss": 1062679,
+  "L2C_pref_total_num": 99017,
+  "L2C_pref_useless_num": 7265,
+  "L2C_pref_late_num": 3400,
+  "L2C_origin_miss": 429328
+ },
+ "spec17_gcc_ref32-O5_11200000000": {
+  "L2C_pref_miss": 417890,
+  "L2C_pref_total_num": 2197582,
+  "L2C_pref_useless_num": 209344,
+  "L2C_pref_late_num": 12315,
+  "L2C_origin_miss": 1358343
+ },
+ "spec17_gcc_ref32-O5_112600000000": {
+  "L2C_pref_miss": 858327,
+  "L2C_pref_total_num": 1436677,
+  "L2C_pref_useless_num": 160417,
+  "L2C_pref_late_num": 41417,
+  "L2C_origin_miss": 1678835
+ },
+ "spec17_gcc_ref32-O5_118400000000": {
+  "L2C_pref_miss": 1466920,
+  "L2C_pref_total_num": 1792236,
+  "L2C_pref_useless_num": 182944,
+  "L2C_pref_late_num": 47709,
+  "L2C_origin_miss": 2959732
+ },
+ "spec17_gcc_ref32-O5_132500000000": {
+  "L2C_pref_miss": 16222,
+  "L2C_pref_total_num": 333424,
+  "L2C_pref_useless_num": 5210,
+  "L2C_pref_late_num": 131,
+  "L2C_origin_miss": 169764
+ },
+ "spec17_gcc_ref32-O5_149500000000": {
+  "L2C_pref_miss": 163807,
+  "L2C_pref_total_num": 59637,
+  "L2C_pref_useless_num": 3127,
+  "L2C_pref_late_num": 1160,
+  "L2C_origin_miss": 270410
+ },
+ "spec17_gcc_ref32-O5_153500000000": {
+  "L2C_pref_miss": 750321,
+  "L2C_pref_total_num": 2834581,
+  "L2C_pref_useless_num": 418259,
+  "L2C_pref_late_num": 75690,
+  "L2C_origin_miss": 1574532
+ },
+ "spec17_gcc_ref32-O5_159100000000": {
+  "L2C_pref_miss": 328212,
+  "L2C_pref_total_num": 1321443,
+  "L2C_pref_useless_num": 57570,
+  "L2C_pref_late_num": 25327,
+  "L2C_origin_miss": 1235261
+ },
+ "spec17_gcc_ref32-O5_164100000000": {
+  "L2C_pref_miss": 813164,
+  "L2C_pref_total_num": 2342353,
+  "L2C_pref_useless_num": 264762,
+  "L2C_pref_late_num": 36589,
+  "L2C_origin_miss": 1711294
+ },
+ "spec17_gcc_ref32-O5_19400000000": {
+  "L2C_pref_miss": 61241,
+  "L2C_pref_total_num": 108267,
+  "L2C_pref_useless_num": 5113,
+  "L2C_pref_late_num": 2311,
+  "L2C_origin_miss": 103380
+ },
+ "spec17_gcc_ref32-O5_21700000000": {
+  "L2C_pref_miss": 171388,
+  "L2C_pref_total_num": 666017,
+  "L2C_pref_useless_num": 20721,
+  "L2C_pref_late_num": 4632,
+  "L2C_origin_miss": 627186
+ },
+ "spec17_gcc_ref32-O5_34000000000": {
+  "L2C_pref_miss": 328335,
+  "L2C_pref_total_num": 4586,
+  "L2C_pref_useless_num": 761,
+  "L2C_pref_late_num": 620,
+  "L2C_origin_miss": 354588
+ },
+ "spec17_gcc_ref32-O5_49500000000": {
+  "L2C_pref_miss": 45252,
+  "L2C_pref_total_num": 21164,
+  "L2C_pref_useless_num": 96,
+  "L2C_pref_late_num": 307,
+  "L2C_origin_miss": 65974
+ },
+ "spec17_gcc_ref32-O5_52700000000": {
+  "L2C_pref_miss": 137250,
+  "L2C_pref_total_num": 69475,
+  "L2C_pref_useless_num": 3889,
+  "L2C_pref_late_num": 1432,
+  "L2C_origin_miss": 490845
+ },
+ "spec17_gcc_ref32-O5_54800000000": {
+  "L2C_pref_miss": 469492,
+  "L2C_pref_total_num": 1678266,
+  "L2C_pref_useless_num": 162562,
+  "L2C_pref_late_num": 16906,
+  "L2C_origin_miss": 1354298
+ },
+ "spec17_gcc_ref32-O5_73200000000": {
+  "L2C_pref_miss": 1295281,
+  "L2C_pref_total_num": 2165801,
+  "L2C_pref_useless_num": 254769,
+  "L2C_pref_late_num": 34403,
+  "L2C_origin_miss": 2463033
+ },
+ "spec17_gcc_ref32-O5_93400000000": {
+  "L2C_pref_miss": 1151168,
+  "L2C_pref_total_num": 1345387,
+  "L2C_pref_useless_num": 165371,
+  "L2C_pref_late_num": 19895,
+  "L2C_origin_miss": 2413444
+ },
+ "spec17_gcc_smaller_108400000000": {
+  "L2C_pref_miss": 126479,
+  "L2C_pref_total_num": 370976,
+  "L2C_pref_useless_num": 26210,
+  "L2C_pref_late_num": 2121,
+  "L2C_origin_miss": 163452
+ },
+ "spec17_gcc_smaller_117900000000": {
+  "L2C_pref_miss": 62097,
+  "L2C_pref_total_num": 28612,
+  "L2C_pref_useless_num": 1168,
+  "L2C_pref_late_num": 954,
+  "L2C_origin_miss": 73418
+ },
+ "spec17_gcc_smaller_118600000000": {
+  "L2C_pref_miss": 154417,
+  "L2C_pref_total_num": 597063,
+  "L2C_pref_useless_num": 45407,
+  "L2C_pref_late_num": 3560,
+  "L2C_origin_miss": 310107
+ },
+ "spec17_gcc_smaller_14300000000": {
+  "L2C_pref_miss": 17832,
+  "L2C_pref_total_num": 21386,
+  "L2C_pref_useless_num": 392,
+  "L2C_pref_late_num": 514,
+  "L2C_origin_miss": 73236
+ },
+ "spec17_gcc_smaller_148200000000": {
+  "L2C_pref_miss": 453616,
+  "L2C_pref_total_num": 1900380,
+  "L2C_pref_useless_num": 132675,
+  "L2C_pref_late_num": 30619,
+  "L2C_origin_miss": 1306769
+ },
+ "spec17_gcc_smaller_149500000000": {
+  "L2C_pref_miss": 716212,
+  "L2C_pref_total_num": 659586,
+  "L2C_pref_useless_num": 98856,
+  "L2C_pref_late_num": 7312,
+  "L2C_origin_miss": 789762
+ },
+ "spec17_gcc_smaller_166200000000": {
+  "L2C_pref_miss": 14,
+  "L2C_pref_total_num": 57,
+  "L2C_pref_useless_num": 0,
+  "L2C_pref_late_num": 0,
+  "L2C_origin_miss": 62
+ },
+ "spec17_gcc_smaller_17800000000": {
+  "L2C_pref_miss": 53871,
+  "L2C_pref_total_num": 1495691,
+  "L2C_pref_useless_num": 14438,
+  "L2C_pref_late_num": 12583,
+  "L2C_origin_miss": 2980816
+ },
+ "spec17_gcc_smaller_189100000000": {
+  "L2C_pref_miss": 6965,
+  "L2C_pref_total_num": 81200,
+  "L2C_pref_useless_num": 2291,
+  "L2C_pref_late_num": 2128,
+  "L2C_origin_miss": 26630
+ },
+ "spec17_gcc_smaller_211800000000": {
+  "L2C_pref_miss": 238905,
+  "L2C_pref_total_num": 898816,
+  "L2C_pref_useless_num": 41929,
+  "L2C_pref_late_num": 12721,
+  "L2C_origin_miss": 598922
+ },
+ "spec17_gcc_smaller_219600000000": {
+  "L2C_pref_miss": 52385,
+  "L2C_pref_total_num": 122162,
+  "L2C_pref_useless_num": 3961,
+  "L2C_pref_late_num": 4047,
+  "L2C_origin_miss": 106786
+ },
+ "spec17_gcc_smaller_46000000000": {
+  "L2C_pref_miss": 64385,
+  "L2C_pref_total_num": 364409,
+  "L2C_pref_useless_num": 5762,
+  "L2C_pref_late_num": 8939,
+  "L2C_origin_miss": 1111360
+ },
+ "spec17_gcc_smaller_49500000000": {
+  "L2C_pref_miss": 33396,
+  "L2C_pref_total_num": 285088,
+  "L2C_pref_useless_num": 4438,
+  "L2C_pref_late_num": 7622,
+  "L2C_origin_miss": 3363201
+ },
+ "spec17_gcc_smaller_70700000000": {
+  "L2C_pref_miss": 881861,
+  "L2C_pref_total_num": 4894359,
+  "L2C_pref_useless_num": 436546,
+  "L2C_pref_late_num": 24734,
+  "L2C_origin_miss": 2120724
+ },
+ "spec17_gcc_smaller_90500000000": {
+  "L2C_pref_miss": 217414,
+  "L2C_pref_total_num": 828170,
+  "L2C_pref_useless_num": 39947,
+  "L2C_pref_late_num": 12024,
+  "L2C_origin_miss": 727218
+ },
+ "spec17_mcf_ref_174400000000": {
+  "L2C_pref_miss": 780990,
+  "L2C_pref_total_num": 2596702,
+  "L2C_pref_useless_num": 366670,
+  "L2C_pref_late_num": 14029,
+  "L2C_origin_miss": 3124997
+ },
+ "spec17_mcf_ref_272000000000": {
+  "L2C_pref_miss": 276384,
+  "L2C_pref_total_num": 419544,
+  "L2C_pref_useless_num": 61228,
+  "L2C_pref_late_num": 4956,
+  "L2C_origin_miss": 2358862
+ },
+ "spec17_mcf_ref_334400000000": {
+  "L2C_pref_miss": 489718,
+  "L2C_pref_total_num": 1313939,
+  "L2C_pref_useless_num": 34996,
+  "L2C_pref_late_num": 44175,
+  "L2C_origin_miss": 12675695
+ },
+ "spec17_mcf_ref_345100000000": {
+  "L2C_pref_miss": 272331,
+  "L2C_pref_total_num": 952194,
+  "L2C_pref_useless_num": 136531,
+  "L2C_pref_late_num": 5984,
+  "L2C_origin_miss": 1264850
+ },
+ "spec17_mcf_ref_364800000000": {
+  "L2C_pref_miss": 806830,
+  "L2C_pref_total_num": 430508,
+  "L2C_pref_useless_num": 27674,
+  "L2C_pref_late_num": 20839,
+  "L2C_origin_miss": 3266527
+ },
+ "spec17_mcf_ref_394100000000": {
+  "L2C_pref_miss": 5262014,
+  "L2C_pref_total_num": 1674050,
+  "L2C_pref_useless_num": 293950,
+  "L2C_pref_late_num": 14384,
+  "L2C_origin_miss": 10173740
+ },
+ "spec17_mcf_ref_455800000000": {
+  "L2C_pref_miss": 1238660,
+  "L2C_pref_total_num": 5128420,
+  "L2C_pref_useless_num": 859068,
+  "L2C_pref_late_num": 13242,
+  "L2C_origin_miss": 6759799
+ },
+ "spec17_mcf_ref_464000000000": {
+  "L2C_pref_miss": 1901624,
+  "L2C_pref_total_num": 347494,
+  "L2C_pref_useless_num": 21447,
+  "L2C_pref_late_num": 13164,
+  "L2C_origin_miss": 7488461
+ },
+ "spec17_mcf_ref_486900000000": {
+  "L2C_pref_miss": 719988,
+  "L2C_pref_total_num": 3185346,
+  "L2C_pref_useless_num": 553059,
+  "L2C_pref_late_num": 10387,
+  "L2C_origin_miss": 4307197
+ },
+ "spec17_mcf_ref_524500000000": {
+  "L2C_pref_miss": 747203,
+  "L2C_pref_total_num": 685822,
+  "L2C_pref_useless_num": 53980,
+  "L2C_pref_late_num": 39587,
+  "L2C_origin_miss": 4857613
+ },
+ "spec17_mcf_ref_548100000000": {
+  "L2C_pref_miss": 1340311,
+  "L2C_pref_total_num": 5899327,
+  "L2C_pref_useless_num": 1041609,
+  "L2C_pref_late_num": 8191,
+  "L2C_origin_miss": 9313053
+ },
+ "spec17_mcf_ref_560000000000": {
+  "L2C_pref_miss": 164089,
+  "L2C_pref_total_num": 561225,
+  "L2C_pref_useless_num": 77197,
+  "L2C_pref_late_num": 6119,
+  "L2C_origin_miss": 877465
+ },
+ "spec17_mcf_ref_582300000000": {
+  "L2C_pref_miss": 518562,
+  "L2C_pref_total_num": 536191,
+  "L2C_pref_useless_num": 15336,
+  "L2C_pref_late_num": 15904,
+  "L2C_origin_miss": 7783738
+ },
+ "spec17_mcf_ref_673700000000": {
+  "L2C_pref_miss": 112318,
+  "L2C_pref_total_num": 90667,
+  "L2C_pref_useless_num": 4661,
+  "L2C_pref_late_num": 4577,
+  "L2C_origin_miss": 13642948
+ },
+ "spec17_mcf_ref_772000000000": {
+  "L2C_pref_miss": 414930,
+  "L2C_pref_total_num": 1547755,
+  "L2C_pref_useless_num": 222284,
+  "L2C_pref_late_num": 13473,
+  "L2C_origin_miss": 2182164
+ },
+ "spec17_mcf_ref_779700000000": {
+  "L2C_pref_miss": 359548,
+  "L2C_pref_total_num": 45525,
+  "L2C_pref_useless_num": 541,
+  "L2C_pref_late_num": 3990,
+  "L2C_origin_miss": 3688520
+ },
+ "spec17_mcf_ref_825200000000": {
+  "L2C_pref_miss": 1979667,
+  "L2C_pref_total_num": 8700648,
+  "L2C_pref_useless_num": 2850204,
+  "L2C_pref_late_num": 68943,
+  "L2C_origin_miss": 2171341
+ },
+ "spec17_mcf_ref_850800000000": {
+  "L2C_pref_miss": 199088,
+  "L2C_pref_total_num": 607258,
+  "L2C_pref_useless_num": 76860,
+  "L2C_pref_late_num": 10001,
+  "L2C_origin_miss": 938196
+ },
+ "spec17_omnetpp_ref_1108300000000": {
+  "L2C_pref_miss": 440742,
+  "L2C_pref_total_num": 1678517,
+  "L2C_pref_useless_num": 179121,
+  "L2C_pref_late_num": 16243,
+  "L2C_origin_miss": 913327
+ },
+ "spec17_omnetpp_ref_1137200000000": {
+  "L2C_pref_miss": 1268,
+  "L2C_pref_total_num": 5503,
+  "L2C_pref_useless_num": 0,
+  "L2C_pref_late_num": 16,
+  "L2C_origin_miss": 7333
+ },
+ "spec17_omnetpp_ref_1137800000000": {
+  "L2C_pref_miss": 752085,
+  "L2C_pref_total_num": 962998,
+  "L2C_pref_useless_num": 289941,
+  "L2C_pref_late_num": 8035,
+  "L2C_origin_miss": 929679
+ },
+ "spec17_omnetpp_ref_1138100000000": {
+  "L2C_pref_miss": 294734,
+  "L2C_pref_total_num": 49954,
+  "L2C_pref_useless_num": 8092,
+  "L2C_pref_late_num": 597,
+  "L2C_origin_miss": 332246
+ },
+ "spec17_omnetpp_ref_120000000000": {
+  "L2C_pref_miss": 674339,
+  "L2C_pref_total_num": 2809551,
+  "L2C_pref_useless_num": 596204,
+  "L2C_pref_late_num": 19571,
+  "L2C_origin_miss": 967655
+ },
+ "spec17_omnetpp_ref_1900000000": {
+  "L2C_pref_miss": 10314,
+  "L2C_pref_total_num": 29120,
+  "L2C_pref_useless_num": 26,
+  "L2C_pref_late_num": 778,
+  "L2C_origin_miss": 41042
+ },
+ "spec17_omnetpp_ref_250200000000": {
+  "L2C_pref_miss": 569745,
+  "L2C_pref_total_num": 2040007,
+  "L2C_pref_useless_num": 319003,
+  "L2C_pref_late_num": 18807,
+  "L2C_origin_miss": 938433
+ },
+ "spec17_omnetpp_ref_4300000000": {
+  "L2C_pref_miss": 324793,
+  "L2C_pref_total_num": 1845974,
+  "L2C_pref_useless_num": 298364,
+  "L2C_pref_late_num": 6570,
+  "L2C_origin_miss": 631036
+ },
+ "spec17_omnetpp_ref_714600000000": {
+  "L2C_pref_miss": 456571,
+  "L2C_pref_total_num": 1661886,
+  "L2C_pref_useless_num": 192032,
+  "L2C_pref_late_num": 15106,
+  "L2C_origin_miss": 888406
+ },
+ "spec17_omnetpp_ref_824100000000": {
+  "L2C_pref_miss": 515793,
+  "L2C_pref_total_num": 1356895,
+  "L2C_pref_useless_num": 188158,
+  "L2C_pref_late_num": 17125,
+  "L2C_origin_miss": 905432
+ },
+ "spec17_omnetpp_ref_829700000000": {
+  "L2C_pref_miss": 539599,
+  "L2C_pref_total_num": 1149490,
+  "L2C_pref_useless_num": 138665,
+  "L2C_pref_late_num": 14327,
+  "L2C_origin_miss": 869782
+ },
+ "spec17_omnetpp_ref_902600000000": {
+  "L2C_pref_miss": 490989,
+  "L2C_pref_total_num": 1503998,
+  "L2C_pref_useless_num": 191894,
+  "L2C_pref_late_num": 16001,
+  "L2C_origin_miss": 887956
+ },
+ "spec17_omnetpp_ref_9300000000": {
+  "L2C_pref_miss": 673551,
+  "L2C_pref_total_num": 2868263,
+  "L2C_pref_useless_num": 551661,
+  "L2C_pref_late_num": 16501,
+  "L2C_origin_miss": 1011998
+ },
+ "spec17_omnetpp_ref_960700000000": {
+  "L2C_pref_miss": 484126,
+  "L2C_pref_total_num": 1513447,
+  "L2C_pref_useless_num": 197879,
+  "L2C_pref_late_num": 15453,
+  "L2C_origin_miss": 899711
+ },
+ "spec17_roms_ref_1039400000000": {
+  "L2C_pref_miss": 45301,
+  "L2C_pref_total_num": 71127,
+  "L2C_pref_useless_num": 900,
+  "L2C_pref_late_num": 6567,
+  "L2C_origin_miss": 569682
+ },
+ "spec17_roms_ref_1298300000000": {
+  "L2C_pref_miss": 32623,
+  "L2C_pref_total_num": 68322,
+  "L2C_pref_useless_num": 1344,
+  "L2C_pref_late_num": 261,
+  "L2C_origin_miss": 523862
+ },
+ "spec17_roms_ref_1453100000000": {
+  "L2C_pref_miss": 31311,
+  "L2C_pref_total_num": 47580,
+  "L2C_pref_useless_num": 1682,
+  "L2C_pref_late_num": 651,
+  "L2C_origin_miss": 680509
+ },
+ "spec17_roms_ref_1652200000000": {
+  "L2C_pref_miss": 16208,
+  "L2C_pref_total_num": 134059,
+  "L2C_pref_useless_num": 2451,
+  "L2C_pref_late_num": 225,
+  "L2C_origin_miss": 494886
+ },
+ "spec17_roms_ref_1685700000000": {
+  "L2C_pref_miss": 213415,
+  "L2C_pref_total_num": 55498,
+  "L2C_pref_useless_num": 347,
+  "L2C_pref_late_num": 3038,
+  "L2C_origin_miss": 1072003
+ },
+ "spec17_roms_ref_1818800000000": {
+  "L2C_pref_miss": 16573,
+  "L2C_pref_total_num": 72388,
+  "L2C_pref_useless_num": 2200,
+  "L2C_pref_late_num": 207,
+  "L2C_origin_miss": 453736
+ },
+ "spec17_roms_ref_1864800000000": {
+  "L2C_pref_miss": 31243,
+  "L2C_pref_total_num": 71663,
+  "L2C_pref_useless_num": 2555,
+  "L2C_pref_late_num": 1919,
+  "L2C_origin_miss": 951444
+ },
+ "spec17_roms_ref_1936100000000": {
+  "L2C_pref_miss": 16821,
+  "L2C_pref_total_num": 224663,
+  "L2C_pref_useless_num": 609,
+  "L2C_pref_late_num": 3103,
+  "L2C_origin_miss": 601050
+ },
+ "spec17_roms_ref_2184400000000": {
+  "L2C_pref_miss": 22910,
+  "L2C_pref_total_num": 1185657,
+  "L2C_pref_useless_num": 2142,
+  "L2C_pref_late_num": 1033,
+  "L2C_origin_miss": 1194899
+ },
+ "spec17_roms_ref_2276000000000": {
+  "L2C_pref_miss": 5131,
+  "L2C_pref_total_num": 49944,
+  "L2C_pref_useless_num": 792,
+  "L2C_pref_late_num": 67,
+  "L2C_origin_miss": 223514
+ },
+ "spec17_roms_ref_2278400000000": {
+  "L2C_pref_miss": 136261,
+  "L2C_pref_total_num": 172645,
+  "L2C_pref_useless_num": 4234,
+  "L2C_pref_late_num": 4281,
+  "L2C_origin_miss": 773911
+ },
+ "spec17_roms_ref_2364400000000": {
+  "L2C_pref_miss": 65507,
+  "L2C_pref_total_num": 16640,
+  "L2C_pref_useless_num": 172,
+  "L2C_pref_late_num": 2524,
+  "L2C_origin_miss": 214610
+ },
+ "spec17_roms_ref_2383700000000": {
+  "L2C_pref_miss": 201901,
+  "L2C_pref_total_num": 1725958,
+  "L2C_pref_useless_num": 65634,
+  "L2C_pref_late_num": 56798,
+  "L2C_origin_miss": 1418290
+ },
+ "spec17_roms_ref_2733900000000": {
+  "L2C_pref_miss": 306771,
+  "L2C_pref_total_num": 1448696,
+  "L2C_pref_useless_num": 39703,
+  "L2C_pref_late_num": 46996,
+  "L2C_origin_miss": 1447996
+ },
+ "spec17_roms_ref_3250500000000": {
+  "L2C_pref_miss": 15868,
+  "L2C_pref_total_num": 73446,
+  "L2C_pref_useless_num": 1116,
+  "L2C_pref_late_num": 446,
+  "L2C_origin_miss": 340646
+ },
+ "spec17_roms_ref_3296300000000": {
+  "L2C_pref_miss": 8063,
+  "L2C_pref_total_num": 9459,
+  "L2C_pref_useless_num": 4,
+  "L2C_pref_late_num": 0,
+  "L2C_origin_miss": 17579
+ },
+ "spec17_roms_ref_3325000000000": {
+  "L2C_pref_miss": 142992,
+  "L2C_pref_total_num": 55137,
+  "L2C_pref_useless_num": 524,
+  "L2C_pref_late_num": 1029,
+  "L2C_origin_miss": 356109
+ },
+ "spec17_roms_ref_3409000000000": {
+  "L2C_pref_miss": 87728,
+  "L2C_pref_total_num": 67583,
+  "L2C_pref_useless_num": 1875,
+  "L2C_pref_late_num": 1308,
+  "L2C_origin_miss": 848461
+ },
+ "spec17_roms_ref_3458800000000": {
+  "L2C_pref_miss": 45638,
+  "L2C_pref_total_num": 1457100,
+  "L2C_pref_useless_num": 822,
+  "L2C_pref_late_num": 2460,
+  "L2C_origin_miss": 1118092
+ },
+ "spec17_roms_ref_3592900000000": {
+  "L2C_pref_miss": 111771,
+  "L2C_pref_total_num": 150711,
+  "L2C_pref_useless_num": 920,
+  "L2C_pref_late_num": 17627,
+  "L2C_origin_miss": 461639
+ },
+ "spec17_roms_ref_521500000000": {
+  "L2C_pref_miss": 137338,
+  "L2C_pref_total_num": 646982,
+  "L2C_pref_useless_num": 1218,
+  "L2C_pref_late_num": 2911,
+  "L2C_origin_miss": 947418
+ },
+ "spec17_roms_ref_56800000000": {
+  "L2C_pref_miss": 290883,
+  "L2C_pref_total_num": 44036,
+  "L2C_pref_useless_num": 2748,
+  "L2C_pref_late_num": 305,
+  "L2C_origin_miss": 669223
+ },
+ "spec17_roms_ref_752400000000": {
+  "L2C_pref_miss": 22591,
+  "L2C_pref_total_num": 18666,
+  "L2C_pref_useless_num": 705,
+  "L2C_pref_late_num": 347,
+  "L2C_origin_miss": 407193
+ },
+ "spec17_roms_ref_767900000000": {
+  "L2C_pref_miss": 183790,
+  "L2C_pref_total_num": 578949,
+  "L2C_pref_useless_num": 2951,
+  "L2C_pref_late_num": 11189,
+  "L2C_origin_miss": 900017
+ },
+ "spec17_roms_ref_852700000000": {
+  "L2C_pref_miss": 57821,
+  "L2C_pref_total_num": 110761,
+  "L2C_pref_useless_num": 2912,
+  "L2C_pref_late_num": 2288,
+  "L2C_origin_miss": 783191
+ },
+ "spec17_roms_ref_894700000000": {
+  "L2C_pref_miss": 14572,
+  "L2C_pref_total_num": 79409,
+  "L2C_pref_useless_num": 1106,
+  "L2C_pref_late_num": 386,
+  "L2C_origin_miss": 472839
+ },
+ "spec17_roms_ref_92400000000": {
+  "L2C_pref_miss": 84751,
+  "L2C_pref_total_num": 438620,
+  "L2C_pref_useless_num": 1243,
+  "L2C_pref_late_num": 9232,
+  "L2C_origin_miss": 816591
+ },
+ "spec17_roms_ref_962700000000": {
+  "L2C_pref_miss": 305509,
+  "L2C_pref_total_num": 1570442,
+  "L2C_pref_useless_num": 57396,
+  "L2C_pref_late_num": 53853,
+  "L2C_origin_miss": 1425761
+ },
+ "spec17_wrf_ref_1500300000000": {
+  "L2C_pref_miss": 53455,
+  "L2C_pref_total_num": 10391,
+  "L2C_pref_useless_num": 1724,
+  "L2C_pref_late_num": 853,
+  "L2C_origin_miss": 159692
+ },
+ "spec17_wrf_ref_1515100000000": {
+  "L2C_pref_miss": 108856,
+  "L2C_pref_total_num": 332247,
+  "L2C_pref_useless_num": 4709,
+  "L2C_pref_late_num": 5419,
+  "L2C_origin_miss": 591529
+ },
+ "spec17_wrf_ref_1517600000000": {
+  "L2C_pref_miss": 121145,
+  "L2C_pref_total_num": 950800,
+  "L2C_pref_useless_num": 18934,
+  "L2C_pref_late_num": 13323,
+  "L2C_origin_miss": 907072
+ },
+ "spec17_wrf_ref_1615600000000": {
+  "L2C_pref_miss": 113539,
+  "L2C_pref_total_num": 787141,
+  "L2C_pref_useless_num": 13354,
+  "L2C_pref_late_num": 9526,
+  "L2C_origin_miss": 775554
+ },
+ "spec17_wrf_ref_164800000000": {
+  "L2C_pref_miss": 156047,
+  "L2C_pref_total_num": 492644,
+  "L2C_pref_useless_num": 13900,
+  "L2C_pref_late_num": 9365,
+  "L2C_origin_miss": 714186
+ },
+ "spec17_wrf_ref_1968600000000": {
+  "L2C_pref_miss": 5272,
+  "L2C_pref_total_num": 8466,
+  "L2C_pref_useless_num": 521,
+  "L2C_pref_late_num": 178,
+  "L2C_origin_miss": 5085
+ },
+ "spec17_wrf_ref_2039100000000": {
+  "L2C_pref_miss": 138355,
+  "L2C_pref_total_num": 352140,
+  "L2C_pref_useless_num": 9218,
+  "L2C_pref_late_num": 29883,
+  "L2C_origin_miss": 660303
+ },
+ "spec17_wrf_ref_2346000000000": {
+  "L2C_pref_miss": 94103,
+  "L2C_pref_total_num": 407026,
+  "L2C_pref_useless_num": 8245,
+  "L2C_pref_late_num": 1850,
+  "L2C_origin_miss": 550862
+ },
+ "spec17_wrf_ref_2434300000000": {
+  "L2C_pref_miss": 69734,
+  "L2C_pref_total_num": 274313,
+  "L2C_pref_useless_num": 2925,
+  "L2C_pref_late_num": 1665,
+  "L2C_origin_miss": 447691
+ },
+ "spec17_wrf_ref_294600000000": {
+  "L2C_pref_miss": 388,
+  "L2C_pref_total_num": 133,
+  "L2C_pref_useless_num": 0,
+  "L2C_pref_late_num": 0,
+  "L2C_origin_miss": 1541
+ },
+ "spec17_wrf_ref_3069500000000": {
+  "L2C_pref_miss": 150984,
+  "L2C_pref_total_num": 702511,
+  "L2C_pref_useless_num": 15754,
+  "L2C_pref_late_num": 9140,
+  "L2C_origin_miss": 765857
+ },
+ "spec17_wrf_ref_3322600000000": {
+  "L2C_pref_miss": 158615,
+  "L2C_pref_total_num": 544937,
+  "L2C_pref_useless_num": 11251,
+  "L2C_pref_late_num": 17775,
+  "L2C_origin_miss": 744240
+ },
+ "spec17_wrf_ref_3534300000000": {
+  "L2C_pref_miss": 26987,
+  "L2C_pref_total_num": 396616,
+  "L2C_pref_useless_num": 4103,
+  "L2C_pref_late_num": 3259,
+  "L2C_origin_miss": 456776
+ },
+ "spec17_wrf_ref_3813200000000": {
+  "L2C_pref_miss": 205070,
+  "L2C_pref_total_num": 482090,
+  "L2C_pref_useless_num": 13384,
+  "L2C_pref_late_num": 9707,
+  "L2C_origin_miss": 778295
+ },
+ "spec17_wrf_ref_392600000000": {
+  "L2C_pref_miss": 117508,
+  "L2C_pref_total_num": 219099,
+  "L2C_pref_useless_num": 4317,
+  "L2C_pref_late_num": 13110,
+  "L2C_origin_miss": 552385
+ },
+ "spec17_wrf_ref_4017300000000": {
+  "L2C_pref_miss": 147655,
+  "L2C_pref_total_num": 344102,
+  "L2C_pref_useless_num": 6179,
+  "L2C_pref_late_num": 11896,
+  "L2C_origin_miss": 883641
+ },
+ "spec17_wrf_ref_408600000000": {
+  "L2C_pref_miss": 3049,
+  "L2C_pref_total_num": 5825,
+  "L2C_pref_useless_num": 0,
+  "L2C_pref_late_num": 14,
+  "L2C_origin_miss": 23663
+ },
+ "spec17_wrf_ref_4205300000000": {
+  "L2C_pref_miss": 62953,
+  "L2C_pref_total_num": 318608,
+  "L2C_pref_useless_num": 8011,
+  "L2C_pref_late_num": 2803,
+  "L2C_origin_miss": 493840
+ },
+ "spec17_wrf_ref_4230000000000": {
+  "L2C_pref_miss": 66032,
+  "L2C_pref_total_num": 607764,
+  "L2C_pref_useless_num": 4406,
+  "L2C_pref_late_num": 1965,
+  "L2C_origin_miss": 559262
+ },
+ "spec17_wrf_ref_4343200000000": {
+  "L2C_pref_miss": 1197,
+  "L2C_pref_total_num": 17,
+  "L2C_pref_useless_num": 0,
+  "L2C_pref_late_num": 0,
+  "L2C_origin_miss": 1271
+ },
+ "spec17_wrf_ref_693200000000": {
+  "L2C_pref_miss": 61141,
+  "L2C_pref_total_num": 28351,
+  "L2C_pref_useless_num": 418,
+  "L2C_pref_late_num": 3294,
+  "L2C_origin_miss": 227259
+ },
+ "spec17_wrf_ref_71800000000": {
+  "L2C_pref_miss": 228697,
+  "L2C_pref_total_num": 518231,
+  "L2C_pref_useless_num": 16346,
+  "L2C_pref_late_num": 10505,
+  "L2C_origin_miss": 811200
+ },
+ "spec17_wrf_ref_913300000000": {
+  "L2C_pref_miss": 176090,
+  "L2C_pref_total_num": 416959,
+  "L2C_pref_useless_num": 4859,
+  "L2C_pref_late_num": 11916,
+  "L2C_origin_miss": 633953
+ },
+ "spec17_xalancbmk_ref_122200000000": {
+  "L2C_pref_miss": 180582,
+  "L2C_pref_total_num": 6819270,
+  "L2C_pref_useless_num": 107533,
+  "L2C_pref_late_num": 4435,
+  "L2C_origin_miss": 3560828
+ },
+ "spec17_xalancbmk_ref_16400000000": {
+  "L2C_pref_miss": 104786,
+  "L2C_pref_total_num": 5813692,
+  "L2C_pref_useless_num": 5137,
+  "L2C_pref_late_num": 2541,
+  "L2C_origin_miss": 3126102
+ },
+ "spec17_xalancbmk_ref_327900000000": {
+  "L2C_pref_miss": 15075,
+  "L2C_pref_total_num": 36628,
+  "L2C_pref_useless_num": 1910,
+  "L2C_pref_late_num": 737,
+  "L2C_origin_miss": 30197
+ },
+ "spec17_xalancbmk_ref_352700000000": {
+  "L2C_pref_miss": 4703,
+  "L2C_pref_total_num": 44344,
+  "L2C_pref_useless_num": 2271,
+  "L2C_pref_late_num": 160,
+  "L2C_origin_miss": 28270
+ },
+ "spec17_xalancbmk_ref_399100000000": {
+  "L2C_pref_miss": 23891,
+  "L2C_pref_total_num": 72348,
+  "L2C_pref_useless_num": 7473,
+  "L2C_pref_late_num": 1749,
+  "L2C_origin_miss": 47826
+ },
+ "spec17_xalancbmk_ref_44000000000": {
+  "L2C_pref_miss": 110662,
+  "L2C_pref_total_num": 4982989,
+  "L2C_pref_useless_num": 31688,
+  "L2C_pref_late_num": 1879,
+  "L2C_origin_miss": 2699214
+ },
+ "spec17_xalancbmk_ref_444900000000": {
+  "L2C_pref_miss": 5648,
+  "L2C_pref_total_num": 15087,
+  "L2C_pref_useless_num": 704,
+  "L2C_pref_late_num": 475,
+  "L2C_origin_miss": 14218
+ },
+ "spec17_xalancbmk_ref_479500000000": {
+  "L2C_pref_miss": 20950,
+  "L2C_pref_total_num": 18221,
+  "L2C_pref_useless_num": 62,
+  "L2C_pref_late_num": 264,
+  "L2C_origin_miss": 40285
+ },
+ "spec17_xalancbmk_ref_494100000000": {
+  "L2C_pref_miss": 13849,
+  "L2C_pref_total_num": 29038,
+  "L2C_pref_useless_num": 1400,
+  "L2C_pref_late_num": 654,
+  "L2C_origin_miss": 28114
+ },
+ "spec17_xalancbmk_ref_512100000000": {
+  "L2C_pref_miss": 19897,
+  "L2C_pref_total_num": 32973,
+  "L2C_pref_useless_num": 3944,
+  "L2C_pref_late_num": 1016,
+  "L2C_origin_miss": 31466
+ },
+ "spec17_xalancbmk_ref_535700000000": {
+  "L2C_pref_miss": 13219,
+  "L2C_pref_total_num": 22964,
+  "L2C_pref_useless_num": 340,
+  "L2C_pref_late_num": 890,
+  "L2C_origin_miss": 27823
+ },
+ "spec17_xalancbmk_ref_585600000000": {
+  "L2C_pref_miss": 42490,
+  "L2C_pref_total_num": 91711,
+  "L2C_pref_useless_num": 12150,
+  "L2C_pref_late_num": 6434,
+  "L2C_origin_miss": 46981
+ },
+ "spec17_xalancbmk_ref_604400000000": {
+  "L2C_pref_miss": 22868,
+  "L2C_pref_total_num": 59963,
+  "L2C_pref_useless_num": 6807,
+  "L2C_pref_late_num": 2383,
+  "L2C_origin_miss": 40484
+ },
+ "spec17_xalancbmk_ref_665600000000": {
+  "L2C_pref_miss": 5355,
+  "L2C_pref_total_num": 18432,
+  "L2C_pref_useless_num": 444,
+  "L2C_pref_late_num": 314,
+  "L2C_origin_miss": 18404
+ },
+ "spec17_xalancbmk_ref_713600000000": {
+  "L2C_pref_miss": 2861,
+  "L2C_pref_total_num": 9995,
+  "L2C_pref_useless_num": 354,
+  "L2C_pref_late_num": 315,
+  "L2C_origin_miss": 8419
+ },
+ "spec17_xalancbmk_ref_766300000000": {
+  "L2C_pref_miss": 32645,
+  "L2C_pref_total_num": 72151,
+  "L2C_pref_useless_num": 6487,
+  "L2C_pref_late_num": 3026,
+  "L2C_origin_miss": 52633
+ },
+ "spec17_xalancbmk_ref_840800000000": {
+  "L2C_pref_miss": 15896,
+  "L2C_pref_total_num": 23177,
+  "L2C_pref_useless_num": 427,
+  "L2C_pref_late_num": 450,
+  "L2C_origin_miss": 34879
+ }
+}

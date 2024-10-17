@@ -1,0 +1,417 @@
+{
+ "misb-md-conflict_health_5-500-1_0": {
+  "metadata_conf_change": 17863874,
+  "metadata_conf_same": 3214215,
+  "metadata_num": 21078089
+ },
+ "misb-md-conflict_listinsert_32pad0-192k_0": {
+  "metadata_conf_change": 13158222,
+  "metadata_conf_same": 4847787,
+  "metadata_num": 18006009
+ },
+ "misb-md-conflict_listinsert_32pad3-192k_0": {
+  "metadata_conf_change": 21873008,
+  "metadata_conf_same": 5140097,
+  "metadata_num": 27013105
+ },
+ "misb-md-conflict_llu_32pad0-192k_0": {
+  "metadata_conf_change": 15415371,
+  "metadata_conf_same": 11968383,
+  "metadata_num": 27383754
+ },
+ "misb-md-conflict_llu_32pad0-192k_100000000": {
+  "metadata_conf_change": 15180294,
+  "metadata_conf_same": 12462194,
+  "metadata_num": 27642488
+ },
+ "misb-md-conflict_llu_32pad0-192k_200000000": {
+  "metadata_conf_change": 12148537,
+  "metadata_conf_same": 7404922,
+  "metadata_num": 19553459
+ },
+ "misb-md-conflict_llu_32pad3-192k_0": {
+  "metadata_conf_change": 22658010,
+  "metadata_conf_same": 8605209,
+  "metadata_num": 31263219
+ },
+ "misb-md-conflict_llu_32pad3-192k_100000000": {
+  "metadata_conf_change": 23090187,
+  "metadata_conf_same": 8450028,
+  "metadata_num": 31540215
+ },
+ "misb-md-conflict_llu_32pad3-192k_200000000": {
+  "metadata_conf_change": 16059848,
+  "metadata_conf_same": 6188339,
+  "metadata_num": 22248187
+ },
+ "misb-md-conflict_spec00_mcf_ref_0": {
+  "metadata_conf_change": 42013,
+  "metadata_conf_same": 38529,
+  "metadata_num": 80542
+ },
+ "misb-md-conflict_spec00_mcf_ref_10000000000": {
+  "metadata_conf_change": 9010458,
+  "metadata_conf_same": 4320486,
+  "metadata_num": 13330944
+ },
+ "misb-md-conflict_spec00_mcf_ref_1600000000": {
+  "metadata_conf_change": 15447773,
+  "metadata_conf_same": 5032261,
+  "metadata_num": 20480034
+ },
+ "misb-md-conflict_spec00_mcf_ref_18900000000": {
+  "metadata_conf_change": 16250732,
+  "metadata_conf_same": 4647828,
+  "metadata_num": 20898560
+ },
+ "misb-md-conflict_spec00_mcf_ref_20900000000": {
+  "metadata_conf_change": 16684649,
+  "metadata_conf_same": 8316706,
+  "metadata_num": 25001355
+ },
+ "misb-md-conflict_spec00_mcf_ref_21500000000": {
+  "metadata_conf_change": 10328750,
+  "metadata_conf_same": 7230131,
+  "metadata_num": 17558881
+ },
+ "misb-md-conflict_spec00_mcf_ref_23600000000": {
+  "metadata_conf_change": 16057371,
+  "metadata_conf_same": 4823035,
+  "metadata_num": 20880406
+ },
+ "misb-md-conflict_spec00_mcf_ref_24200000000": {
+  "metadata_conf_change": 17311100,
+  "metadata_conf_same": 8091929,
+  "metadata_num": 25403029
+ },
+ "misb-md-conflict_spec00_mcf_ref_28400000000": {
+  "metadata_conf_change": 19149751,
+  "metadata_conf_same": 8202529,
+  "metadata_num": 27352280
+ },
+ "misb-md-conflict_spec00_mcf_ref_3100000000": {
+  "metadata_conf_change": 17090141,
+  "metadata_conf_same": 5338456,
+  "metadata_num": 22428597
+ },
+ "misb-md-conflict_spec00_mcf_ref_31100000000": {
+  "metadata_conf_change": 15870577,
+  "metadata_conf_same": 5065169,
+  "metadata_num": 20935746
+ },
+ "misb-md-conflict_spec00_mcf_ref_32200000000": {
+  "metadata_conf_change": 9883212,
+  "metadata_conf_same": 11013119,
+  "metadata_num": 20896331
+ },
+ "misb-md-conflict_spec00_mcf_ref_32700000000": {
+  "metadata_conf_change": 10834308,
+  "metadata_conf_same": 13365032,
+  "metadata_num": 24199340
+ },
+ "misb-md-conflict_spec00_mcf_ref_34800000000": {
+  "metadata_conf_change": 14736846,
+  "metadata_conf_same": 7431184,
+  "metadata_num": 22168030
+ },
+ "misb-md-conflict_spec00_mcf_ref_6000000000": {
+  "metadata_conf_change": 17478830,
+  "metadata_conf_same": 5461748,
+  "metadata_num": 22940578
+ },
+ "misb-md-conflict_spec00_mcf_ref_700000000": {
+  "metadata_conf_change": 12829865,
+  "metadata_conf_same": 5535849,
+  "metadata_num": 18365714
+ },
+ "misb-md-conflict_spec00_mcf_ref_9400000000": {
+  "metadata_conf_change": 18551004,
+  "metadata_conf_same": 5972674,
+  "metadata_num": 24523678
+ },
+ "misb-md-conflict_spec06_gcc_166_1900000000": {
+  "metadata_conf_change": 805783,
+  "metadata_conf_same": 228137,
+  "metadata_num": 1033920
+ },
+ "misb-md-conflict_spec06_gcc_166_19000000000": {
+  "metadata_conf_change": 2488380,
+  "metadata_conf_same": 2036898,
+  "metadata_num": 4525278
+ },
+ "misb-md-conflict_spec06_gcc_166_27700000000": {
+  "metadata_conf_change": 1808480,
+  "metadata_conf_same": 1652740,
+  "metadata_num": 3461220
+ },
+ "misb-md-conflict_spec06_gcc_166_29900000000": {
+  "metadata_conf_change": 1655249,
+  "metadata_conf_same": 518090,
+  "metadata_num": 2173339
+ },
+ "misb-md-conflict_spec06_gcc_166_31100000000": {
+  "metadata_conf_change": 6353904,
+  "metadata_conf_same": 3683490,
+  "metadata_num": 10037394
+ },
+ "misb-md-conflict_spec06_gcc_166_3300000000": {
+  "metadata_conf_change": 245686,
+  "metadata_conf_same": 3002823,
+  "metadata_num": 3248509
+ },
+ "misb-md-conflict_spec06_gcc_166_33400000000": {
+  "metadata_conf_change": 3393436,
+  "metadata_conf_same": 1761952,
+  "metadata_num": 5155388
+ },
+ "misb-md-conflict_spec06_gcc_166_33600000000": {
+  "metadata_conf_change": 2165623,
+  "metadata_conf_same": 3474386,
+  "metadata_num": 5640009
+ },
+ "misb-md-conflict_spec06_gcc_166_33900000000": {
+  "metadata_conf_change": 3107745,
+  "metadata_conf_same": 1428498,
+  "metadata_num": 4536243
+ },
+ "misb-md-conflict_spec06_gcc_166_3700000000": {
+  "metadata_conf_change": 1280060,
+  "metadata_conf_same": 466326,
+  "metadata_num": 1746386
+ },
+ "misb-md-conflict_spec06_gcc_166_41000000000": {
+  "metadata_conf_change": 3837332,
+  "metadata_conf_same": 1358850,
+  "metadata_num": 5196182
+ },
+ "misb-md-conflict_spec06_gcc_166_41500000000": {
+  "metadata_conf_change": 1085978,
+  "metadata_conf_same": 724849,
+  "metadata_num": 1810827
+ },
+ "misb-md-conflict_spec06_gcc_166_42300000000": {
+  "metadata_conf_change": 4232523,
+  "metadata_conf_same": 2122245,
+  "metadata_num": 6354768
+ },
+ "misb-md-conflict_spec06_gcc_166_43300000000": {
+  "metadata_conf_change": 3681240,
+  "metadata_conf_same": 1519146,
+  "metadata_num": 5200386
+ },
+ "misb-md-conflict_spec06_gcc_166_49300000000": {
+  "metadata_conf_change": 2908441,
+  "metadata_conf_same": 2709629,
+  "metadata_num": 5618070
+ },
+ "misb-md-conflict_spec06_gcc_166_5500000000": {
+  "metadata_conf_change": 3791090,
+  "metadata_conf_same": 556105,
+  "metadata_num": 4347195
+ },
+ "misb-md-conflict_spec06_gcc_166_57700000000": {
+  "metadata_conf_change": 12622098,
+  "metadata_conf_same": 2956590,
+  "metadata_num": 15578688
+ },
+ "misb-md-conflict_spec06_gcc_166_60200000000": {
+  "metadata_conf_change": 1198232,
+  "metadata_conf_same": 964866,
+  "metadata_num": 2163098
+ },
+ "misb-md-conflict_spec06_gcc_g23_103800000000": {
+  "metadata_conf_change": 13353996,
+  "metadata_conf_same": 2389681,
+  "metadata_num": 15743677
+ },
+ "misb-md-conflict_spec06_gcc_g23_114000000000": {
+  "metadata_conf_change": 1664702,
+  "metadata_conf_same": 561164,
+  "metadata_num": 2225866
+ },
+ "misb-md-conflict_spec06_gcc_g23_120700000000": {
+  "metadata_conf_change": 1800673,
+  "metadata_conf_same": 268354,
+  "metadata_num": 2069027
+ },
+ "misb-md-conflict_spec06_gcc_g23_13200000000": {
+  "metadata_conf_change": 2699816,
+  "metadata_conf_same": 2415546,
+  "metadata_num": 5115362
+ },
+ "misb-md-conflict_spec06_gcc_g23_145600000000": {
+  "metadata_conf_change": 1782257,
+  "metadata_conf_same": 195996,
+  "metadata_num": 1978253
+ },
+ "misb-md-conflict_spec06_gcc_g23_145900000000": {
+  "metadata_conf_change": 1764556,
+  "metadata_conf_same": 180522,
+  "metadata_num": 1945078
+ },
+ "misb-md-conflict_spec06_gcc_g23_154500000000": {
+  "metadata_conf_change": 3320371,
+  "metadata_conf_same": 1694767,
+  "metadata_num": 5015138
+ },
+ "misb-md-conflict_spec06_gcc_g23_154600000000": {
+  "metadata_conf_change": 3039977,
+  "metadata_conf_same": 2855901,
+  "metadata_num": 5895878
+ },
+ "misb-md-conflict_spec06_gcc_g23_29500000000": {
+  "metadata_conf_change": 2115058,
+  "metadata_conf_same": 2353468,
+  "metadata_num": 4468526
+ },
+ "misb-md-conflict_spec06_gcc_g23_35200000000": {
+  "metadata_conf_change": 5318233,
+  "metadata_conf_same": 745285,
+  "metadata_num": 6063518
+ },
+ "misb-md-conflict_spec06_gcc_g23_38000000000": {
+  "metadata_conf_change": 794691,
+  "metadata_conf_same": 231258,
+  "metadata_num": 1025949
+ },
+ "misb-md-conflict_spec06_gcc_g23_45400000000": {
+  "metadata_conf_change": 366511,
+  "metadata_conf_same": 3106854,
+  "metadata_num": 3473365
+ },
+ "misb-md-conflict_spec06_gcc_g23_46900000000": {
+  "metadata_conf_change": 298225,
+  "metadata_conf_same": 3033936,
+  "metadata_num": 3332161
+ },
+ "misb-md-conflict_spec06_gcc_g23_49700000000": {
+  "metadata_conf_change": 179582,
+  "metadata_conf_same": 508295,
+  "metadata_num": 687877
+ },
+ "misb-md-conflict_spec06_gcc_g23_52200000000": {
+  "metadata_conf_change": 1078471,
+  "metadata_conf_same": 317788,
+  "metadata_num": 1396259
+ },
+ "misb-md-conflict_spec06_gcc_g23_65000000000": {
+  "metadata_conf_change": 3790442,
+  "metadata_conf_same": 267055,
+  "metadata_num": 4057497
+ },
+ "misb-md-conflict_spec06_gcc_g23_76000000000": {
+  "metadata_conf_change": 5720151,
+  "metadata_conf_same": 1479313,
+  "metadata_num": 7199464
+ },
+ "misb-md-conflict_spec06_gcc_g23_93200000000": {
+  "metadata_conf_change": 1179688,
+  "metadata_conf_same": 887461,
+  "metadata_num": 2067149
+ },
+ "misb-md-conflict_spec06_mcf_ref_0": {
+  "metadata_conf_change": 41263,
+  "metadata_conf_same": 118069,
+  "metadata_num": 159332
+ },
+ "misb-md-conflict_spec06_mcf_ref_101600000000": {
+  "metadata_conf_change": 13380548,
+  "metadata_conf_same": 4067326,
+  "metadata_num": 17447874
+ },
+ "misb-md-conflict_spec06_mcf_ref_15500000000": {
+  "metadata_conf_change": 12063993,
+  "metadata_conf_same": 1911781,
+  "metadata_num": 13975774
+ },
+ "misb-md-conflict_spec06_mcf_ref_170300000000": {
+  "metadata_conf_change": 13734998,
+  "metadata_conf_same": 5195392,
+  "metadata_num": 18930390
+ },
+ "misb-md-conflict_spec06_mcf_ref_175500000000": {
+  "metadata_conf_change": 13698044,
+  "metadata_conf_same": 6578431,
+  "metadata_num": 20276475
+ },
+ "misb-md-conflict_spec06_mcf_ref_198000000000": {
+  "metadata_conf_change": 8622608,
+  "metadata_conf_same": 6756799,
+  "metadata_num": 15379407
+ },
+ "misb-md-conflict_spec06_mcf_ref_204300000000": {
+  "metadata_conf_change": 88026,
+  "metadata_conf_same": 32486,
+  "metadata_num": 120512
+ },
+ "misb-md-conflict_spec06_mcf_ref_20600000000": {
+  "metadata_conf_change": 12376765,
+  "metadata_conf_same": 2550119,
+  "metadata_num": 14926884
+ },
+ "misb-md-conflict_spec06_mcf_ref_206800000000": {
+  "metadata_conf_change": 10258744,
+  "metadata_conf_same": 7740851,
+  "metadata_num": 17999595
+ },
+ "misb-md-conflict_spec06_mcf_ref_212700000000": {
+  "metadata_conf_change": 14041013,
+  "metadata_conf_same": 8502611,
+  "metadata_num": 22543624
+ },
+ "misb-md-conflict_spec06_mcf_ref_225300000000": {
+  "metadata_conf_change": 13329768,
+  "metadata_conf_same": 4934114,
+  "metadata_num": 18263882
+ },
+ "misb-md-conflict_spec06_mcf_ref_234000000000": {
+  "metadata_conf_change": 9679058,
+  "metadata_conf_same": 6903645,
+  "metadata_num": 16582703
+ },
+ "misb-md-conflict_spec06_mcf_ref_241400000000": {
+  "metadata_conf_change": 6717757,
+  "metadata_conf_same": 7891523,
+  "metadata_num": 14609280
+ },
+ "misb-md-conflict_spec06_mcf_ref_249300000000": {
+  "metadata_conf_change": 3472491,
+  "metadata_conf_same": 5383578,
+  "metadata_num": 8856069
+ },
+ "misb-md-conflict_spec06_mcf_ref_253400000000": {
+  "metadata_conf_change": 16344554,
+  "metadata_conf_same": 14978667,
+  "metadata_num": 31323221
+ },
+ "misb-md-conflict_spec06_mcf_ref_272200000000": {
+  "metadata_conf_change": 5646397,
+  "metadata_conf_same": 6424326,
+  "metadata_num": 12070723
+ },
+ "misb-md-conflict_spec06_mcf_ref_32000000000": {
+  "metadata_conf_change": 8301471,
+  "metadata_conf_same": 5434681,
+  "metadata_num": 13736152
+ },
+ "misb-md-conflict_spec06_mcf_ref_55300000000": {
+  "metadata_conf_change": 12714608,
+  "metadata_conf_same": 5605671,
+  "metadata_num": 18320279
+ },
+ "misb-md-conflict_spec06_mcf_ref_68200000000": {
+  "metadata_conf_change": 11026498,
+  "metadata_conf_same": 6476687,
+  "metadata_num": 17503185
+ },
+ "misb-md-conflict_treeadd_18-1_0": {
+  "metadata_conf_change": 3212718,
+  "metadata_conf_same": 3184747,
+  "metadata_num": 6397465
+ },
+ "misb-md-conflict_tsp_128000-1_0": {
+  "metadata_conf_change": 17947005,
+  "metadata_conf_same": 1787971,
+  "metadata_num": 19734976
+ }
+}

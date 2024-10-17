@@ -1,0 +1,36 @@
+{
+  "dcache": {
+    "search" : 0,
+    "read" : 0.0177071,
+    "write" : 0.0185831,
+    "leakage" : 18.0784
+  },
+
+  "l2cache": {
+    "search" : 0,
+    "read" : 0.138134,
+    "write" : 0.146124,
+    "leakage" : 318.427
+  },
+
+  "l3cache": {
+    "search" : 0,
+    "read" : 0.324247,
+    "write" : 0.348675,
+    "leakage" : 1273
+  },
+
+  "icache": {
+    "search" : 0,
+    "read" : 0.00962708,
+    "write" : 0.00977985,
+    "leakage" : 15.0739
+  },
+
+  "mem": {
+    "search" : 0,
+    "read" : 8.54944,
+    "write" : 12.9068,
+    "leakage" : 315076
+  }
+}

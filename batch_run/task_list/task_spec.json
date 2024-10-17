@@ -1,0 +1,41 @@
+{
+    "spec06": [
+        "mcf/ref",
+        "soplex/pds",
+        "gcc/166",
+        "gcc/200",
+        "gcc/c-typeck",
+        "gcc/cp-decl",
+        "gcc/expr",
+        "gcc/expr2",
+        "gcc/g23",
+        "gcc/s04",
+        "gcc/scilab",
+        "omnetpp/ref",
+        "astar/lakes",
+        "perlbench/diffmail",
+        "xalancbmk/ref"
+    ],
+
+    "spec00": [
+        "mcf/ref",
+        "vpr1/ref",
+        "parser/ref",
+        "twolf/ref",
+        "ammp/ref"
+    ],
+
+    "spec17": [
+        "mcf/ref",
+        "cactuBSSN/ref",
+        "gcc/pp-O2",
+        "gcc/pp-O3",
+        "gcc/ref32-O3",
+        "gcc/ref32-O5",
+        "gcc/smaller",
+        "omnetpp/ref",
+        "roms/ref",
+        "wrf/ref",
+        "xalancbmk/ref"
+    ]
+}
