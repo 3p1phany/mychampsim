@@ -68,7 +68,7 @@
         "prefetch_as_load": true,
         "virtual_prefetch": true,
         "prefetch_activate": "LOAD,PREFETCH",
-        "prefetcher": "catp",
+        "prefetcher": "no",
         "replacement": "lru",
         "packet_can_merge": false
     },

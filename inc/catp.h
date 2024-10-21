@@ -13,7 +13,7 @@
 
 using namespace std;
 
-#define ENABLE_CATP
+#define nENABLE_CATP
 #define CATP_MAX_ASSOC 16
 #define CATP_METADATA_INTERVAL 30000000
 

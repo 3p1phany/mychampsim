@@ -711,7 +711,7 @@ with open('Makefile', 'wt') as wfp:
     wfp.write('CXXFLAGS := ' + config_file.get('CXXFLAGS', '-Wall -O3') + ' -std=c++17 -g\n')
     wfp.write('CPPFLAGS := ' + config_file.get('CPPFLAGS', '') + ' -Iinc -MMD -MP -Iloongarch -g\n')
     wfp.write('LDFLAGS := ' + config_file.get('LDFLAGS', '') + '\n')
-    wfp.write('LDLIBS := ' + config_file.get('LDLIBS', '') + '-lbf\n')
+    wfp.write('LDLIBS := ' + config_file.get('LDLIBS', '') + '\n')
     wfp.write('\n')
     wfp.write('.phony: all clean\n\n')
     wfp.write('all: ' + config_file['executable_name'] + '\n\n')

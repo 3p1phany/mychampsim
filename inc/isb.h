@@ -21,7 +21,7 @@
 
 #define nISB_ENABLE
 
-#ifdef nISB_ENABLE
+#ifdef ISB_ENABLE
   #define BLOOM_ISB
   //BLOOM_ISB_TRAFFIC_DEBUG
   #ifdef BLOOM_ISB
