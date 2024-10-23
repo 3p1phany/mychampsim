@@ -397,6 +397,7 @@ void reset_cache_stats(uint32_t cpu, CACHE* cache)
 
   cache->pf_requested = 0;
   cache->pf_issued = 0;
+  cache->pf_miss_issued = 0;
   cache->pf_useful = 0;
   cache->pf_useless = 0;
   cache->pf_fill = 0;

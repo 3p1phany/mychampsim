@@ -324,6 +324,8 @@ void CACHE::readlike_hit(std::size_t set, std::size_t way, PACKET& handle_pkt)
     if (hit_block.prefetch) {
         pf_useful++;
         hit_block.prefetch = 0;
+        // For IPCP
+        pref_useful[handle_pkt.cpu][hit_block.pref_type]++;
     }
 }
 
@@ -348,15 +350,20 @@ bool CACHE::readlike_miss(PACKET& handle_pkt)
             if (mshr_entry->pf_origin_level == fill_level){
                 pf_useful++;
                 pf_late++;
+                // For IPCP
+                uint32_t pref_type = (mshr_entry->pf_metadata & 0xF00) >> 8;
+                pref_useful[mshr_entry->cpu][pref_type]++;
             }
 
             uint64_t prior_event_cycle = mshr_entry->event_cycle;
             auto prior_to_return = std::move(mshr_entry->to_return);
+            uint64_t prior_pf_metadata = mshr_entry->pf_metadata;
             *mshr_entry = handle_pkt;
 
             // in case request is already returned, we should keep event_cycle
             mshr_entry->event_cycle = prior_event_cycle;
             mshr_entry->to_return = std::move(prior_to_return);
+            mshr_entry->pf_metadata = prior_pf_metadata;
         }
     } else {
         if (mshr_full){  // not enough MSHR resource
@@ -388,8 +395,12 @@ bool CACHE::readlike_miss(PACKET& handle_pkt)
         else
             lower_level->add_rq(&handle_pkt);
         
-        if(handle_pkt.type == PREFETCH && handle_pkt.fill_level == fill_level)
+        if(handle_pkt.type == PREFETCH && handle_pkt.fill_level == fill_level) {
             pf_miss_issued++;      
+            // For IPCP
+            uint32_t pref_type = (handle_pkt.pf_metadata & 0xF00) >> 8;
+            pref_filled[handle_pkt.cpu][pref_type]++;
+        }
     }
 
     // update prefetcher on load instructions and prefetches from upper levels
@@ -404,7 +415,6 @@ bool CACHE::readlike_miss(PACKET& handle_pkt)
 
 bool CACHE::filllike_miss(std::size_t set, std::size_t way, PACKET& handle_pkt)
 {
-
     bool bypass = (way == current_assoc);
     #ifndef LLC_BYPASS
     assert(!bypass);
@@ -447,6 +457,7 @@ bool CACHE::filllike_miss(std::size_t set, std::size_t way, PACKET& handle_pkt)
         assert(handle_pkt.type != METADATA);
         fill_block.valid = true;
         fill_block.prefetch = (handle_pkt.type == PREFETCH && handle_pkt.pf_origin_level == fill_level);
+        fill_block.pref_type = (handle_pkt.pf_metadata & 0xF00) >> 8;
         fill_block.dirty = (handle_pkt.type == WRITEBACK || (handle_pkt.type == RFO && handle_pkt.to_return.empty()));
         fill_block.address = handle_pkt.address;
         fill_block.v_address = handle_pkt.v_address;
@@ -654,8 +665,9 @@ int CACHE::prefetch_line(uint64_t pf_addr, bool fill_this_level, uint64_t prefet
     } else {
         int result = add_pq(&pf_packet);
         if (result != -2) {
-            if (result > 0)
+            if (result > 0) {
                 pf_issued++;
+            }
             return 1;
         }
     }
@@ -727,12 +739,14 @@ void CACHE::va_translate_prefetches()
         // move the translated prefetch over to the regular PQ
         int result = add_pq(&VAPQ.front());
 
+        if (result > 0) {
+            pf_issued++;
+        }
+
         // remove the prefetch from the VAPQ
         if (result != -2)
-        VAPQ.pop_front();
+            VAPQ.pop_front();
 
-        if (result > 0)
-        pf_issued++;
     }
 }
 

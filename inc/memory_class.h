@@ -36,7 +36,7 @@ class BLOCK
 public:
   bool valid = false, prefetch = false, dirty = false;
 
-  uint64_t address = 0, v_address = 0, tag = 0, data = 0, ip = 0, cpu = 0, instr_id = 0;
+  uint64_t address = 0, v_address = 0, tag = 0, data = 0, ip = 0, cpu = 0, instr_id = 0, pref_type;
 
   // replacement state
   uint32_t lru = std::numeric_limits<uint32_t>::max() >> 1;
