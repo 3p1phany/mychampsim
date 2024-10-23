@@ -27,8 +27,8 @@ if(mode == "collect_instr"):
 else:
     print("Strat Run Simulation!")
 
-default_warmup_len = 100000000
-default_sim_len = 100000000
+default_warmup_len = 10000000
+default_sim_len = 90000000
 
 #### For Single Core
 program_list = []
