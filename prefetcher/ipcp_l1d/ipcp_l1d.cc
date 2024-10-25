@@ -34,10 +34,10 @@ vice versa in the cache's MSHR as, if the prefetch would've been on time, the de
 #define NUM_IP_TAG_BITS 9 	
 #define NUM_PAGE_TAG_BITS 2
 
-#define MAX_POS_NEG_COUNT 64				    // 6-bit saturating counter
 #define NUM_SIG_BITS 7                          // num of bits in signature        
 #define NUM_CSPT_ENTRIES 128                    // = 2^NUM_SIG_BITS                                                               
 
+#define MAX_POS_NEG_COUNT 64				    // 6-bit saturating counter
 #define NUM_OF_LINES_IN_REGION 32			    // 32 cache lines in 2KB region
 #define REGION_OFFSET_MASK 0x1F				    // 5-bit offset for 2KB region
 #define NUM_RST_ENTRIES 8 
@@ -258,7 +258,7 @@ uint64_t hash_page(uint64_t addr){
 
 void CACHE::prefetcher_initialize() 
 {
-    cout << "L1D IPCP Prefetcher" << endl;
+    cout << "[L1D IPCP Prefetcher]" << endl;
 	cout << "IP Table Entries: " << NUM_IP_TABLE_L1_ENTRIES << endl;
 	cout << "CSPT Entries: " << NUM_CSPT_ENTRIES << endl; 
 	cout << "RST_ENTRIES: " << NUM_RST_ENTRIES << endl; 
@@ -391,6 +391,14 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
         stride *= -1;
     }
 
+    // page boundary learning
+    if(curr_page != trackers_l1[cpu][index].last_vpage){
+        if(stride < 0)
+            stride += NUM_OF_LINES_IN_REGION;
+        else
+            stride -= NUM_OF_LINES_IN_REGION;
+    }
+
     // don't do anything if same address is seen twice in a row
     if (stride == 0)
         return metadata_in;
@@ -484,14 +492,6 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
         rstable[cpu][c].lru = 0;
         for(int i=0; i < NUM_OF_LINES_IN_REGION; i++)
             rstable[cpu][c].line_access[i]=0;
-    }
-
-    // page boundary learning
-    if(curr_page != trackers_l1[cpu][index].last_vpage){
-        if(stride < 0)
-            stride += NUM_OF_LINES_IN_REGION;
-        else
-            stride -= NUM_OF_LINES_IN_REGION;
     }
 
     // update constant stride(CS) confidence
