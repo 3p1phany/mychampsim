@@ -325,7 +325,7 @@ void CACHE::readlike_hit(std::size_t set, std::size_t way, PACKET& handle_pkt)
         pf_useful++;
         hit_block.prefetch = 0;
         // For IPCP
-        pref_useful[handle_pkt.cpu][hit_block.pref_type]++;
+        if (hit_block.pref_type < 6) pref_useful[handle_pkt.cpu][hit_block.pref_type]++;
     }
 }
 
@@ -352,7 +352,7 @@ bool CACHE::readlike_miss(PACKET& handle_pkt)
                 pf_late++;
                 // For IPCP
                 uint32_t pref_type = (mshr_entry->pf_metadata & 0xF00) >> 8;
-                pref_useful[mshr_entry->cpu][pref_type]++;
+                if (pref_type < 6) pref_useful[mshr_entry->cpu][pref_type]++;
             }
 
             uint64_t prior_event_cycle = mshr_entry->event_cycle;
@@ -399,7 +399,7 @@ bool CACHE::readlike_miss(PACKET& handle_pkt)
             pf_miss_issued++;      
             // For IPCP
             uint32_t pref_type = (handle_pkt.pf_metadata & 0xF00) >> 8;
-            pref_filled[handle_pkt.cpu][pref_type]++;
+            if (pref_type < 6) pref_filled[handle_pkt.cpu][pref_type]++;
         }
     }
 
