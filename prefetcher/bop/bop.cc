@@ -56,7 +56,9 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
     }
 
     if (rr_table.trained_offset != 0) {
-        prefetch_line(addr + rr_table.trained_offset * 0x40, true, 0);
+        uint64_t pf_address = addr + rr_table.trained_offset * 0x40;
+        if ((pf_address >> LOG2_PAGE_SIZE) == (addr >> LOG2_PAGE_SIZE))
+            prefetch_line(pf_address, true, 0);
     }
     return metadata_in; 
 }

@@ -5,7 +5,7 @@ import sys
 
 type = sys.argv[1]
 
-type_list = ["no", "stride", "stride-l1", "dbp", "cdp", "ipcp", "berti", "imp", 
+type_list = ["no", "stride", "stride-l1", "dbp", "cdp", "ipcp", "berti", "bop", "imp", 
              "gretch", "tyche", "domino", "isb", "misb", "triage-l1", "triangel-l1", "triangel-l2", "cmc", "catp-l1", "catp-l2",
              "domino-l2", "cmc-domino", "isb-l2", "cmc-isb", "misb-l2", "cmc-misb", 
              "triage-l2", "cmc-triage", "cmc-triangel"]
@@ -27,7 +27,7 @@ if(lines[config_line-1].find("prefetcher") == -1):
 
 if(type=="tyche"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"tyche\",' {config_fname}"
-elif(type=="stride" or type=="stride-l1" or type == "triage-l2" or type == "triangel-l2" or type == "catp-l2" or type=="misb-l2" or type=="isb-l2" or type=="domino-l2"):
+elif(type=="stride" or type=="stride-l1" or type == "triage-l2" or type == "triangel-l2" or type == "catp-l2" or type=="misb-l2" or type=="isb-l2" or type=="domino-l2" or type=="bop"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"stride_l1d\",' {config_fname}"
 elif(type == "berti"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"berti\",' {config_fname}"
@@ -149,6 +149,8 @@ elif(type == "isb-l2" or type == "cmc-isb" or type == "misb-l2" or type == "cmc-
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"misb\",' {config_fname}"
 elif(type == "domino-l2" or type == "cmc-domino"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"domino\",' {config_fname}"
+elif(type == "bop"):
+    command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"bop\",' {config_fname}"
 print(command)
 os.system(command)
 
