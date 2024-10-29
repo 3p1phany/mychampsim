@@ -17,7 +17,7 @@ binary_file.close()
 #             "triage-l2", "cmc-triage"]
 
 ## Binary List
-single_binary_list = ["no","ipcp"]
+single_binary_list = ["bop"]
 md_confict_binary_list = ["isb-md-conflict", "misb-md-conflict", "triage-l1-md-conflict", 
                           "triangel-md-conflict", "cmc-md-conflict"
                           ]

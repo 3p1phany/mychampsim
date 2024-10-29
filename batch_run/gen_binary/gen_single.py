@@ -3,7 +3,7 @@
 import os
 import sys
 
-supported_list = ["no", "stride", "stride-l1", "dbp", "cdp", "ipcp", "berti", "imp", 
+supported_list = ["no", "stride", "stride-l1", "dbp", "cdp", "ipcp", "berti", "imp", "bop",
                   "gretch", "tyche", "domino", "isb", "misb", "triage-l1", "triangel-l1", "triangel-l2", "cmc", "catp-l1", "catp-l2",
                   "domino-l2", "cmc-domino", "isb-l2", "cmc-isb", "misb-l2", "cmc-misb", 
                   "triage-l2", "cmc-triage", "cmc-triangel"]
