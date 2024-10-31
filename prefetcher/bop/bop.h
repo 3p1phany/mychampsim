@@ -6,17 +6,11 @@
 
 class RRTable {
     private:
-    struct rr_entry {
-        uint64_t tag;
-        uint64_t cycle;
-    };
 
-    vector<rr_entry> entries;
+    vector<uint64_t> rr_table;
     uint64_t table_size;
     uint64_t index_mask;
     uint64_t tag_mask;
-
-    uint64_t memory_delay;
 
     public:
 
@@ -32,32 +26,23 @@ class RRTable {
     uint64_t trained_offset;
 
     void init(uint32_t index_bit, uint32_t tag_bit, uint64_t delay) {
-        entries.resize(pow(2, index_bit));
+        rr_table.resize(pow(2, index_bit));
         table_size = pow(2, index_bit);
         index_mask = table_size - 1;
         tag_mask = pow(2, tag_bit) - 1;
-        memory_delay = delay;
     }
 
-    void insert(uint64_t addr, uint64_t cycle) {
+    void insert(uint64_t addr) {
         uint64_t index = (addr & index_mask) ^ ((addr >> (int)log2(table_size)) & index_mask);
         assert(index < table_size);
-        rr_entry* entry = &entries[index];
-        entry->tag = (addr >> (int)log2(table_size)) & tag_mask;
-        entry->cycle = cycle;
+        rr_table[index] = (addr >> (int)log2(table_size)) & tag_mask;
     }
 
-    bool find(uint64_t addr, uint64_t cycle) {
+    bool find(uint64_t addr) {
         uint64_t index = (addr & index_mask) ^ ((addr >> (int)log2(table_size)) & index_mask);
         assert(index < table_size);
-        rr_entry* entry = &entries[index];
-        if (entry->tag == ((addr >> (int)log2(table_size)) & tag_mask)) {
-            if (cycle - entry->cycle >= memory_delay) {
-                return true;
-            }
-            else {
-                return false;
-            }
+        if (rr_table[index] == ((addr >> (int)log2(table_size)) & tag_mask)) {
+            return true;
         }
         return false;
     }

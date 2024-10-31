@@ -17,7 +17,7 @@ void CACHE::prefetcher_initialize() {
 
 uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cache_hit, bool hit_pref, uint8_t type, uint64_t metadata_in) { 
     uint64_t test_addr = (addr >> 6) - rr_table.offsets[rr_table.offset_index] ;
-    if (rr_table.find(test_addr, current_cycle)) {
+    if (rr_table.find(test_addr)) {
         rr_table.scores[rr_table.offset_index]++;
     }
     
@@ -56,7 +56,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
     }
 
     if (rr_table.trained_offset != 0) {
-        uint64_t pf_address = addr + rr_table.trained_offset * 0x40;
+        uint64_t pf_address = ((addr << LOG2_BLOCK_SIZE) + rr_table.trained_offset) >> LOG2_BLOCK_SIZE;
         if ((pf_address >> LOG2_PAGE_SIZE) == (addr >> LOG2_PAGE_SIZE))
             prefetch_line(pf_address, true, 0);
     }
@@ -67,7 +67,7 @@ uint64_t CACHE::prefetcher_cache_fill(uint64_t addr, uint32_t set, uint32_t way,
 {
   if (rr_table.trained_offset == 0 || prefetch) {
     uint64_t base_addr = (addr >> 6) - rr_table.trained_offset;
-    rr_table.insert(base_addr, current_cycle);
+    rr_table.insert(base_addr);
   }
   return metadata_in;
 }
