@@ -65,7 +65,6 @@ pt_format_t pt[NUM_CPUS][64] = {0};
     uint8_t complex_infect_info[NUM_CPUS][64] = {0};
 #endif
 
-IPT_L1 ipt[NUM_CPUS][IPT_NUM];
 DCT dct[NUM_CPUS];
 AGQ agq[NUM_CPUS];
 

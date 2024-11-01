@@ -29,18 +29,12 @@
 
 #define XF_DEBUG 0
 
-#define IPT_NUM 32
-
-#define SP_CONF_MAX 3
-
 #define IDM_BIT 8
 #define IDM_NUM (1 << IDM_BIT)
 
 #define IPTAG_BIT   47
 
 #define PREFETCH_DEBUG
-
-#define L2_STRIDE_SHIFT 0
 
 #define LOAD_NONE    0
 #define LOAD_STRIDE  1
@@ -62,18 +56,6 @@ typedef struct pt_format {
     uint8_t type;
     uint64_t dct_ptr;
 } pt_format_t;
-
-class IPT_L1 {
-    public:
-        uint64_t ip = 0;
-        uint64_t last_addr = 0;
-        int64_t stride = 0;
-        uint8_t conf = 0;
-
-        uint8_t rplc_bits; // 3 means most recently used, 0 means least recently used
-
-        vector<uint64_t> pref_filter;
-};
 
 typedef enum {
     IDM_INVALID,
@@ -288,5 +270,3 @@ pair<uint64_t, uint64_t> stride_cache_operate(uint64_t cpu, uint64_t addr, uint6
 #endif
 
 #endif
-
-#define L1_STRIDE_DISTANCE 8

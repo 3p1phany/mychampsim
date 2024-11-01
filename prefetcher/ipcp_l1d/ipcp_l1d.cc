@@ -258,7 +258,7 @@ uint64_t hash_page(uint64_t addr){
 
 void CACHE::prefetcher_initialize() 
 {
-    cout << "[L1D IPCP Prefetcher]" << endl;
+    cout << "L1D [IPCP] Prefetcher" << endl;
 	cout << "IP Table Entries: " << NUM_IP_TABLE_L1_ENTRIES << endl;
 	cout << "CSPT Entries: " << NUM_CSPT_ENTRIES << endl; 
 	cout << "RST_ENTRIES: " << NUM_RST_ENTRIES << endl; 

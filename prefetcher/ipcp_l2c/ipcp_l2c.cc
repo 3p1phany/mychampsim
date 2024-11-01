@@ -97,7 +97,7 @@ uint32_t encode_metadata_l2(int stride, uint16_t type, int spec_nl_l2){
 
 void CACHE::l2c_prefetcher_initialize() 
 {
-    cout << "[L2C IPCP Prefetcher]" << endl;
+    cout << "L2C [IPCP] Prefetcher" << endl;
 	cout << "IP Table L2 entries: " << NUM_IP_TABLE_L2_ENTRIES << endl;
 }
 

@@ -5,6 +5,7 @@
 RRTable rr_table;
 
 void CACHE::prefetcher_initialize() {
+    std::cout << "L2C [BOP] prefetcher" << std::endl;
     rr_table.init(8, 12, 100);    
     rr_table.offsets = {1,2,3,4,5,6,8,9,10,12,15,16,18,20,24,25,27,30,32,36,40,45,48,50,54,60,64,72,75,80,81,90,96,100,108,120,125,128,135,144,150,160,162,180,192,200,216,225,240,243,250,256};
     for (uint64_t i = 0; i < rr_table.offsets.size(); i++) {
