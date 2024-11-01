@@ -5,7 +5,7 @@
 #include "cache.h"
 #include "prefetch.h"
 
-#define L2_STRIDE_SHIFT 1
+#define L2_STRIDE_SHIFT 2
 
 int32_t decode_stride(uint64_t metadata){
     int32_t stride=0;
@@ -24,7 +24,7 @@ PREF_TYPE decode_pref_type(uint64_t metadata){
 
 void CACHE::l2c_prefetcher_initialize() 
 {
-    std::cout << NAME << "L2C [Stride] prefetcher" << std::endl; 
+    std::cout << "L2C [Stride] prefetcher" << std::endl; 
 }
 
 void CACHE::prefetcher_cycle_operate()

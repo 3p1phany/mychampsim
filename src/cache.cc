@@ -476,7 +476,7 @@ bool CACHE::filllike_miss(std::size_t set, std::size_t way, PACKET& handle_pkt)
 
     handle_pkt.pf_metadata =
     impl_prefetcher_cache_fill(addr, set, way,
-                                handle_pkt.type == PREFETCH, evicting_address, handle_pkt.pf_metadata, handle_pkt.ip);
+                                handle_pkt.type == PREFETCH && handle_pkt.pf_origin_level == fill_level, evicting_address, handle_pkt.pf_metadata, handle_pkt.ip);
 
     // update replacement policy
     impl_replacement_update_state(handle_pkt.cpu, set, way, handle_pkt.address, handle_pkt.ip, 0, handle_pkt.type, 0);
