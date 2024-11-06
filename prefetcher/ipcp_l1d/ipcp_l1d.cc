@@ -551,7 +551,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
             //Issue prefetch request only if prefetch address is not present in RR filter
             if(found_in_filter == 0) 
             { 
-                prefetch_line(ip, addr, pf_address, FILL_L1, metadata);
+                prefetch_line(pf_address, fill_level, metadata);
                 recent_request_filter.push_back((pf_address >> 6) & RR_TAG_MASK);
                 if(recent_request_filter.size() > NUM_OF_RR_ENTRIES)
                     recent_request_filter.erase(recent_request_filter.begin());
@@ -594,7 +594,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
             //Issue prefetch request only if prefetch address is not present in RR filter
             if(found_in_filter == 0)
             {
-                prefetch_line(ip, addr, pf_address, FILL_L1, metadata);
+                prefetch_line(pf_address, fill_level, metadata);
                 //Add to RR filter
                 recent_request_filter.push_back((pf_address >> 6) & RR_TAG_MASK);
                 if(recent_request_filter.size() > NUM_OF_RR_ENTRIES)
@@ -639,7 +639,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
                 //Issue prefetch request only if prefetch address is not present in RR filter
                 if(found_in_filter == 0)
                 {
-                    prefetch_line(ip, addr, pf_address, FILL_L1, metadata);
+                    prefetch_line(pf_address, fill_level, metadata);
                     //Add to RR filter
                     recent_request_filter.push_back((pf_address >> 6) & RR_TAG_MASK);
                     if(recent_request_filter.size() > NUM_OF_RR_ENTRIES)
@@ -679,7 +679,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
             //Issue prefetch request only if prefetch address is not present in RR filter
             if(found_in_filter == 0)
             {
-            	prefetch_line(ip, addr, pf_address, FILL_L1, metadata);
+                prefetch_line(pf_address, fill_level, metadata);
                 //Add to RR filter
                 recent_request_filter.push_back((pf_address >> 6) & RR_TAG_MASK);
                 if(recent_request_filter.size() > NUM_OF_RR_ENTRIES)

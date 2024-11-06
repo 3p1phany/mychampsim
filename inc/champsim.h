@@ -41,9 +41,9 @@
 #define INFLIGHT 1
 #define COMPLETED 2
 
-#define FILL_L1 1
-#define FILL_L2 2
-#define FILL_LLC 4
+#define FILL_L1 4
+#define FILL_L2 5
+#define FILL_LLC 6
 #define FILL_DRC 8
 #define FILL_DRAM 16
 

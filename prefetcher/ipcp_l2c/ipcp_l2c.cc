@@ -140,7 +140,7 @@ uint64_t CACHE::l2c_prefetcher_operate(uint64_t addr, uint64_t ip, uint8_t cache
         uint64_t pf_address = ((addr>>LOG2_BLOCK_SIZE)+1) << LOG2_BLOCK_SIZE;
        	if ((pf_address >> LOG2_PAGE_SIZE) == (addr >> LOG2_PAGE_SIZE)) 
         {
-        	prefetch_line(ip, addr, pf_address, FILL_L2, 0);
+        	prefetch_line(pf_address, fill_level, 0);
         }
         return metadata_in;
     }
@@ -156,13 +156,9 @@ uint64_t CACHE::l2c_prefetcher_operate(uint64_t addr, uint64_t ip, uint8_t cache
     }
 
 	if((trackers[cpu][index].pref_type == 1 || trackers[cpu][index].pref_type == 2) && trackers[cpu][index].stride != 0){      // S or CS class   
-        uint32_t metadata = 0;
         if(trackers[cpu][index].pref_type == 1){
             prefetch_degree = prefetch_degree*2;
-            metadata = encode_metadata_l2(1, S_TYPE, spec_nl_l2[cpu]);                                // for stream, prefetch with twice the usual degree
-        } else{
-            metadata = encode_metadata_l2(1, CS_TYPE, spec_nl_l2[cpu]);
-        }
+        } 
 
         for (int i=0; i<prefetch_degree; i++) {
             uint64_t pf_address = (line_addr + (trackers[cpu][index].stride*(i+1))) << LOG2_BLOCK_SIZE;
@@ -171,7 +167,7 @@ uint64_t CACHE::l2c_prefetcher_operate(uint64_t addr, uint64_t ip, uint8_t cache
             if ((pf_address >> LOG2_PAGE_SIZE) != (addr >> LOG2_PAGE_SIZE))
                 break;
             num_prefs++;
-            prefetch_line(ip, addr, pf_address, FILL_L2,metadata);
+        	prefetch_line(pf_address, fill_level, 0);
         }
     }
     
@@ -183,9 +179,8 @@ uint64_t CACHE::l2c_prefetcher_operate(uint64_t addr, uint64_t ip, uint8_t cache
         {
             return metadata_in;
         } 
-        uint32_t metadata = encode_metadata_l2(1, NL_TYPE, spec_nl_l2[cpu]);
         trackers[cpu][index].pref_type = 3;
-        prefetch_line(ip, addr, pf_address, FILL_L2, metadata);
+        prefetch_line(pf_address, fill_level, 0);
     }
 
     return metadata_in;

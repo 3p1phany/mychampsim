@@ -103,8 +103,7 @@ public:
   uint32_t get_way(uint64_t address, uint32_t set);
 
   int invalidate_entry(uint64_t inval_addr);
-  int prefetch_line(uint64_t pf_addr, bool fill_this_level, uint64_t prefetch_metadata);
-  int prefetch_line(uint64_t ip, uint64_t base_addr, uint64_t pf_addr, bool fill_this_level, uint64_t prefetch_metadata); // deprecated
+  int prefetch_line(uint64_t pf_addr, uint8_t pf_fill_level, uint64_t pf_metadata);
 
   void add_mshr(PACKET* packet);
   void va_translate_prefetches();
@@ -121,6 +120,7 @@ public:
   bool should_activate_prefetcher(int type);
 
   void adjust_assoc(uint32_t new_assoc);
+  void notify_prefetch(uint64_t addr, uint64_t tag, uint32_t cpu, uint64_t cycle);
 
   void print_deadlock() override;
 

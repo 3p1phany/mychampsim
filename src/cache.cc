@@ -288,8 +288,13 @@ void CACHE::handle_prefetch()
             }
         } else {
             bool success = readlike_miss(handle_pkt);
-            if (!success)
+            if (!success) {
                 return;
+            }
+            else {
+                if (handle_pkt.fill_level == fill_level)
+                    notify_prefetch(handle_pkt.v_address >> LOG2_BLOCK_SIZE, handle_pkt.ip, handle_pkt.cpu, current_core_cycle[handle_pkt.cpu]);
+            }
         }
 
         // remove this entry from PQ
@@ -451,7 +456,7 @@ bool CACHE::filllike_miss(std::size_t set, std::size_t way, PACKET& handle_pkt)
             pf_useless++;
         }
 
-        if (handle_pkt.type == PREFETCH)
+        if (handle_pkt.type == PREFETCH && handle_pkt.fill_level == fill_level) 
             pf_fill++;
 
         assert(handle_pkt.type != METADATA);
@@ -474,9 +479,11 @@ bool CACHE::filllike_miss(std::size_t set, std::size_t way, PACKET& handle_pkt)
     cpu = handle_pkt.cpu;
     uint64_t addr = (virtual_prefetch ? handle_pkt.v_address : handle_pkt.address) /*& ~bitmask(match_offset_bits ? 0 : OFFSET_BITS)*/;
 
-    handle_pkt.pf_metadata =
-    impl_prefetcher_cache_fill(addr, set, way,
-                                handle_pkt.type == PREFETCH && handle_pkt.pf_origin_level == fill_level, evicting_address, handle_pkt.pf_metadata, handle_pkt.ip);
+    if (handle_pkt.type == LOAD || handle_pkt.type == PREFETCH) {
+        handle_pkt.pf_metadata =
+        impl_prefetcher_cache_fill(addr, set, way,
+                                    handle_pkt.type == PREFETCH && handle_pkt.pf_origin_level == fill_level, evicting_address, handle_pkt.pf_metadata, handle_pkt.ip);
+    }
 
     // update replacement policy
     impl_replacement_update_state(handle_pkt.cpu, set, way, handle_pkt.address, handle_pkt.ip, 0, handle_pkt.type, 0);
@@ -642,42 +649,45 @@ int CACHE::add_wq(PACKET* packet)
     return WQ.occupancy();
 }
 
-int CACHE::prefetch_line(uint64_t pf_addr, bool fill_this_level, uint64_t prefetch_metadata)
+int CACHE::prefetch_line(uint64_t pf_addr, uint8_t pf_fill_level, uint64_t prefetch_metadata)
 {
-    pf_requested++;
+    if (pf_fill_level == fill_level) {
+        pf_requested++;
 
-    PACKET pf_packet;
-    pf_packet.type = PREFETCH;
-    pf_packet.fill_level = (fill_this_level ? fill_level : lower_level->fill_level);
-    pf_packet.pf_origin_level = fill_level;
-    pf_packet.pf_metadata = prefetch_metadata;
-    pf_packet.cpu = cpu;
-    pf_packet.address = pf_addr;
-    pf_packet.v_address = virtual_prefetch ? pf_addr : 0;
+        PACKET pf_packet;
+        pf_packet.type = PREFETCH;
+        pf_packet.fill_level = fill_level;
+        pf_packet.pf_origin_level = fill_level;
+        pf_packet.pf_metadata = prefetch_metadata;
+        pf_packet.cpu = cpu;
+        pf_packet.address = pf_addr;
+        pf_packet.v_address = virtual_prefetch ? pf_addr : 0;
 
-    if (virtual_prefetch) {
-        if (!VAPQ.full()) {
-            VAPQ.push_back(pf_packet);
-            return 1;
-        }else {
-            VAPQ_FULL++;
-        }
-    } else {
-        int result = add_pq(&pf_packet);
-        if (result != -2) {
-            if (result > 0) {
-                pf_issued++;
+        if (virtual_prefetch) {
+            if (!VAPQ.full()) {
+                VAPQ.push_back(pf_packet);
+                return 1;
+            }else {
+                VAPQ_FULL++;
             }
-            return 1;
+        } else {
+            int result = add_pq(&pf_packet);
+            if (result != -2) {
+                if (result > 0) {
+                    pf_issued++;
+                }
+                return 1;
+            }
         }
+
+        return 0;
     }
-
-    return 0;
-}
-
-int CACHE::prefetch_line(uint64_t ip, uint64_t base_addr, uint64_t pf_addr, bool fill_this_level, uint64_t prefetch_metadata)
-{
-  return prefetch_line(pf_addr, fill_this_level, prefetch_metadata);
+    else {
+        if (fill_level == FILL_L1 && virtual_prefetch) {
+            pf_addr = vmem.va_to_pa(cpu, pf_addr).first;
+        }
+        return  static_cast<CACHE*>(lower_level)->prefetch_line(pf_addr, pf_fill_level, prefetch_metadata);
+    }
 }
 
 int CACHE::get_metadata(uint64_t meta_data_addr)
@@ -861,6 +871,14 @@ uint32_t CACHE::get_size(uint8_t queue_type, uint64_t address)
 }
 
 bool CACHE::should_activate_prefetcher(int type) { return (1 << static_cast<int>(type)) & pref_activate_mask; }
+
+void CACHE::notify_prefetch(uint64_t addr, uint64_t tag, uint32_t cpu, uint64_t cycle) 
+{
+    #ifdef ENABLE_BERTI
+    latency_table_add(addr, tag, cpu, cycle & TIME_MASK);
+    #endif
+}
+
 
 void CACHE::print_deadlock()
 {
