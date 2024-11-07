@@ -130,7 +130,6 @@ uint8_t latency_table_add(uint64_t line_addr, uint64_t ip, uint32_t cpu, uint64_
 
     // No free space!! This cannot be truth
     if (free == nullptr) {
-        assert(0);
         return 0;
     }
 
@@ -178,6 +177,7 @@ uint64_t latency_table_del(uint64_t line_addr, uint32_t cpu)
     }
 
     // We should always track the misses
+    assert(0);
     return 0;
 }
 
