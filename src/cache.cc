@@ -29,6 +29,7 @@
 #include "triage.h"
 #include "cmc.h"
 #include "catp.h"
+#include "berti.h"
 
 extern std::array<O3_CPU*, NUM_CPUS> ooo_cpu;
 extern VirtualMemory vmem;

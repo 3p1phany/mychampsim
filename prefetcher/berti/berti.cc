@@ -4,11 +4,16 @@
 
 // Last edit: 27 - Sept - 2021 12:10
 
-// FIFO queue
-//#define SIZE_RR 16
-//uint64_t RR[NUM_CPUS][SIZE_RR] = {0};
-//uint64_t RR_cycle[NUM_CPUS][SIZE_RR] = {0};
-//uint64_t RR_dx[NUM_CPUS] = {0};
+// Structs
+latency_table_t latencyt[NUM_CPUS][LATENCY_TABLE_SIZE];
+// Cache Style
+history_table_t historyt[NUM_CPUS][HISTORY_TABLE_SET][HISTORY_TABLE_WAY];
+shadow_cache_t scache[NUM_CPUS][L1D_SET][L1D_WAY];
+std::map<uint64_t, delta_table_t*> delta_table[NUM_CPUS];
+// To Make a FIFO MAP
+std::queue<uint64_t> delta_table_queue[NUM_CPUS];
+// Auxiliar pointers
+history_table_t *history_pointers[NUM_CPUS][HISTORY_TABLE_SET];
 
 bool compare_greater_stride_t(stride_t a, stride_t b)
 {
