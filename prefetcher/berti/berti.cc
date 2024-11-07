@@ -177,7 +177,6 @@ uint64_t latency_table_del(uint64_t line_addr, uint32_t cpu)
     }
 
     // We should always track the misses
-    assert(0);
     return 0;
 }
 
