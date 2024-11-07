@@ -136,7 +136,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
     /** Stride Prefetcher */
     pair<uint64_t, uint64_t> stride = stride_cache_operate(cpu, addr, ip);
     if(stride.first != 0){
-        int stride_succ = prefetch_line(stride.first, true, stride.second);
+        int stride_succ = prefetch_line(stride.first, fill_level, stride.second);
     }
 
     return metadata_in;

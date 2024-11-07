@@ -39,7 +39,7 @@ uint64_t CACHE::l2c_prefetcher_operate(uint64_t addr, uint64_t ip, uint8_t cache
 
         if(pref_type == PREF_STRIDE){
             uint64_t pf_address = addr + (stride << L2_STRIDE_SHIFT);
-            prefetch_line(pf_address, true, metadata_in);
+            prefetch_line(pf_address, fill_level, metadata_in);
         }
     }
 
