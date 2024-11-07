@@ -153,6 +153,14 @@ uint64_t latency_table_del(uint64_t line_addr, uint32_t cpu)
      *
      *  Return: the latency of the address
      */
+    
+    for (uint32_t i = 0; i < LATENCY_TABLE_SIZE; i++) {
+        if (current_core_cycle[cpu] & TIME_MASK < latencyt[cpu][i].time) {
+            latencyt[cpu][i].addr = 0;
+            latencyt[cpu][i].ip   = 0;
+            latencyt[cpu][i].time = 0;
+        }
+    }
     for (uint32_t i = 0; i < LATENCY_TABLE_SIZE; i++)
     {
         // Line already in the table
@@ -170,7 +178,6 @@ uint64_t latency_table_del(uint64_t line_addr, uint32_t cpu)
     }
 
     // We should always track the misses
-    assert(0);
     return 0;
 }
 

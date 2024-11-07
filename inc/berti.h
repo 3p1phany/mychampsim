@@ -17,7 +17,7 @@
 #define ENABLE_BERTI
 
 // Berti defines
-# define LATENCY_TABLE_SIZE           (L1D_MSHR_SIZE + 16)
+# define LATENCY_TABLE_SIZE           (L1D_MSHR_SIZE + 16 + 64)
 # define HISTORY_TABLE_SET            (8)
 # define HISTORY_TABLE_WAY            (16)
 # define TABLE_SET_MASK               (0x7)
