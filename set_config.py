@@ -5,7 +5,7 @@ import sys
 
 type = sys.argv[1]
 
-type_list = ["no", "stride", "stride-l1", "dbp", "cdp", "ipcp", "berti", "bop", "imp", 
+type_list = ["no", "stride", "stride-l1", "dbp", "cdp", "ipcp", "berti", "bop", "imp", "la",
              "gretch", "tyche", "domino", "isb", "misb", "triage-l1", "triangel-l1", "triangel-l2", "cmc", "catp-l1", "catp-l2",
              "domino-l2", "cmc-domino", "isb-l2", "cmc-isb", "misb-l2", "cmc-misb", 
              "triage-l2", "cmc-triage", "cmc-triangel"]
@@ -41,6 +41,8 @@ elif(type == "imp"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"imp\",' {config_fname}"
 elif(type == "ipcp"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"ipcp_l1d\",' {config_fname}"
+elif(type == "la"):
+    command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"la_l1d\",' {config_fname}"
 elif(type == "no"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"no\",' {config_fname}"
 elif(type == "domino"):
@@ -114,6 +116,13 @@ else:
 print(command)
 os.system(command)
 
+if(type == "berti"):
+    command = f"sed -i 's/#define nENABLE_BERTI/#define ENABLE_BERTI/' inc/berti.h"
+else:
+    command = f"sed -i 's/#define ENABLE_BERTI/#define nENABLE_BERTI/' inc/berti.h"
+print(command)
+os.system(command)
+
 
 config_line = 69
 if(lines[config_line-1].find("virtual_prefetch") == -1):
@@ -130,7 +139,7 @@ if(type == "tyche" or type == "imp" or type == "gretch" or type=="stride"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"stride_l2c\",' {config_fname}"
 elif(type == "ipcp"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"ipcp_l2c\",' {config_fname}"
-elif(type == "no" or type == "stride-l1" or type == "berti" or type == "dbp" or type == "cdp" or type == "domino" or type == "isb" or type == "misb" or type == "cmc" or type == "triage-l1" or type == "triangel" or type == "catp"):
+elif(type == "no" or type == "stride-l1" or type == "berti" or type == "dbp" or type == "cdp" or type == "domino" or type == "isb" or type == "misb" or type == "cmc" or type == "triage-l1" or type == "triangel" or type == "catp" or type == "la"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"no\",' {config_fname}"
 elif(type == "triage-l2" or type == "cmc-triage"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"triage_isr\",' {config_fname}"
