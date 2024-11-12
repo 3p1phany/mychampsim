@@ -150,7 +150,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
 
     if (ip_table[cpu].find(ip_tag) != ip_table[cpu].end()) {
         IP_TABLE_L1 *entry = &ip_table[cpu][ip_tag];
-        
+
         // prefetch
         uint32_t stride = (addr & 0xFFFFFFFF) - entry->addr;
         uint32_t pstride = (stride & 0xF) ^ ((stride >> 4) & 0xF) ^ ((stride >> 8) & 0xF) ^ ((stride >> 12) & 0xF);
@@ -161,9 +161,9 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
             pf_type = 3;
         }
         if (entry->state == 3 || (entry->state == 2 && entry->stride == stride)) {
-            pf_l1_addr = generate_stride_addr(addr, entry->stride, entry->step, 0);
-            pf_l2_addr = generate_stride_addr(addr, entry->stride, entry->step, 1);
-            pf_l3_addr = generate_stride_addr(addr, entry->stride, entry->step, 3);
+            pf_l1_addr = generate_stride_addr(addr, entry->stride, entry->step, 0); //x2 x4 x8
+            pf_l2_addr = generate_stride_addr(addr, entry->stride, entry->step, 1); //x4 x8 x16
+            pf_l3_addr = generate_stride_addr(addr, entry->stride, entry->step, 3); //x16 x32 x64
             pf_type = 2;
         }
 
@@ -179,13 +179,10 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
                 entry->state = entry->state - 1;
             }
             if (entry->state == 1) {
-                if ((stride & ~0xFFF) == 0) 
-                    entry->stride = (stride & 0xFFF);
+                if ((stride & ~0xFFFFFF) == 0) 
+                    entry->stride = (stride & 0xFFFFFF);
                 else 
                     entry->stride = 0;
-            }
-            if (entry->state == 3 && entry->stride <= 0x40) {
-                entry->stride = 0x40;
             }
         }
 
@@ -257,19 +254,22 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
         else {
             for (auto it = ip_table[cpu].begin(); it != ip_table[cpu].end(); it++) {
                 if (it->second.state == 0 || it->second.rrip == 0x7) {
-                    it->second.state = 1;
-                    it->second.ip = ip_tag;
-                    it->second.addr = addr;
-                    it->second.cycle = 0;
-                    it->second.step = 0;
-                    it->second.stride = 0;
-                    it->second.delta_sum = 0;
-                    it->second.pat_hist = 0;
-                    it->second.pat_last = 0;
-                    it->second.rrip = 0x5;
+                    ip_table[cpu].erase(it);
+                    IP_TABLE_L1 entry;
+                    entry.state = 1;
+                    entry.ip = ip_tag;
+                    entry.addr = addr;
+                    entry.cycle = 0;
+                    entry.step = 0;
+                    entry.stride = 0;
+                    entry.delta_sum = 0;
+                    entry.pat_hist = 0;
+                    entry.pat_last = 0;
+                    entry.rrip = 0x5;
                     for (int i = 0; i < 5; i++) {
-                        it->second.pstride[i] = 0;
+                        entry.pstride[i] = 0;
                     }
+                    ip_table[cpu][ip_tag] = entry;
                     find = 1;
                     break;
                 }
@@ -291,9 +291,9 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
 
         // predict
         if (entry->dense) {
-            pf_l1_addr = generate_stream_addr(addr, entry->direction, entry->step, 0);
-            pf_l2_addr = generate_stream_addr(addr, entry->direction, entry->step, 1);
-            pf_l3_addr = generate_stream_addr(addr, entry->direction, entry->step, 3);
+            pf_l1_addr = generate_stream_addr(addr, entry->direction, entry->step, 0); // x2 x4 x8
+            pf_l2_addr = generate_stream_addr(addr, entry->direction, entry->step, 1); // x4 x8 x16
+            pf_l3_addr = generate_stream_addr(addr, entry->direction, entry->step, 3); // x16 x32 x64
             pf_type = 1;
         }
 
@@ -324,13 +324,24 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
         bool find = 0;
         uint8_t dense = 0;
         uint8_t direction = 0;
+        uint8_t step = 0;
         if (global_table[cpu].find(region_tag+1) != global_table[cpu].end()) {
             direction = 1;
             dense = global_table[cpu][region_tag+1].dense;
+            step = global_table[cpu][region_tag+1].step;
         }
         if (global_table[cpu].find(region_tag-1) != global_table[cpu].end()) {
             direction = 0;
             dense = global_table[cpu][region_tag-1].dense;
+            step = global_table[cpu][region_tag-1].step;
+        }
+
+        // predict
+        if (dense) {
+            pf_l1_addr = generate_stream_addr(addr, direction, step, 0); // x2 x4 x8
+            pf_l2_addr = generate_stream_addr(addr, direction, step, 1); // x4 x8 x16
+            pf_l3_addr = generate_stream_addr(addr, direction, step, 3); // x16 x32 x64
+            pf_type = 1;
         }
 
         if (global_table[cpu].size() < NUM_GLOBAL_TABLE_ENTRIES) {
@@ -342,21 +353,24 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
             entry.dense = dense;
             entry.rrip = 0x5;
             entry.cycle = 0;
-            entry.step = 0;
+            entry.step = step;
             global_table[cpu][region_tag] = entry;
             find = 1;
         }
         else {
             for (auto it = global_table[cpu].begin(); it != global_table[cpu].end(); it++) {
                 if (it->second.dense_cnt == 0 || it->second.rrip == 0x7) {
-                    it->second.region_tag = region_tag;
-                    it->second.dense_cnt = 1;
-                    it->second.bitmap = line_mask;
-                    it->second.direction = direction;
-                    it->second.dense = dense;
-                    it->second.rrip = 0x5;
-                    it->second.cycle = 0;
-                    it->second.step = 0;
+                    global_table[cpu].erase(it);
+                    GLOBAL_TABLE_L1 entry;
+                    entry.region_tag = region_tag;
+                    entry.dense_cnt = 1;
+                    entry.bitmap = line_mask;
+                    entry.direction = direction;
+                    entry.dense = dense;
+                    entry.rrip = 0x5;
+                    entry.cycle = 0;
+                    entry.step = step;
+                    global_table[cpu][region_tag] = entry;
                     find = 1;
                     break;
                 }
