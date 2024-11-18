@@ -18,6 +18,7 @@ batch_run/result*/
 /result/
 /batch_run/result/
 /pictures/
+/plotting/**/*.json
 
 .vscode/
 
