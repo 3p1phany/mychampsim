@@ -17,7 +17,7 @@ void CACHE::prefetcher_initialize() {
 }
 
 uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cache_hit, bool hit_pref, uint8_t type, uint64_t metadata_in) { 
-    uint64_t test_addr = (addr >> 6) - rr_table.offsets[rr_table.offset_index] ;
+    uint64_t test_addr = (addr >> LOG2_BLOCK_SIZE) - rr_table.offsets[rr_table.offset_index] ;
     if (rr_table.find(test_addr)) {
         rr_table.scores[rr_table.offset_index]++;
     }

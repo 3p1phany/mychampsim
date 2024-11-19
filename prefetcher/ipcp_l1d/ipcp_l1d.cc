@@ -707,4 +707,8 @@ uint64_t CACHE::prefetcher_cache_fill(uint64_t addr, uint32_t set, uint32_t way,
 
 void CACHE::prefetcher_final_stats()
 {
+    cout << "S Type pref filled " << pref_filled[cpu][1] << " pref useful " << pref_useful[cpu][1] << endl;
+    cout << "CS Type pref filled " << pref_filled[cpu][2] << " pref useful " << pref_useful[cpu][2] << endl;
+    cout << "CPLX Type pref filled " << pref_filled[cpu][3] << " pref useful " << pref_useful[cpu][3] << endl;
+    cout << "NL Type pref filled " << pref_filled[cpu][4] << " pref useful " << pref_useful[cpu][4] << endl;
 }

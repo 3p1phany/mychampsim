@@ -1,9 +1,5 @@
 #include "berti.h"
 
-#define LANZAR_INT 8
-
-// Last edit: 27 - Sept - 2021 12:10
-
 // Structs
 latency_table_t latencyt[NUM_CPUS][LATENCY_TABLE_SIZE];
 // Cache Style
@@ -25,8 +21,8 @@ bool compare_greater_stride_t(stride_t a, stride_t b)
         else if (a.rpl != L2 && b.rpl == L2) return 0;
         else
         {
-            if (a.rpl == L2R && b.rpl != L2R) return 1;
-            if (a.rpl != L2R && b.rpl == L2R) return 0;
+            if (a.rpl == L3 && b.rpl != L3) return 1;
+            if (a.rpl != L3 && b.rpl == L3) return 0;
             else
             {
                 if (std::abs(a.stride) < std::abs(b.stride)) return 1;
@@ -434,7 +430,7 @@ void delta_table_increase_conf_ip(uint64_t ip, uint32_t cpu)
     if (tmp->conf == CONFIDENCE_MAX) 
     {
         // Max confidence achieve
-        for(int i = 0; i < BERTI_TABLE_STRIDE_SIZE; i++)
+        for(int i = 0; i < DELTA_TABLE_STRIDE_SIZE; i++)
         {
             float temp = (float) aux[i].conf / (float) tmp->conf;
             uint64_t aux_conf   = (uint64_t) (temp * 100);
@@ -442,7 +438,7 @@ void delta_table_increase_conf_ip(uint64_t ip, uint32_t cpu)
             // Set bits
             if (aux_conf > CONFIDENCE_L1) aux[i].rpl = L1;
             else if (aux_conf > CONFIDENCE_L2) aux[i].rpl = L2;
-            else if (aux_conf > CONFIDENCE_L2R) aux[i].rpl = L2R;
+            else if (aux_conf > CONFIDENCE_L3) aux[i].rpl = L3;
             else aux[i].rpl = R;
             
             aux[i].conf = 0;
@@ -465,7 +461,7 @@ void delta_table_add(uint64_t ip, uint32_t cpu, int64_t stride)
     if (delta_table[cpu].find(ip) == delta_table[cpu].end())
     {
         // FIFO MAP
-        if (delta_table_queue[cpu].size() > BERTI_TABLE_SIZE)
+        if (delta_table_queue[cpu].size() > DELTA_TABLE_SIZE)
         {
             uint64_t key = delta_table_queue[cpu].front();
             delta_table_t *tmp = delta_table[cpu][key];
@@ -476,10 +472,10 @@ void delta_table_add(uint64_t ip, uint32_t cpu, int64_t stride)
         }
         delta_table_queue[cpu].push(ip);
 
-        assert(delta_table[cpu].size() <= BERTI_TABLE_SIZE);
+        assert(delta_table[cpu].size() <= DELTA_TABLE_SIZE);
 
         delta_table_t *tmp = new delta_table_t;
-        tmp->stride = new stride_t[BERTI_TABLE_STRIDE_SIZE]();
+        tmp->stride = new stride_t[DELTA_TABLE_STRIDE_SIZE]();
         
         // Confidence IP
         tmp->conf = CONFIDENCE_INC;
@@ -500,7 +496,7 @@ void delta_table_add(uint64_t ip, uint32_t cpu, int64_t stride)
     // Increase IP confidence
     uint8_t max = 0;
 
-    for (int i = 0; i < BERTI_TABLE_STRIDE_SIZE; i++)
+    for (int i = 0; i < DELTA_TABLE_STRIDE_SIZE; i++)
     {
         if (aux[i].stride == stride)
         {
@@ -512,7 +508,7 @@ void delta_table_add(uint64_t ip, uint32_t cpu, int64_t stride)
 
     uint8_t dx_conf = 100;
     int dx_remove = -1;
-    for (int i = 0; i < BERTI_TABLE_STRIDE_SIZE; i++)
+    for (int i = 0; i < DELTA_TABLE_STRIDE_SIZE; i++)
     {
         if (aux[i].rpl == R && aux[i].conf < dx_conf)
         {
@@ -527,11 +523,10 @@ void delta_table_add(uint64_t ip, uint32_t cpu, int64_t stride)
         tmp->stride[dx_remove].conf   = CONFIDENCE_INIT;
         tmp->stride[dx_remove].rpl    = R;
         return;
-    } else
-    {
-        for (int i = 0; i < BERTI_TABLE_STRIDE_SIZE; i++)
+    } else {
+        for (int i = 0; i < DELTA_TABLE_STRIDE_SIZE; i++)
         {
-            if (aux[i].rpl == L2R && aux[i].conf < dx_conf)
+            if (aux[i].rpl == L3 && aux[i].conf < dx_conf)
             {
                 dx_conf = aux[i].conf;
                 dx_remove = i;
@@ -565,7 +560,7 @@ uint8_t delta_table_get(uint64_t ip, uint32_t cpu, stride_t res[MAX_PF])
     uint64_t max_conf = 0;
     uint16_t dx = 0;
     
-    for (int i = 0; i < BERTI_TABLE_STRIDE_SIZE; i++)
+    for (int i = 0; i < DELTA_TABLE_STRIDE_SIZE; i++)
     {
         if (aux[i].stride != 0 && aux[i].rpl)
         {
@@ -576,9 +571,9 @@ uint8_t delta_table_get(uint64_t ip, uint32_t cpu, stride_t res[MAX_PF])
         }
     }
 
-    if (dx == 0 && tmp->conf >= LANZAR_INT)
+    if (dx == 0 && tmp->conf >= CONFIDENCE_MIN)
     {
-        for (int i = 0; i < BERTI_TABLE_STRIDE_SIZE; i++)
+        for (int i = 0; i < DELTA_TABLE_STRIDE_SIZE; i++)
         {
             if (aux[i].stride != 0)
             {
@@ -706,7 +701,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
             pf_fill_level = FILL_L1;
         } else if (stride[i].rpl == L1 || stride[i].rpl == L2){
             pf_fill_level = FILL_L2;
-        } else if (stride[i].rpl == L2R){
+        } else if (stride[i].rpl == L3){
             pf_fill_level = FILL_LLC;
         }
 
