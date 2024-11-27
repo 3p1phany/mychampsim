@@ -54,7 +54,7 @@ class IP_TABLE_L1 {
     public:
     uint64_t ip_tag;					    
     uint64_t last_vpage;                    // last page seen by IP 
-    uint64_t last_line_offset;              // last cl offset in the 4KB page 
+    uint64_t last_line_offset;              // last cl offset in the 16KB page 
     int64_t last_stride;                    // last stride observed 
     uint16_t ip_valid;		                // valid bit
     int conf;                               // CS confidence 
@@ -85,19 +85,19 @@ class IP_TABLE_L1 {
 	
 	IP tag					9 
 	last page				2
-	last line offset	    6
-	last stride				7 	(6 bits stride + 1 sign bit)
+	last line offset	    8
+	last stride				9 	(8 bits stride + 1 sign bit)
 	IP valid				1
 	confidence				2
 	signature				7
 	stream direction	    1
 	stream valid		    1
 	
-	Total 					36
+	Total 					40
 
 	Full Table Storage Overhead: 
 
-	64 entries * 36 bits = 2304 bits = 288 Bytes
+	64 entries * 40 bits = 2560 bits = 320 Bytes
 
 	NOTE: The field prefetch class is used for book-keeping purposes. 
 */
@@ -119,14 +119,14 @@ public:
 
 	FIELD					STORAGE (bits)
 	
-	stride					7	(6 bits stride + 1 sign bit)
+	stride					9	(8 bits stride + 1 sign bit)
 	confidence 				2
 
-	Total					9
+	Total					11
 
 	Full Table Storage Overhead:
 	
-	128 entries * 9 bits = 1152 bits = 144 Bytes
+	128 entries * 11 bits = 1408 bits = 176 Bytes
 
 */
 
@@ -157,7 +157,7 @@ class REGION_STREAM_TABLE {
 
 	FIELD					STORAGE (bits)
 
-	region id				    3
+	region id				    5
 	tentative dense				1
 	trained dense				1
 	positive/negative count		6
@@ -165,11 +165,11 @@ class REGION_STREAM_TABLE {
 	lru 					    3
 	bit vector line access		32	(for 2KB region)
 
-	Total					    47
+	Total					    49
 
 	Full Table Storage Overhead:
 
-	8 entries * 47 bits = 376 bits = 47 Bytes
+	8 entries * 49 bits = 392 bits = 49 Bytes
 
 */
 
@@ -206,7 +206,8 @@ uint16_t update_sig_l1(uint16_t old_sig, int delta){
     int sig_delta = 0;
 
     // 7-bit sign magnitude form, since we need to track deltas from +63 to -63
-    sig_delta = (delta < 0) ? (((-1) * delta) + (1 << 6)) : delta;
+    sig_delta = (delta < 0) ? (((-1) * delta) + (1 << 8)) : delta;
+    sig_delta = ((sig_delta >> 7) ^ sig_delta) & ((1 << 7)-1);
     new_sig = ((old_sig << 1) ^ sig_delta) & ((1 << NUM_SIG_BITS)-1);                     
 
     return new_sig;
@@ -216,14 +217,14 @@ uint16_t update_sig_l1(uint16_t old_sig, int delta){
 uint32_t ipcp_encode_metadata(int stride, uint16_t type, int spec_nl){
 	uint32_t metadata = 0;
 
-	// first encode stride in the last 8 bits of the metadata
+	// first encode stride in the last 9 bits of the metadata
 	if(stride > 0)
         metadata = stride;
 	else
-        metadata = ((-1*stride) | 0b1000000);
+        metadata = ((-1*stride) | 0b100000000);
 
-	// encode the type of IP in the next 4 bits 			 
-	metadata = metadata | (type << 8);
+	// encode the type of IP in the next 3 bits 			 
+	metadata = metadata | (type << 9);
 
 	// encode the speculative NL bit in the next 1 bit
 	metadata = metadata | (spec_nl << 12);
@@ -261,13 +262,12 @@ void CACHE::prefetcher_initialize()
     cout << "L1D [IPCP] Prefetcher" << endl;
 	cout << "IP Table Entries: " << NUM_IP_TABLE_L1_ENTRIES << endl;
 	cout << "CSPT Entries: " << NUM_CSPT_ENTRIES << endl; 
-	cout << "RST_ENTRIES: " << NUM_RST_ENTRIES << endl; 
-	cout << "RR_ENTRIES: " << NUM_OF_RR_ENTRIES << endl;
+	cout << "RST ENTRIES: " << NUM_RST_ENTRIES << endl; 
+	cout << "RR ENTRIES: " << NUM_OF_RR_ENTRIES << endl;
 
     for( int i=0; i <NUM_RST_ENTRIES; i++)
         rstable[cpu][i].lru = i;
-    for( uint32_t i=0; i <NUM_CPUS; i++)
-    {
+    for( uint32_t i=0; i <NUM_CPUS; i++) {
         prefetch_degree[cpu][0] = 0;
         prefetch_degree[cpu][1] = 6;
         prefetch_degree[cpu][2] = 3;
@@ -282,9 +282,10 @@ void CACHE::prefetcher_cycle_operate()
 
 uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cache_hit, bool hit_pref, uint8_t type, uint64_t metadata_in)
 {
+    ip = ip >> 2;
     uint64_t curr_page = hash_page(addr >> LOG2_PAGE_SIZE); 	//current page 
     uint64_t line_addr = addr >> LOG2_BLOCK_SIZE;		        //cache line address
-    uint64_t line_offset = (addr >> LOG2_BLOCK_SIZE) & 0x3F; 	//cache line offset
+    uint64_t line_offset = (addr >> LOG2_BLOCK_SIZE) & 0xFF; 	//cache line offset
     uint16_t signature = 0, last_signature = 0;
     uint16_t ip_tag = (ip >> NUM_IP_INDEX_BITS) & ((1 << NUM_IP_TAG_BITS)-1);
 
@@ -408,7 +409,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
     //Checking if IP is already classified as a part of the GS class, so that for the new region we will set the tentative (spec_dense) bit.
     for(int i = 0; i < NUM_RST_ENTRIES; i++)
     {
-        if(rstable[cpu][i].region_id == ((trackers_l1[cpu][index].last_vpage << 1) | (trackers_l1[cpu][index].last_line_offset >> 5)))
+        if(rstable[cpu][i].region_id == ((trackers_l1[cpu][index].last_vpage << 3) | (trackers_l1[cpu][index].last_line_offset >> 5)))
         {
             if(rstable[cpu][i].trained_dense == 1)
                 flag = 1;
@@ -417,7 +418,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
     }
     for(c=0; c < NUM_RST_ENTRIES; c++)
     {
-        if(((curr_page << 1) | (line_offset >> 5)) == rstable[cpu][c].region_id)
+        if(((curr_page << 3) | (line_offset >> 5)) == rstable[cpu][c].region_id)
         {
             if(rstable[cpu][c].line_access[line_offset & REGION_OFFSET_MASK] == 0)
             {
@@ -480,18 +481,19 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
                 rstable[cpu][i].lru++;
             }
         }
-        if (flag == 1)
+        if (flag == 1) 
             rstable[cpu][c].tentative_dense =1;
         else
             rstable[cpu][c].tentative_dense = 0;
         
-        rstable[cpu][c].region_id = (curr_page << 1) | (line_offset >> 5);
+        rstable[cpu][c].region_id = (curr_page << 3) | (line_offset >> 5);
         rstable[cpu][c].trained_dense = 0;
         rstable[cpu][c].pos_neg_count = MAX_POS_NEG_COUNT/2;
         rstable[cpu][c].dir = 0;
         rstable[cpu][c].lru = 0;
         for(int i=0; i < NUM_OF_LINES_IN_REGION; i++)
             rstable[cpu][c].line_access[i]=0;
+        rstable[cpu][c].line_access[line_offset & REGION_OFFSET_MASK] = 1;
     }
 
     // update constant stride(CS) confidence
@@ -513,98 +515,86 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
     signature = update_sig_l1(last_signature, stride);
     trackers_l1[cpu][index].signature = signature;
 
+    flag = 1;
     if(trackers_l1[cpu][index].str_valid == 1){                         // stream IP
         // for stream, prefetch with twice the usual degree
-        if(prefetch_degree[cpu][S_TYPE] < 3)
-            flag = 1;
-        for (int i=0; i<prefetch_degree[cpu][S_TYPE]; i++) {
-            uint64_t pf_address = 0;
+        flag = 0;
+        uint64_t pf_address = 0;
 
-            if(trackers_l1[cpu][index].str_dir == 1){                   // +ve stream
-                pf_address = (line_addr + i + 1) << LOG2_BLOCK_SIZE;
-                metadata = ipcp_encode_metadata(1, S_TYPE, spec_nl[cpu]);    // stride is 1
-            }
-            else{                                                       // -ve stream
-                pf_address = (line_addr - i - 1) << LOG2_BLOCK_SIZE;
-                metadata = ipcp_encode_metadata(-1, S_TYPE, spec_nl[cpu]);   // stride is -1
-            }
+        if(trackers_l1[cpu][index].str_dir == 1){                   // +ve stream
+            pf_address = (line_addr + prefetch_degree[cpu][S_TYPE] + 1) << LOG2_BLOCK_SIZE;
+            metadata = ipcp_encode_metadata(1, S_TYPE, spec_nl[cpu]);    // stride is 1
+        }
+        else{                                                       // -ve stream
+            pf_address = (line_addr - prefetch_degree[cpu][S_TYPE] - 1) << LOG2_BLOCK_SIZE;
+            metadata = ipcp_encode_metadata(-1, S_TYPE, spec_nl[cpu]);   // stride is -1
+        }
 
-            if(acc[cpu][1] < 75)
-                metadata = ipcp_encode_metadata(0, S_TYPE, spec_nl[cpu]);
-            // Check if prefetch address is in same 4 KB page
-            if ((pf_address >> LOG2_PAGE_SIZE) != (addr >> LOG2_PAGE_SIZE)){
+        if(acc[cpu][S_TYPE] < 75)
+            metadata = ipcp_encode_metadata(0, S_TYPE, spec_nl[cpu]);
+        // Check if prefetch address is in same 16 KB page
+        if ((pf_address >> LOG2_PAGE_SIZE) != (addr >> LOG2_PAGE_SIZE)){
+            pf_address = 0;
+        }
+
+        trackers_l1[cpu][index].pref_type = S_TYPE;
+        
+        int found_in_filter = 0;
+        for(uint32_t i = 0; i < recent_request_filter.size(); i++)
+        {
+            if(recent_request_filter[i] == ((pf_address >> LOG2_BLOCK_SIZE) & RR_TAG_MASK))
+            {
+                // Prefetch address is present in RR filter
+                found_in_filter = 1;
                 break;
             }
-
-            trackers_l1[cpu][index].pref_type = S_TYPE;
-            
-            int found_in_filter = 0;
-            for(uint32_t i = 0; i < recent_request_filter.size(); i++)
-            {
-                if(recent_request_filter[i] == ((pf_address >> 6) & RR_TAG_MASK))
-                {
-                    // Prefetch address is present in RR filter
-                    found_in_filter = 1;
-                    break;
-                }
-            }
-            //Issue prefetch request only if prefetch address is not present in RR filter
-            if(found_in_filter == 0) 
-            { 
-                prefetch_line(pf_address, fill_level, metadata);
-                recent_request_filter.push_back((pf_address >> 6) & RR_TAG_MASK);
-                if(recent_request_filter.size() > NUM_OF_RR_ENTRIES)
-                    recent_request_filter.erase(recent_request_filter.begin());
-            }
-            num_prefs++;
         }
-    } else {
-        flag = 1;
-    }
+        //Issue prefetch request only if prefetch address is not present in RR filter
+        if(found_in_filter == 0 && pf_address != 0) 
+        { 
+            prefetch_line(pf_address, fill_level, metadata);
+            recent_request_filter.push_back((pf_address >> LOG2_BLOCK_SIZE) & RR_TAG_MASK);
+            if(recent_request_filter.size() > NUM_OF_RR_ENTRIES)
+                recent_request_filter.erase(recent_request_filter.begin());
+        }
+        num_prefs++;
+    } 
 
     if(trackers_l1[cpu][index].conf > 1 && trackers_l1[cpu][index].last_stride != 0 && flag == 1){            // CS IP  
-        if(prefetch_degree[cpu][CS_TYPE] < 2)
-            flag = 1;
+        flag = 0;
+
+        uint64_t pf_address = (line_addr + (trackers_l1[cpu][index].last_stride*(prefetch_degree[cpu][CS_TYPE]+1))) << LOG2_BLOCK_SIZE;
+
+        // Check if prefetch address is in same 4 KB page
+        if ((pf_address >> LOG2_PAGE_SIZE) != (addr >> LOG2_PAGE_SIZE)){
+            pf_address = 0;
+        }
+
+        trackers_l1[cpu][index].pref_type = CS_TYPE;
+        if(acc[cpu][CS_TYPE] > 75)                
+            metadata = ipcp_encode_metadata(trackers_l1[cpu][index].last_stride, CS_TYPE, spec_nl[cpu]);
         else
-            flag = 0;
-
-        for (int i=0; i<prefetch_degree[cpu][CS_TYPE]; i++) {
-            uint64_t pf_address = (line_addr + (trackers_l1[cpu][index].last_stride*(i+1))) << LOG2_BLOCK_SIZE;
-
-            // Check if prefetch address is in same 4 KB page
-            if ((pf_address >> LOG2_PAGE_SIZE) != (addr >> LOG2_PAGE_SIZE)){
+            metadata = ipcp_encode_metadata(0, CS_TYPE, spec_nl[cpu]);
+        int found_in_filter = 0;
+        for(uint32_t i = 0; i < recent_request_filter.size(); i++)
+        {
+            if(recent_request_filter[i] == ((pf_address >> LOG2_BLOCK_SIZE) & RR_TAG_MASK))
+            {
+                // Prefetch address is present in RR filter
+                found_in_filter = 1;
                 break;
             }
-
-            trackers_l1[cpu][index].pref_type = CS_TYPE;
-            if(acc[cpu][2] > 75)                
-                metadata = ipcp_encode_metadata(trackers_l1[cpu][index].last_stride, CS_TYPE, spec_nl[cpu]);
-            else
-                metadata = ipcp_encode_metadata(0, CS_TYPE, spec_nl[cpu]);
-            int found_in_filter = 0;
-            for(uint32_t i = 0; i < recent_request_filter.size(); i++)
-            {
-                if(recent_request_filter[i] == ((pf_address >> 6) & RR_TAG_MASK))
-                {
-                    // Prefetch address is present in RR filter
-                    found_in_filter = 1;
-                    break;
-                }
-            }
-            //Issue prefetch request only if prefetch address is not present in RR filter
-            if(found_in_filter == 0)
-            {
-                prefetch_line(pf_address, fill_level, metadata);
-                //Add to RR filter
-                recent_request_filter.push_back((pf_address >> 6) & RR_TAG_MASK);
-                if(recent_request_filter.size() > NUM_OF_RR_ENTRIES)
-                    recent_request_filter.erase(recent_request_filter.begin());
-            }
-            num_prefs++;
         }
-    } else {
-        flag = 1;
-    }
+        //Issue prefetch request only if prefetch address is not present in RR filter
+        if(found_in_filter == 0 && pf_address != 0) {
+            prefetch_line(pf_address, fill_level, metadata);
+            //Add to RR filter
+            recent_request_filter.push_back((pf_address >> LOG2_BLOCK_SIZE) & RR_TAG_MASK);
+            if(recent_request_filter.size() > NUM_OF_RR_ENTRIES)
+                recent_request_filter.erase(recent_request_filter.begin());
+        }
+        num_prefs++;
+    } 
 
     if(CSPT_l1[cpu][signature].conf >= 0 && CSPT_l1[cpu][signature].stride != 0 && flag == 1) {  // if conf>=0, continue looking for stride
         int pref_offset = 0,i=0;                                                        // CPLX IP
@@ -613,42 +603,42 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
             pref_offset += CSPT_l1[cpu][signature].stride;
             uint64_t pf_address = ((line_addr + pref_offset) << LOG2_BLOCK_SIZE);
 
-            // Check if prefetch address is in same 4 KB page
+            // Check if prefetch address is in same 16 KB page
             if (((pf_address >> LOG2_PAGE_SIZE) != (addr >> LOG2_PAGE_SIZE)) || 
-                    (CSPT_l1[cpu][signature].conf == -1) ||
+                    (CSPT_l1[cpu][signature].conf <= 0) ||
                     (CSPT_l1[cpu][signature].stride == 0)){
                 // if new entry in CSPT or stride is zero, break
+                pref_offset -= CSPT_l1[cpu][signature].stride;
                 break;
             }
 
-            // we are not prefetching at L2 for CPLX type, so encode stride as 0
-            trackers_l1[cpu][index].pref_type = CPLX_TYPE;
-            metadata = ipcp_encode_metadata(0, CPLX_TYPE, spec_nl[cpu]);
-            if(CSPT_l1[cpu][signature].conf > 0){                                 // prefetch only when conf>0 for CPLX
-                trackers_l1[cpu][index].pref_type = 3;
-                int found_in_filter = 0;
-                for(uint32_t i = 0; i < recent_request_filter.size(); i++)
-                {
-                    if(recent_request_filter[i] == ((pf_address >> 6) & RR_TAG_MASK))
-                    {
-                        // Prefetch address is present in RR filter
-                        found_in_filter = 1;
-                        break;
-                    }
-                }
-                //Issue prefetch request only if prefetch address is not present in RR filter
-                if(found_in_filter == 0)
-                {
-                    prefetch_line(pf_address, fill_level, metadata);
-                    //Add to RR filter
-                    recent_request_filter.push_back((pf_address >> 6) & RR_TAG_MASK);
-                    if(recent_request_filter.size() > NUM_OF_RR_ENTRIES)
-                        recent_request_filter.erase(recent_request_filter.begin());
-                }
-                num_prefs++;
-            }
             signature = update_sig_l1(signature, CSPT_l1[cpu][signature].stride);
         }
+
+        // we are not prefetching at L2 for CPLX type, so encode stride as 0
+        uint64_t pf_address = ((line_addr + pref_offset) << LOG2_BLOCK_SIZE);
+        trackers_l1[cpu][index].pref_type = CPLX_TYPE;
+        metadata = ipcp_encode_metadata(0, CPLX_TYPE, spec_nl[cpu]);
+        int found_in_filter = 0;
+        for(uint32_t i = 0; i < recent_request_filter.size(); i++)
+        {
+            if(recent_request_filter[i] == ((pf_address >> LOG2_BLOCK_SIZE) & RR_TAG_MASK))
+            {
+                // Prefetch address is present in RR filter
+                found_in_filter = 1;
+                break;
+            }
+        }
+        //Issue prefetch request only if prefetch address is not present in RR filter
+        if(found_in_filter == 0)
+        {
+            prefetch_line(pf_address, fill_level, metadata);
+            //Add to RR filter
+            recent_request_filter.push_back((pf_address >> LOG2_BLOCK_SIZE) & RR_TAG_MASK);
+            if(recent_request_filter.size() > NUM_OF_RR_ENTRIES)
+                recent_request_filter.erase(recent_request_filter.begin());
+        }
+        num_prefs++;
     } 
 
     // if no prefetches are issued till now, speculatively issue a next_line prefetch
@@ -669,7 +659,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
             int found_in_filter = 0;
             for(uint32_t i = 0; i < recent_request_filter.size(); i++)
             {
-                if(recent_request_filter[i] == ((pf_address >> 6) & RR_TAG_MASK))
+                if(recent_request_filter[i] == ((pf_address >> LOG2_BLOCK_SIZE) & RR_TAG_MASK))
                 {
                     // Prefetch address is present in RR filter
                     found_in_filter = 1;
@@ -681,7 +671,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
             {
                 prefetch_line(pf_address, fill_level, metadata);
                 //Add to RR filter
-                recent_request_filter.push_back((pf_address >> 6) & RR_TAG_MASK);
+                recent_request_filter.push_back((pf_address >> LOG2_BLOCK_SIZE) & RR_TAG_MASK);
                 if(recent_request_filter.size() > NUM_OF_RR_ENTRIES)
                     recent_request_filter.erase(recent_request_filter.begin());
             }

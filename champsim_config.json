@@ -1,7 +1,7 @@
 {
     "executable_name": "bin/champsim",
     "block_size": 64,
-    "page_size": 2097152,
+    "page_size": 16384,
     "heartbeat_frequency": 10000000,
     "num_cores": 1,
 

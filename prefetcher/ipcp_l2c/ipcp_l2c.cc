@@ -51,27 +51,27 @@ class IP_TABLE {
 
         IP tag                                  9
         IP valid                                1
-        stride		                            7       (6 bits stride + 1 sign bit)
+        stride		                            9       (8 bits stride + 1 sign bit)
         prefetch type				            2
 
-        Total                                   19
+        Total                                   21
 
         Full Table Storage Overhead:
 
-        64 entries * 19 bits = 1216 bits = 152 Bytes
+        64 entries * 21 bits = 1344 bits = 168 Bytes
 */
 
 uint64_t num_misses_l2[NUM_CPUS] = {0};
 uint32_t spec_nl_l2[NUM_CPUS] = {0};
 IP_TABLE trackers[NUM_CPUS][NUM_IP_TABLE_L2_ENTRIES];
 
-/*ipcp_decode_stride: This function decodes 7 bit stride from the metadata from IPCP at L1. 6 bits for magnitude and 1 bit for sign. */
+/*ipcp_decode_stride: This function decodes 9 bit stride from the metadata from IPCP at L1. 8 bits for magnitude and 1 bit for sign. */
 int ipcp_decode_stride(uint32_t metadata){
     int stride=0;
-    if(metadata & 0b1000000)
-        stride = -1*(metadata & 0b111111);
+    if(metadata & 0b100000000)
+        stride = -1*(metadata & 0b11111111);
     else
-        stride = metadata & 0b111111;
+        stride = metadata & 0b11111111;
 
     return stride;
 }
@@ -79,14 +79,14 @@ int ipcp_decode_stride(uint32_t metadata){
 /* encode_metadata_l2: This function encodes the stride, prefetch class type and speculative nl fields in the metadata. */
 uint32_t encode_metadata_l2(int stride, uint16_t type, int spec_nl_l2){
     uint32_t metadata = 0;
-    // first encode stride in the last 8 bits of the metadata
+    // first encode stride in the last 9 bits of the metadata
     if(stride > 0)
         metadata = stride;
     else
-        metadata = ((-1*stride) | 0b1000000);
+        metadata = ((-1*stride) | 0b100000000);
 
-    // encode the type of IP in the next 4 bits
-    metadata = metadata | (type << 8);
+    // encode the type of IP in the next 3 bits
+    metadata = metadata | (type << 9);
 
     // encode the speculative NL bit in the next 1 bit
     metadata = metadata | (spec_nl_l2 << 12);
@@ -108,12 +108,13 @@ void CACHE::prefetcher_cycle_operate()
 
 uint64_t CACHE::l2c_prefetcher_operate(uint64_t addr, uint64_t ip, uint8_t cache_hit, bool hit_pref, uint8_t type, uint64_t metadata_in)
 {
+    ip = ip >> 2;
     uint64_t line_addr = addr >> LOG2_BLOCK_SIZE;
     uint16_t ip_tag = (ip >> NUM_IP_INDEX_BITS_L2) & ((1 << NUM_IP_TAG_BITS_L2)-1);
 
     int prefetch_degree = 0;
     int64_t stride = ipcp_decode_stride(metadata_in);
-    uint32_t pref_type = (metadata_in & 0xF00) >> 8;
+    uint32_t pref_type = (metadata_in & 0xE00) >> 9;
     int num_prefs = 0;
 
     if(NUM_CPUS == 1){
@@ -160,14 +161,12 @@ uint64_t CACHE::l2c_prefetcher_operate(uint64_t addr, uint64_t ip, uint8_t cache
             prefetch_degree = prefetch_degree*2;
         } 
 
-        for (int i=0; i<prefetch_degree; i++) {
-            uint64_t pf_address = (line_addr + (trackers[cpu][index].stride*(i+1))) << LOG2_BLOCK_SIZE;
-            
-            // Check if prefetch address is in same 4 KB page
-            if ((pf_address >> LOG2_PAGE_SIZE) != (addr >> LOG2_PAGE_SIZE))
-                break;
+        uint64_t pf_address = (line_addr + (trackers[cpu][index].stride*(prefetch_degree+1))) << LOG2_BLOCK_SIZE;
+        
+        // Check if prefetch address is in same 4 KB page
+        if ((pf_address >> LOG2_PAGE_SIZE) == (addr >> LOG2_PAGE_SIZE)) {
             num_prefs++;
-        	prefetch_line(pf_address, fill_level, 0);
+            prefetch_line(pf_address, fill_level, 0);
         }
     }
     

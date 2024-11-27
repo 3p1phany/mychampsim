@@ -357,7 +357,7 @@ bool CACHE::readlike_miss(PACKET& handle_pkt)
                 pf_useful++;
                 pf_late++;
                 // For IPCP
-                uint32_t pref_type = (mshr_entry->pf_metadata & 0xF00) >> 8;
+                uint32_t pref_type = (mshr_entry->pf_metadata & 0xE00) >> 9;
                 if (pref_type < 6) pref_useful[mshr_entry->cpu][pref_type]++;
             }
 
@@ -404,7 +404,7 @@ bool CACHE::readlike_miss(PACKET& handle_pkt)
         if(handle_pkt.type == PREFETCH && handle_pkt.fill_level == fill_level) {
             pf_miss_issued++;      
             // For IPCP
-            uint32_t pref_type = (handle_pkt.pf_metadata & 0xF00) >> 8;
+            uint32_t pref_type = (handle_pkt.pf_metadata & 0xE00) >> 9;
             if (pref_type < 6) pref_filled[handle_pkt.cpu][pref_type]++;
         }
     }
@@ -463,7 +463,8 @@ bool CACHE::filllike_miss(std::size_t set, std::size_t way, PACKET& handle_pkt)
         assert(handle_pkt.type != METADATA);
         fill_block.valid = true;
         fill_block.prefetch = (handle_pkt.type == PREFETCH && handle_pkt.pf_origin_level == fill_level);
-        fill_block.pref_type = (handle_pkt.pf_metadata & 0xF00) >> 8;
+        // For IPCP
+        fill_block.pref_type = (handle_pkt.pf_metadata & 0xE00) >> 9;
         fill_block.dirty = (handle_pkt.type == WRITEBACK || (handle_pkt.type == RFO && handle_pkt.to_return.empty()));
         fill_block.address = handle_pkt.address;
         fill_block.v_address = handle_pkt.v_address;
