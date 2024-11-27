@@ -129,6 +129,11 @@ if(lines[config_line-1].find("virtual_prefetch") == -1):
     print(f"L1D virtual_prefetch is not in line {config_line}")
     exit(1)
 
+if(type == "ipcp"):
+    command = f"sed -i '{config_line},{config_line}c\        \"virtual_prefetch\": false,' {config_fname}"
+print(command)
+os.system(command)
+
 ## L2 Prefetcher
 config_line = 89
 if(lines[config_line-1].find("prefetcher") == -1):
