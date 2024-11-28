@@ -28,7 +28,7 @@ if(lines[config_line-1].find("prefetcher") == -1):
 if(type=="tyche"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"tyche\",' {config_fname}"
 elif(type=="stride" or type=="stride-l1" or type == "triage-l2" or type == "triangel-l2" or type == "catp-l2" or type=="misb-l2" or type=="isb-l2" or type=="domino-l2" or type=="bop"):
-    command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"stride_l1d\",' {config_fname}"
+    command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"stride\",' {config_fname}"
 elif(type == "berti"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"berti\",' {config_fname}"
 elif(type == "dbp"):
@@ -129,7 +129,7 @@ if(lines[config_line-1].find("virtual_prefetch") == -1):
     print(f"L1D virtual_prefetch is not in line {config_line}")
     exit(1)
 
-if(type == "ipcp"):
+if(type == "stride" or type == "ipcp"):
     command = f"sed -i '{config_line},{config_line}c\        \"virtual_prefetch\": false,' {config_fname}"
 print(command)
 os.system(command)
@@ -140,11 +140,9 @@ if(lines[config_line-1].find("prefetcher") == -1):
     print(f"L2C prefetcher is not in line {config_line}")
     exit(1)
 
-if(type == "tyche" or type == "imp" or type == "gretch" or type=="stride"):
-    command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"stride_l2c\",' {config_fname}"
-elif(type == "ipcp"):
+if(type == "ipcp"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"ipcp_l2c\",' {config_fname}"
-elif(type == "no" or type == "stride-l1" or type == "berti" or type == "dbp" or type == "cdp" or type == "domino" or type == "isb" or type == "misb" or type == "cmc" or type == "triage-l1" or type == "triangel" or type == "catp" or type == "la"):
+elif(type == "no" or type == "stride" or type == "berti" or type == "dbp" or type == "cdp" or type == "domino" or type == "isb" or type == "misb" or type == "cmc" or type == "triage-l1" or type == "triangel" or type == "catp" or type == "la"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"no\",' {config_fname}"
 elif(type == "triage-l2" or type == "cmc-triage"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"triage_isr\",' {config_fname}"

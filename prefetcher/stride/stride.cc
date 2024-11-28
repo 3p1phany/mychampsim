@@ -3,6 +3,7 @@
 
 #define IPT_NUM 48
 #define L1_STRIDE_DISTANCE 8
+#define L2_STRIDE_DISTANCE 32
 #define SP_CONF_MAX 3
 
 class IPT_L1 {
@@ -30,20 +31,8 @@ uint8_t update_conf(int64_t stride, int64_t last_stride, uint8_t conf){
     return conf_ret;
 }
 
-uint64_t encode_metadata(int stride, PREF_TYPE pref_type){
-	uint64_t metadata = 0;
-
-	if(stride > 0)
-    	metadata = stride & 0x7fffffff;
-	else
-    	metadata = (((-1*stride) & 0x7fffffff) | 0x80000000);
-
-	metadata = metadata | ((uint64_t)pref_type << 32);
-	return metadata;
-}
-
 pair<uint64_t, uint64_t> stride_cache_operate(uint64_t cpu, uint64_t addr, uint64_t ip){
-    uint64_t pf_address = 0, pf_metadata = 0;
+    uint64_t pf_address_l1 = 0, pf_address_l2 = 0;
     uint32_t hit_idx = IPT_NUM;
 
     for(uint32_t i = 0; i < IPT_NUM; i++){
@@ -63,11 +52,13 @@ pair<uint64_t, uint64_t> stride_cache_operate(uint64_t cpu, uint64_t addr, uint6
 
         if(trigger_prefetch){
             int64_t stride = ipt_hit_item.stride;
-            uint64_t distance = L1_STRIDE_DISTANCE;
-            int64_t delta = stride * distance;
+            uint64_t l1_distance = L1_STRIDE_DISTANCE;
+            int64_t l1_delta = stride * l1_distance;
+            uint64_t l2_distance = L2_STRIDE_DISTANCE;
+            int64_t l2_delta = stride * l2_distance;
 
-            pf_address = addr + delta;
-            pf_metadata = encode_metadata((int)(stride * distance), PREF_STRIDE);
+            pf_address_l1 = addr + l1_delta;
+            pf_address_l2 = addr + l2_delta;
         }
 
         if(!ignore){
@@ -120,11 +111,11 @@ pair<uint64_t, uint64_t> stride_cache_operate(uint64_t cpu, uint64_t addr, uint6
         ipt[cpu][rplc_idx].rplc_bits = IPT_NUM-1;
     }
 
-    return make_pair(pf_address, pf_metadata);
+    return make_pair(pf_address_l1, pf_address_l2);
 }
 
 void CACHE::prefetcher_initialize() {
-    std::cout << "L1D [Stride] prefetcher" << std::endl;
+    std::cout << "L1D+L2C [Stride] prefetcher" << std::endl;
 
     for(uint32_t i = 0; i < IPT_NUM; i++){
         ipt[cpu][i].conf = 0;
@@ -134,9 +125,12 @@ void CACHE::prefetcher_initialize() {
 
 uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cache_hit, bool hit_pref, uint8_t type, uint64_t metadata_in) { 
     /** Stride Prefetcher */
-    pair<uint64_t, uint64_t> stride = stride_cache_operate(cpu, addr, ip);
-    if(stride.first != 0){
-        int stride_succ = prefetch_line(stride.first, fill_level, stride.second);
+    pair<uint64_t, uint64_t> pf_address = stride_cache_operate(cpu, addr, ip);
+    if(pf_address.first != 0 && (pf_address.first >> LOG2_PAGE_SIZE) == (addr >> LOG2_PAGE_SIZE)){
+        int stride_succ = prefetch_line(pf_address.first, FILL_L1, 0);
+    }
+    if(pf_address.second != 0 && (pf_address.second >> LOG2_PAGE_SIZE) == (addr >> LOG2_PAGE_SIZE)){
+        int stride_succ = prefetch_line(pf_address.second, FILL_L2, 0);
     }
 
     return metadata_in;
