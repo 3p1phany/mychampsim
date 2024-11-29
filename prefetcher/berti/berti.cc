@@ -150,7 +150,7 @@ uint64_t latency_table_del(uint64_t line_addr, uint32_t cpu)
      */
     
     for (uint32_t i = 0; i < LATENCY_TABLE_SIZE; i++) {
-        if (current_core_cycle[cpu] & TIME_MASK < latencyt[cpu][i].time) {
+        if ((current_core_cycle[cpu] & TIME_MASK) < latencyt[cpu][i].time) {
             latencyt[cpu][i].addr = 0;
             latencyt[cpu][i].ip   = 0;
             latencyt[cpu][i].time = 0;
@@ -494,8 +494,6 @@ void delta_table_add(uint64_t ip, uint32_t cpu, int64_t stride)
     stride_t *aux = tmp->stride;
 
     // Increase IP confidence
-    uint8_t max = 0;
-
     for (int i = 0; i < DELTA_TABLE_STRIDE_SIZE; i++)
     {
         if (aux[i].stride == stride)
@@ -557,7 +555,6 @@ uint8_t delta_table_get(uint64_t ip, uint32_t cpu, stride_t res[MAX_PF])
 
     delta_table_t *tmp = delta_table[cpu][ip];
     stride_t *aux = tmp->stride;
-    uint64_t max_conf = 0;
     uint16_t dx = 0;
     
     for (int i = 0; i < DELTA_TABLE_STRIDE_SIZE; i++)
@@ -649,7 +646,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
     
     uint64_t line_addr = (addr >> LOG2_BLOCK_SIZE); // Line addr
     
-    ip = ((ip >> 1) ^ (ip >> 4));
+    ip = ((ip >> 2) ^ (ip >> 5));
     ip = ip & IP_MASK;
 
     if (!cache_hit){
@@ -687,27 +684,36 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
 
     if (!delta_table_get(ip, cpu, stride)) return metadata_in;
 
-    int launched = 0;
-    for (int i = 0; i < MAX_PF_LAUNCH; i++) {
+    int launched_l1 = 0;
+    int launched_l2 = 0;
+    int launched_l3 = 0;
+    for (int i = 0; i < MAX_PF; i++) {
         uint64_t p_addr = (line_addr + stride[i].stride) << LOG2_BLOCK_SIZE;
-        uint64_t p_b_addr = (p_addr >> LOG2_BLOCK_SIZE);
 
-        uint8_t pf_fill_level = FILL_L1;
         float mshr_load = ((float) MSHR.size() / (float) MSHR_SIZE) * 100;
 
         // Level of prefetching depends son CONFIDENCE
         if (stride[i].rpl == L1 && mshr_load < MSHR_LIMIT)
         {
-            pf_fill_level = FILL_L1;
+            if (launched_l1 < MAX_PF_LAUNCH) {
+                if (prefetch_line(p_addr, FILL_L1, 0)){
+                    launched_l1++;
+                }
+            }
         } else if (stride[i].rpl == L1 || stride[i].rpl == L2){
-            pf_fill_level = FILL_L2;
+            if (launched_l2 < MAX_PF_LAUNCH) {
+                if (prefetch_line(p_addr, FILL_L2, 0)){
+                    launched_l2++;
+                }
+            }
         } else if (stride[i].rpl == L3){
-            pf_fill_level = FILL_LLC;
+            if (launched_l3 < MAX_PF_LAUNCH) {
+                if (prefetch_line(p_addr, FILL_LLC, 0)){
+                    launched_l3++;
+                }
+            }   
         }
 
-        if (prefetch_line(p_addr, pf_fill_level, 0)){
-            launched++;
-        }
     }
 
     return metadata_in;
@@ -720,7 +726,7 @@ uint64_t CACHE::prefetcher_cache_fill(uint64_t addr, uint32_t set, uint32_t way,
     // Remove @ from latency table
     uint64_t ip      = latency_table_get_ip(line_addr, cpu);
     uint64_t latency = latency_table_del(line_addr, cpu);
-    uint64_t cycle   = current_core_cycle[cpu] & TIME_MASK - latency;
+    uint64_t cycle   = (current_core_cycle[cpu] & TIME_MASK) - latency;
 
     if (latency > LAT_MASK) latency = 0;
 

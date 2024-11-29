@@ -18,7 +18,7 @@
 #define nENABLE_BERTI
 
 // Berti defines
-# define LATENCY_TABLE_SIZE           (L1D_MSHR_SIZE + 16 + 64)
+# define LATENCY_TABLE_SIZE           (128)
 # define HISTORY_TABLE_SET            (8)
 # define HISTORY_TABLE_WAY            (16)
 # define TABLE_SET_MASK               (0x7)
@@ -29,7 +29,7 @@
 // Mask
 # define MAX_HISTORY_IP               (8)
 # define MAX_PF                       (16)
-# define MAX_PF_LAUNCH                (12)
+# define MAX_PF_LAUNCH                (2)
 # define STRIDE_MASK                  (12)
 # define IP_MASK                      (0x3FF)
 # define TIME_MASK                    (0xFFFF)
