@@ -18,6 +18,7 @@ class IP_TABLE_L1 {
     int32_t  delta_sum;
     uint8_t  pat_hist;
     uint8_t  pat_last;
+    uint8_t  useline;
 
     IP_TABLE_L1 () {
         state = 0;
@@ -51,12 +52,13 @@ class IP_TABLE_L1 {
     delta_sum               18
     pat_hist                5
     pat_last                3
+    useline                 1
 	
-	Total 					125
+	Total 					126
 
 	Full Table Storage Overhead: 
 
-	48 entries * 125 bits = 6000 bits = 750 Bytes
+	48 entries * 126 bits = 6048 bits = 756 Bytes
 */
 
 class GLOBAL_TABLE_L1 {
@@ -128,7 +130,7 @@ uint64_t generate_stream_addr(uint64_t addr, uint8_t direction, uint8_t step, ui
 
 void CACHE::prefetcher_initialize() 
 {
-    cout << "L1D [LA664E] Prefetcher" << endl;
+    cout << "L1D [LA864] Prefetcher" << endl;
 }
 
 void CACHE::prefetcher_cycle_operate()
@@ -136,6 +138,17 @@ void CACHE::prefetcher_cycle_operate()
     for (auto it = ip_table[cpu].begin(); it != ip_table[cpu].end(); it++) {
         if (it->second.state != 0) {
             it->second.cycle++;
+            if (it->second.cycle >= 32) {
+                it->second.cycle = 31;
+            }
+        }
+    }
+    for (auto it = global_table[cpu].begin(); it != global_table[cpu].end(); it++) {
+        if (it->second.dense_cnt != 0) {
+            it->second.cycle++;
+            if (it->second.cycle >= 32) {
+                it->second.cycle = 31;
+            }
         }
     }
 }
@@ -147,20 +160,22 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
     uint64_t pf_l2_addr = 0;
     uint64_t pf_l3_addr = 0;
     uint64_t pf_type = 0;
-
+    
     if (ip_table[cpu].find(ip_tag) != ip_table[cpu].end()) {
         IP_TABLE_L1 *entry = &ip_table[cpu][ip_tag];
 
         // prefetch
-        uint32_t stride = (addr & 0xFFFFFFFF) - entry->addr;
-        uint32_t pstride = (stride & 0xF) ^ ((stride >> 4) & 0xF) ^ ((stride >> 8) & 0xF) ^ ((stride >> 12) & 0xF);
-        if  (entry->pat_hist == 0x1F) {
+        int32_t bstride = (addr & 0xFFFFFFFF) - entry->addr;
+        int32_t lstride = (addr & 0xFFFFFFC0) - (entry->addr & 0xFFFFFFC0);
+        int32_t stride = entry->useline ? lstride : bstride;
+        uint32_t pstride = (bstride & 0xF) ^ ((bstride >> 4) & 0xF) ^ ((bstride >> 8) & 0xF) ^ ((bstride >> 12) & 0xF);
+        if  ((entry->delta_sum > 0x40 || entry->delta_sum < -0x40) && entry->pat_last > 1 && entry->pat_hist == 0x1F) {
             pf_l1_addr = addr + entry->delta_sum;
             pf_l2_addr = addr + ((entry->delta_sum) << 1);
             pf_l3_addr = addr + ((entry->delta_sum) << 3);
             pf_type = 3;
         }
-        if (entry->state == 3 || (entry->state == 2 && entry->stride == stride)) {
+        if (stride != 0 && (entry->state == 3 || (entry->state == 2 && entry->stride == stride))) {
             pf_l1_addr = generate_stride_addr(addr, entry->stride, entry->step, 0); //x2 x4 x8
             pf_l2_addr = generate_stride_addr(addr, entry->stride, entry->step, 1); //x4 x8 x16
             pf_l3_addr = generate_stride_addr(addr, entry->stride, entry->step, 3); //x16 x32 x64
@@ -168,22 +183,51 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
         }
 
         // update
-        if (entry->stride == stride) {
-            entry->state = entry->state + 1;
-            if (entry->state > 3) {
-                entry->state = 3;
+        if (stride != 0) {
+            if (entry->stride == stride) {
+                entry->state = entry->state + 1;
+                if (entry->state > 3) {
+                    entry->state = 3;
+                }
             }
-        }
-        else {
-            if (entry->state > 1) {
-                entry->state = entry->state - 1;
+            else {
+                if (entry->state > 1) {
+                    entry->state = entry->state - 1;
+                }
+                if (entry->state == 1) {
+                    if ((stride & 0xFF800000) == 0 || (stride & 0xFF800000) == 0xFF800000) {
+                        if (stride > 0) {
+                            entry->stride = (stride & 0x7FFFFF);
+                        }
+                        else {
+                            entry->stride = (stride | 0xFF800000);
+                        }
+
+                        if (stride <= 0x40 && stride >= -0x40) {
+                            entry->useline = 1;
+                            entry->stride = stride > 0 ? 0x40 : -0x40;
+                        }
+                        else {
+                            entry->useline = 0;
+                        }
+                    }
+                    else 
+                        entry->stride = 0;
+                }
             }
-            if (entry->state == 1) {
-                if ((stride & ~0xFFFFFF) == 0) 
-                    entry->stride = (stride & 0xFFFFFF);
-                else 
-                    entry->stride = 0;
+
+            if (entry->cycle < 8) {
+                entry->step = 2;
             }
+            else if (entry->cycle < 16) {
+                entry->step = 1;
+            }
+            else {
+                entry->step = 0;
+            }
+
+            entry->cycle = 0;
+            entry->rrip = entry->rrip < 2 ? 0 : entry->rrip - 2;
         }
 
         int hit_idx = -1;
@@ -195,20 +239,12 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
         }
         uint8_t pat_hit = hit_idx != -1 && entry->pat_last == hit_idx;
 
-        entry->pat_hist = ((entry->pat_hist << 1) | pat_hit) & 0x1F;
-        entry->pat_last = hit_idx == -1 ? 0 : hit_idx;
-        
-        for (int i = 4; i > 0; i--) {
-            entry->pstride[i] = entry->pstride[i-1];
-        }
-        entry->pstride[0] = pstride;
-        
         if (!pat_hit) {
             entry->delta_sum = 0;
         }
-        else if ((entry->pat_hist & (1 << hit_idx)) != (1 << hit_idx)) {
-            if ((stride & ~0xFF) == 0) {
-                entry->delta_sum += stride;
+        else if ((entry->pat_hist & ((1 << hit_idx) - 1)) != ((1 << hit_idx) - 1)) {
+            if ((bstride & 0xFFFF0000) == 0 || (bstride & 0xFFFF0000) == 0xFFFF0000) {
+                entry->delta_sum += bstride;
             }
             else {
                 entry->delta_sum = 0;
@@ -217,19 +253,15 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
             }
         }
 
-        if (entry->cycle < 8) {
-            entry->step = 2;
+        entry->pat_hist = ((entry->pat_hist << 1) | pat_hit) & 0x1F;
+        entry->pat_last = hit_idx == -1 ? 0 : hit_idx;
+        
+        for (int i = 4; i > 0; i--) {
+            entry->pstride[i] = entry->pstride[i-1];
         }
-        else if (entry->cycle < 16) {
-            entry->step = 1;
-        }
-        else {
-            entry->step = 0;
-        }
-
+        entry->pstride[0] = pstride;
+        
         entry->addr = addr;
-        entry->cycle = 0;
-        entry->rrip = entry->rrip < 2 ? 0 : entry->rrip - 2;
     }
     else {
         bool find = 0;
@@ -283,8 +315,8 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
         }
     }
 
-    uint32_t region_tag = (addr >> (6 + 4)) & 0xFFFF;
-    uint8_t line_offset = (addr >> 6) & 0xF;
+    uint32_t region_tag = (addr >> (LOG2_BLOCK_SIZE + 4)) & 0xFFFF;
+    uint8_t line_offset = (addr >> LOG2_BLOCK_SIZE) & 0xF;
     uint16_t line_mask = 1 << line_offset;
     if (global_table[cpu].find(region_tag) != global_table[cpu].end()) {
         GLOBAL_TABLE_L1 *entry = &global_table[cpu][region_tag];
@@ -304,21 +336,22 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
             if (entry->dense_cnt >= 12) {
                 entry->dense = 1;
             }
+
+            if (entry->cycle < 8) {
+                entry->step = 2;
+            }
+            else if (entry->cycle < 16) {
+                entry->step = 1;
+            }
+            else {
+                entry->step = 0;
+            }
+
+            entry->cycle = 0;
+            entry->rrip = entry->rrip < 2 ? 0 : entry->rrip - 2;
         }
         entry->bitmap |= line_mask;
 
-        if (entry->cycle < 8) {
-            entry->step = 2;
-        }
-        else if (entry->cycle < 16) {
-            entry->step = 1;
-        }
-        else {
-            entry->step = 0;
-        }
-
-        entry->cycle = 0;
-        entry->rrip = entry->rrip < 2 ? 0 : entry->rrip - 2;
     }
     else {
         bool find = 0;
