@@ -42,16 +42,16 @@
 # define CONFIDENCE_INIT              (1)  // 6 bits
 # define CONFIDENCE_L1                (65) // 6 bits
 # define CONFIDENCE_L2                (50) // 6 bits
-# define CONFIDENCE_L3                (35) // 6 bits
+# define CONFIDENCE_L2R               (35) // 6 bits
 # define CONFIDENCE_MIN               (8)  // 6 bits
 # define MSHR_LIMIT                   (70)
 
 // Stride rpl
-// L1, L2, L3
+// L1, L2, L2R
 # define R                            (0x0)
 # define L1                           (0x1)
 # define L2                           (0x2)
-# define L3                           (0x3)
+# define L2R                          (0x3)
 
 // Structs define
 typedef struct latency_table {

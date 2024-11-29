@@ -21,8 +21,8 @@ bool compare_greater_stride_t(stride_t a, stride_t b)
         else if (a.rpl != L2 && b.rpl == L2) return 0;
         else
         {
-            if (a.rpl == L3 && b.rpl != L3) return 1;
-            if (a.rpl != L3 && b.rpl == L3) return 0;
+            if (a.rpl == L2R && b.rpl != L2R) return 1;
+            if (a.rpl != L2R && b.rpl == L2R) return 0;
             else
             {
                 if (std::abs(a.stride) < std::abs(b.stride)) return 1;
@@ -438,7 +438,7 @@ void delta_table_increase_conf_ip(uint64_t ip, uint32_t cpu)
             // Set bits
             if (aux_conf > CONFIDENCE_L1) aux[i].rpl = L1;
             else if (aux_conf > CONFIDENCE_L2) aux[i].rpl = L2;
-            else if (aux_conf > CONFIDENCE_L3) aux[i].rpl = L3;
+            else if (aux_conf > CONFIDENCE_L2R) aux[i].rpl = L2R;
             else aux[i].rpl = R;
             
             aux[i].conf = 0;
@@ -524,7 +524,7 @@ void delta_table_add(uint64_t ip, uint32_t cpu, int64_t stride)
     } else {
         for (int i = 0; i < DELTA_TABLE_STRIDE_SIZE; i++)
         {
-            if (aux[i].rpl == L3 && aux[i].conf < dx_conf)
+            if (aux[i].rpl == L2R && aux[i].conf < dx_conf)
             {
                 dx_conf = aux[i].conf;
                 dx_remove = i;
@@ -686,7 +686,6 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
 
     int launched_l1 = 0;
     int launched_l2 = 0;
-    int launched_l3 = 0;
     for (int i = 0; i < MAX_PF; i++) {
         uint64_t p_addr = (line_addr + stride[i].stride) << LOG2_BLOCK_SIZE;
 
@@ -700,20 +699,13 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
                     launched_l1++;
                 }
             }
-        } else if (stride[i].rpl == L1 || stride[i].rpl == L2){
+        } else if (stride[i].rpl == L1 || stride[i].rpl == L2 || stride[i].rpl == L2R){
             if (launched_l2 < MAX_PF_LAUNCH) {
                 if (prefetch_line(p_addr, FILL_L2, 0)){
                     launched_l2++;
                 }
             }
-        } else if (stride[i].rpl == L3){
-            if (launched_l3 < MAX_PF_LAUNCH) {
-                if (prefetch_line(p_addr, FILL_LLC, 0)){
-                    launched_l3++;
-                }
-            }   
-        }
-
+        } 
     }
 
     return metadata_in;
