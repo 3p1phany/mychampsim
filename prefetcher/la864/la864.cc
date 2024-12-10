@@ -109,18 +109,54 @@ class GLOBAL_TABLE_L1 {
 std::map<uint16_t, IP_TABLE_L1> ip_table[NUM_CPUS];
 std::map<uint32_t, GLOBAL_TABLE_L1> global_table[NUM_CPUS];
 
+uint32_t l1_pf_total_interval = 0;
+uint32_t l1_pf_useful_interval = 0, l1_pf_useful_cnt = 0;
+uint32_t l1_pf_late_interval = 0, l1_pf_late_cnt = 0;
+uint32_t l1_last_pf_total, l1_last_pf_useful, l1_last_pf_late;
+uint8_t l1_depth = 2;
+
+uint32_t l2_pf_total_interval = 0;
+uint32_t l2_pf_useful_interval = 0, l2_pf_useful_cnt = 0;
+uint32_t l2_pf_late_interval = 0, l2_pf_late_cnt = 0;
+uint32_t l2_last_pf_total, l2_last_pf_useful, l2_last_pf_late;
+uint8_t l2_depth = 2;
+
+uint32_t l3_pf_total_interval = 0;
+uint32_t l3_pf_useful_interval = 0, l3_pf_useful_cnt = 0;
+uint32_t l3_pf_late_interval = 0, l3_pf_late_cnt = 0;
+uint32_t l3_last_pf_total, l3_last_pf_useful, l3_last_pf_late;
+uint8_t l3_depth = 2;
+
 uint64_t stride_pf_num = 0;
 uint64_t stream_pf_num = 0;
 uint64_t pattern_pf_num = 0;
 
-uint64_t generate_stride_addr(uint64_t addr, uint32_t stride, uint8_t step, uint8_t radix) {
+uint64_t generate_stride_addr(uint64_t addr, uint32_t stride, uint8_t step, uint8_t radix, uint8_t depth) {
+    if (depth == 0) {
+        return 0;
+    }
+    if (depth == 1 && step > 0) {
+        step -= 1;
+    }
+    if (depth == 3 && step < 2) {
+        step += 1;
+    }
     int64_t ext_stride = static_cast<int32_t>(stride << 8) >> 8;
     int64_t delta = (step >= 2) ? ext_stride << (3+radix) : 
                     (step == 1) ? ext_stride << (2+radix) :
                                   ext_stride << (1+radix) ;
     return addr + delta;
 }
-uint64_t generate_stream_addr(uint64_t addr, uint8_t direction, uint8_t step, uint8_t radix) {
+uint64_t generate_stream_addr(uint64_t addr, uint8_t direction, uint8_t step, uint8_t radix, uint8_t depth) {
+    if (depth == 0) {
+        return 0;
+    }
+    if (depth == 1 && step > 0) {
+        step -= 1;
+    }
+    if (depth == 3 && step < 2) {
+        step += 1;
+    }
     int64_t ext_stride = direction ? -0x40 : 0x40;
     int64_t delta = (step >= 2) ? ext_stride << (3+radix) : 
                     (step == 1) ? ext_stride << (2+radix) :
@@ -155,6 +191,104 @@ void CACHE::prefetcher_cycle_operate()
 
 uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cache_hit, bool hit_pref, uint8_t type, uint64_t metadata_in)
 {
+    l1_pf_total_interval += (pf_fill- l1_last_pf_total);
+    l1_pf_useful_interval += (pf_useful - l1_last_pf_useful);
+    l1_pf_late_interval += (pf_late - l1_last_pf_late);
+    l1_last_pf_total = pf_fill;
+    l1_last_pf_useful = pf_useful;
+    l1_last_pf_late = pf_late;
+    if (l1_pf_total_interval >= 0xFF) {
+        l1_pf_late_cnt = (l1_pf_late_interval + l1_pf_late_cnt) / 2;
+        l1_pf_useful_cnt = (l1_pf_useful_interval + l1_pf_useful_cnt) / 2;
+
+        bool acc_high = (l1_pf_useful_cnt * 100) / 0xFF > 75;
+        bool acc_low = (l1_pf_useful_cnt * 100) / 0XFF < 12.5;
+        bool acc_med = !acc_high && !acc_low;
+        bool late_high = (l1_pf_late_cnt * 100) / 0XFF > 6.25;
+        bool depth_increase = acc_high && late_high;
+        bool depth_decrease = acc_med && !late_high || acc_low;
+        if (depth_increase) {
+            if (l1_depth < 3) {
+                l1_depth += 1;
+            }
+        }
+        else if (depth_decrease) {
+            if (l1_depth > 1) {
+                l1_depth -= 1;
+            }
+        }
+
+        l1_pf_total_interval = 0;
+        l1_pf_useful_interval = 0;
+        l1_pf_late_interval = 0;
+    }
+
+    CACHE* l2 = static_cast<CACHE*>(lower_level);
+    l2_pf_total_interval += (l2->pf_fill- l2_last_pf_total);
+    l2_pf_useful_interval += (l2->pf_useful - l2_last_pf_useful);
+    l2_pf_late_interval += (l2->pf_late - l2_last_pf_late);
+    l2_last_pf_total = l2->pf_fill;
+    l2_last_pf_useful = l2->pf_useful;
+    l2_last_pf_late = l2->pf_late;
+    if (l2_pf_total_interval >= 0xFF) {
+        l2_pf_late_cnt = (l2_pf_late_interval + l2_pf_late_cnt) / 2;
+        l2_pf_useful_cnt = (l2_pf_useful_interval + l2_pf_useful_cnt) / 2;
+
+        bool acc_high = (l2_pf_useful_cnt * 100) / 0xFF > 75;
+        bool acc_low = (l2_pf_useful_cnt * 100) / 0XFF < 12.5;
+        bool acc_med = !acc_high && !acc_low;
+        bool late_high = (l2_pf_late_cnt * 100) / 0XFF > 6.25;
+        bool depth_increase = acc_high && late_high;
+        bool depth_decrease = acc_med && !late_high || acc_low;
+        if (depth_increase) {
+            if (l2_depth < 3) {
+                l2_depth += 1;
+            }
+        }
+        else if (depth_decrease) {
+            if (l2_depth > 0) {
+                l2_depth -= 1;
+            }
+        }
+
+        l2_pf_total_interval = 0;
+        l2_pf_useful_interval = 0;
+        l2_pf_late_interval = 0;
+    }
+
+    CACHE* l3 = static_cast<CACHE*>(static_cast<CACHE*>(lower_level)->lower_level);
+    l3_pf_total_interval += (l3->pf_fill- l3_last_pf_total);
+    l3_pf_useful_interval += (l3->pf_useful - l3_last_pf_useful);
+    l3_pf_late_interval += (l3->pf_late - l3_last_pf_late);
+    l3_last_pf_total = l3->pf_fill;
+    l3_last_pf_useful = l3->pf_useful;
+    l3_last_pf_late = l3->pf_late;
+    if (l3_pf_total_interval >= 0xFF) {
+        l3_pf_late_cnt = (l3_pf_late_interval + l3_pf_late_cnt) / 2;
+        l3_pf_useful_cnt = (l3_pf_useful_interval + l3_pf_useful_cnt) / 2;
+
+        bool acc_high = (l3_pf_useful_cnt * 100) / 0xFF > 75;
+        bool acc_low = (l3_pf_useful_cnt * 100) / 0XFF < 12.5;
+        bool acc_med = !acc_high && !acc_low;
+        bool late_high = (l3_pf_late_cnt * 100) / 0XFF > 6.25;
+        bool depth_increase = acc_high && late_high;
+        bool depth_decrease = acc_med && !late_high || acc_low;
+        if (depth_increase) {
+            if (l3_depth < 3) {
+                l3_depth += 1;
+            }
+        }
+        else if (depth_decrease) {
+            if (l3_depth > 0) {
+                l3_depth -= 1;
+            }
+        }
+
+        l3_pf_total_interval = 0;
+        l3_pf_useful_interval = 0;
+        l3_pf_late_interval = 0;
+    }
+
     uint16_t ip_tag = ((ip >> 2) & 0xFFFF) ^ ((ip >> 18) & 0xFFFF);
     uint64_t pf_l1_addr = 0;
     uint64_t pf_l2_addr = 0;
@@ -176,9 +310,9 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
             pf_type = 3;
         }
         if (stride != 0 && (entry->state == 3 || (entry->state == 2 && entry->stride == stride))) {
-            pf_l1_addr = generate_stride_addr(addr, entry->stride, entry->step, 0); //x2 x4 x8
-            pf_l2_addr = generate_stride_addr(addr, entry->stride, entry->step, 1); //x4 x8 x16
-            pf_l3_addr = generate_stride_addr(addr, entry->stride, entry->step, 3); //x16 x32 x64
+            pf_l1_addr = generate_stride_addr(addr, entry->stride, entry->step, 0, l1_depth); //x2 x4 x8
+            pf_l2_addr = generate_stride_addr(addr, entry->stride, entry->step, 1, l2_depth); //x4 x8 x16
+            pf_l3_addr = generate_stride_addr(addr, entry->stride, entry->step, 3, l3_depth); //x16 x32 x64
             pf_type = 2;
         }
 
@@ -323,9 +457,9 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
 
         // predict
         if (entry->dense) {
-            pf_l1_addr = generate_stream_addr(addr, entry->direction, entry->step, 0); // x2 x4 x8
-            pf_l2_addr = generate_stream_addr(addr, entry->direction, entry->step, 1); // x4 x8 x16
-            pf_l3_addr = generate_stream_addr(addr, entry->direction, entry->step, 3); // x16 x32 x64
+            pf_l1_addr = generate_stream_addr(addr, entry->direction, entry->step, 0, l1_depth); // x2 x4 x8
+            pf_l2_addr = generate_stream_addr(addr, entry->direction, entry->step, 1, l2_depth); // x4 x8 x16
+            pf_l3_addr = generate_stream_addr(addr, entry->direction, entry->step, 3, l3_depth); // x16 x32 x64
             pf_type = 1;
         }
 
@@ -371,9 +505,9 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
 
         // predict
         if (dense) {
-            pf_l1_addr = generate_stream_addr(addr, direction, step, 0); // x2 x4 x8
-            pf_l2_addr = generate_stream_addr(addr, direction, step, 1); // x4 x8 x16
-            pf_l3_addr = generate_stream_addr(addr, direction, step, 3); // x16 x32 x64
+            pf_l1_addr = generate_stream_addr(addr, direction, step, 0, l1_depth); // x2 x4 x8
+            pf_l2_addr = generate_stream_addr(addr, direction, step, 1, l2_depth); // x4 x8 x16
+            pf_l3_addr = generate_stream_addr(addr, direction, step, 3, l3_depth); // x16 x32 x64
             pf_type = 1;
         }
 
@@ -419,7 +553,11 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
     
     if (pf_l1_addr != 0) {
         prefetch_line(pf_l1_addr, FILL_L1, 0);
+    }
+    if (pf_l2_addr != 0) {
         prefetch_line(pf_l2_addr, FILL_L2, 0);
+    }
+    if (pf_l3_addr != 0) {
         prefetch_line(pf_l3_addr, FILL_LLC, 0);
     }
     if (pf_type == 1) {
