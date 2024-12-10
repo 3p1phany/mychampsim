@@ -397,7 +397,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
         
         entry->addr = addr;
     }
-    else {
+    else if (!cache_hit) {
         bool find = 0;
         if (ip_table[cpu].size() < NUM_IP_TABLE_ENTRIES) {
             IP_TABLE_L1 entry;
@@ -487,7 +487,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
         entry->bitmap |= line_mask;
 
     }
-    else {
+    else if (!cache_hit) {
         bool find = 0;
         uint8_t dense = 0;
         uint8_t direction = 0;
