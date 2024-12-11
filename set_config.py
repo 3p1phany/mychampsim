@@ -131,6 +131,8 @@ if(lines[config_line-1].find("virtual_prefetch") == -1):
 
 if(type == "stride" or type == "ipcp"):
     command = f"sed -i '{config_line},{config_line}c\        \"virtual_prefetch\": false,' {config_fname}"
+elif(type == "berti" or type == "la864"):
+    command = f"sed -i '{config_line},{config_line}c\        \"virtual_prefetch\": true,' {config_fname}"
 print(command)
 os.system(command)
 
