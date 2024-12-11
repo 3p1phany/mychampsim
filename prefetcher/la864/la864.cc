@@ -2,7 +2,7 @@
 #include "cache.h"
 #include <vector>
 
-#define NUM_IP_TABLE_ENTRIES 64
+#define NUM_IP_TABLE_ENTRIES 48
 #define NUM_GLOBAL_TABLE_ENTRIES 8 
 
 class IP_TABLE_L1 {
@@ -71,6 +71,7 @@ class GLOBAL_TABLE_L1 {
         uint8_t  rrip;
         uint8_t  cycle;
         uint8_t  step;
+        uint8_t  gid;
 
         GLOBAL_TABLE_L1 () {
             region_tag = 0;
@@ -81,6 +82,7 @@ class GLOBAL_TABLE_L1 {
             rrip = 0;
             cycle = 0;
             step = 0;
+            gid = 0;
         };
 };
 
@@ -97,12 +99,13 @@ class GLOBAL_TABLE_L1 {
     rrip					3
     cycle					5
     step					2
+    gid                     3
 
-	Total					49
+	Total					52
 
 	Full Table Storage Overhead:
 
-	8 entries * 49 bits = 384 bits = 49 Bytes
+	8 entries * 52 bits = 416 bits = 52 Bytes
 
 */
 
@@ -294,6 +297,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
     uint64_t pf_l2_addr = 0;
     uint64_t pf_l3_addr = 0;
     uint64_t pf_type = 0;
+    uint64_t pf_metadata = 0;
     
     if (ip_table[cpu].find(ip_tag) != ip_table[cpu].end()) {
         IP_TABLE_L1 *entry = &ip_table[cpu][ip_tag];
@@ -308,12 +312,14 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
             pf_l2_addr = addr + ((entry->delta_sum) << 1);
             pf_l3_addr = addr + ((entry->delta_sum) << 3);
             pf_type = 3;
+            pf_metadata = std::distance(ip_table[cpu].begin(), ip_table[cpu].find(ip_tag)) + 1;
         }
         if (stride != 0 && (entry->state == 3 || (entry->state == 2 && entry->stride == stride))) {
             pf_l1_addr = generate_stride_addr(addr, entry->stride, entry->step, 0, l1_depth); //x2 x4 x8
             pf_l2_addr = generate_stride_addr(addr, entry->stride, entry->step, 1, l2_depth); //x4 x8 x16
             pf_l3_addr = generate_stride_addr(addr, entry->stride, entry->step, 3, l3_depth); //x16 x32 x64
             pf_type = 2;
+            pf_metadata = std::distance(ip_table[cpu].begin(), ip_table[cpu].find(ip_tag)) + 1;
         }
 
         // update
@@ -461,6 +467,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
             pf_l2_addr = generate_stream_addr(addr, entry->direction, entry->step, 1, l2_depth); // x4 x8 x16
             pf_l3_addr = generate_stream_addr(addr, entry->direction, entry->step, 3, l3_depth); // x16 x32 x64
             pf_type = 1;
+            pf_metadata = NUM_IP_TABLE_ENTRIES + entry->gid + 1;
         }
 
         // update
@@ -489,6 +496,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
     }
     else if (!cache_hit) {
         bool find = 0;
+        uint8_t gid = 63;
         uint8_t dense = 0;
         uint8_t direction = 0;
         uint8_t step = 0;
@@ -496,11 +504,13 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
             direction = 1;
             dense = global_table[cpu][region_tag+1].dense;
             step = global_table[cpu][region_tag+1].step;
+            gid = global_table[cpu][region_tag+1].gid;
         }
         if (global_table[cpu].find(region_tag-1) != global_table[cpu].end()) {
             direction = 0;
             dense = global_table[cpu][region_tag-1].dense;
             step = global_table[cpu][region_tag-1].step;
+            gid = global_table[cpu][region_tag-1].gid;
         }
 
         // predict
@@ -508,6 +518,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
             pf_l1_addr = generate_stream_addr(addr, direction, step, 0, l1_depth); // x2 x4 x8
             pf_l2_addr = generate_stream_addr(addr, direction, step, 1, l2_depth); // x4 x8 x16
             pf_l3_addr = generate_stream_addr(addr, direction, step, 3, l3_depth); // x16 x32 x64
+            pf_metadata = NUM_IP_TABLE_ENTRIES + gid + 1;
             pf_type = 1;
         }
 
@@ -521,6 +532,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
             entry.rrip = 0x5;
             entry.cycle = 0;
             entry.step = step;
+            entry.gid = gid == 63 ? (gid + 1) % NUM_GLOBAL_TABLE_ENTRIES : gid;
             global_table[cpu][region_tag] = entry;
             find = 1;
         }
@@ -537,6 +549,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
                     entry.rrip = 0x5;
                     entry.cycle = 0;
                     entry.step = step;
+                    entry.gid = gid == 63 ? (gid + 1) % NUM_GLOBAL_TABLE_ENTRIES : gid;
                     global_table[cpu][region_tag] = entry;
                     find = 1;
                     break;
@@ -552,7 +565,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
     }
     
     if (pf_l1_addr != 0) {
-        prefetch_line(pf_l1_addr, FILL_L1, 0);
+        prefetch_line(pf_l1_addr, FILL_L1, pf_metadata);
     }
     if (pf_l2_addr != 0) {
         prefetch_line(pf_l2_addr, FILL_L2, 0);
@@ -570,7 +583,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
         pattern_pf_num++;
     }
 
-    return metadata_in;
+    return pf_metadata;
 }
 
 uint64_t CACHE::prefetcher_cache_fill(uint64_t addr, uint32_t set, uint32_t way, uint8_t prefetch, uint64_t evicted_addr, uint64_t metadata_in, int64_t ret_val)

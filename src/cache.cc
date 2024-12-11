@@ -341,6 +341,13 @@ bool CACHE::readlike_miss(PACKET& handle_pkt)
     auto mshr_entry = std::find_if(MSHR.begin(), MSHR.end(), eq_addr<PACKET>(handle_pkt.address, OFFSET_BITS));
     bool mshr_full = (MSHR.size() == MSHR_SIZE);
 
+    // update prefetcher on load instructions and prefetches from upper levels
+    if (should_activate_prefetcher(handle_pkt.type) && handle_pkt.pf_origin_level < fill_level) {
+        cpu = handle_pkt.cpu;
+        uint64_t pf_base_addr = (virtual_prefetch ? handle_pkt.v_address : handle_pkt.address); //& ~bitmask(match_offset_bits ? 0 : OFFSET_BITS);
+        handle_pkt.pf_metadata = impl_prefetcher_cache_operate(pf_base_addr, handle_pkt.ip, 0, 0, handle_pkt.type, handle_pkt.pf_metadata);
+    }
+
     if (mshr_entry != MSHR.end()) // miss already inflight
     {
         // update fill location
@@ -406,14 +413,7 @@ bool CACHE::readlike_miss(PACKET& handle_pkt)
             // For IPCP
             uint32_t pref_type = (handle_pkt.pf_metadata & 0xE00) >> 9;
             if (pref_type < 6) pref_filled[handle_pkt.cpu][pref_type]++;
-        }
-    }
-
-    // update prefetcher on load instructions and prefetches from upper levels
-    if (should_activate_prefetcher(handle_pkt.type) && handle_pkt.pf_origin_level < fill_level) {
-        cpu = handle_pkt.cpu;
-        uint64_t pf_base_addr = (virtual_prefetch ? handle_pkt.v_address : handle_pkt.address); //& ~bitmask(match_offset_bits ? 0 : OFFSET_BITS);
-        handle_pkt.pf_metadata = impl_prefetcher_cache_operate(pf_base_addr, handle_pkt.ip, 0, 0, handle_pkt.type, handle_pkt.pf_metadata);
+        }    // update prefetcher on load instructions and prefetches from upper levels
     }
 
     return true;
