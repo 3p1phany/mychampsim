@@ -46,8 +46,8 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
     uint32_t current_cycle = current_core_cycle[cpu] & 0xFFFF;
     if (page_tag == entry->page_tag) {
         if (offset != entry->offset[entry->idx]) {
-            for (uint8_t i = 0; i < DELTA_TABLE_OFFSET_NUM; i++) {
-                if (entry->cycle != 0 && current_cycle > entry->cycle[i] && 
+            for (uint8_t i = entry->idx > 0 ? entry->idx - 1 : DELTA_TABLE_OFFSET_NUM - 1; i != entry->idx; i = i > 0 ? i-1 : DELTA_TABLE_OFFSET_NUM - 1) {
+                if (entry->cycle[i] != 0 && current_cycle > entry->cycle[i] && 
                     current_cycle - entry->cycle[i] > avg_delay) {
                     int16_t delta = offset > entry->offset[i] ? offset - entry->offset[i] : -1*(entry->offset[i] - offset);
                     bool exist = false;
@@ -69,11 +69,7 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
                             }
                         }
                     }
-                    if (!replace) {
-                        for (uint8_t j = 0; j < DELTA_TABLE_DELTA_NUM; j++) {
-                            entry->conf[j] = entry->conf[j] > 1 ? entry->conf[j] - 1 : 0;
-                        }
-                    }
+                    break;
                 }
             }
             entry->offset[entry->idx] = offset;
