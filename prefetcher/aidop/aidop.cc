@@ -45,31 +45,41 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
     uint8_t offset = (addr >> LOG2_BLOCK_SIZE) & 0xFF;
     uint32_t current_cycle = current_core_cycle[cpu] & 0xFFFF;
     if (page_tag == entry->page_tag) {
-        for (uint8_t i = 0; i < DELTA_TABLE_OFFSET_NUM; i++) {
-            if (current_cycle > entry->cycle[i] && current_cycle - entry->cycle[i] > avg_delay) {
-                int16_t delta = offset > entry->offset[i] ? offset - entry->offset[i] : -1*(entry->offset[i] - offset);
-                bool exist = false;
-                for (uint8_t j = 0; j < DELTA_TABLE_DELTA_NUM; j++) {
-                    if (delta == entry->delta[j]) {
-                        exist = true;
-                        entry->conf[j] = entry->conf[j] < 7 ? entry->conf[j] + 1 : 7;
-                        break;
-                    }
-                }
-                if (!exist) {
+        if (offset != entry->offset[entry->idx]) {
+            for (uint8_t i = 0; i < DELTA_TABLE_OFFSET_NUM; i++) {
+                if (entry->cycle != 0 && current_cycle > entry->cycle[i] && 
+                    current_cycle - entry->cycle[i] > avg_delay) {
+                    int16_t delta = offset > entry->offset[i] ? offset - entry->offset[i] : -1*(entry->offset[i] - offset);
+                    bool exist = false;
                     for (uint8_t j = 0; j < DELTA_TABLE_DELTA_NUM; j++) {
-                        if (entry->conf[j] == 0) {
-                            entry->delta[j] = delta;
-                            entry->conf[j] = 1;
+                        if (delta == entry->delta[j]) {
+                            exist = true;
+                            entry->conf[j] = entry->conf[j] < 7 ? entry->conf[j] + 1 : 7;
                             break;
+                        }
+                    }
+                    bool replace = false;
+                    if (!exist) {
+                        for (uint8_t j = 0; j < DELTA_TABLE_DELTA_NUM; j++) {
+                            if (entry->conf[j] == 0) {
+                                entry->delta[j] = delta;
+                                entry->conf[j] = 1;
+                                replace = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!replace) {
+                        for (uint8_t j = 0; j < DELTA_TABLE_DELTA_NUM; j++) {
+                            entry->conf[j] = entry->conf[j] > 1 ? entry->conf[j] - 1 : 0;
                         }
                     }
                 }
             }
+            entry->offset[entry->idx] = offset;
+            entry->cycle[entry->idx] = current_cycle;
+            entry->idx = entry->idx < DELTA_TABLE_OFFSET_NUM - 1 ? entry->idx + 1 : 0;
         }
-        entry->offset[entry->idx] = offset;
-        entry->cycle[entry->idx] = current_cycle;
-        entry->idx = entry->idx < DELTA_TABLE_OFFSET_NUM - 1 ? entry->idx + 1 : 0;
     }
     else {
         uint8_t max_conf = 0;
@@ -80,7 +90,9 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
                 max_idx = i;
             }
         }
-        entry->best_delta = entry->delta[max_idx];
+        if (max_conf > 4) {
+            entry->best_delta = entry->delta[max_idx];
+        }
         for (uint8_t i = 0; i < DELTA_TABLE_OFFSET_NUM; i++) {
             entry->offset[i] = 0;
             entry->cycle[i] = 0;
@@ -91,6 +103,9 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
         }
         entry->idx = 0;
         entry->page_tag = page_tag;
+        entry->offset[entry->idx] = offset;
+        entry->cycle[entry->idx] = current_cycle;
+        entry->idx = entry->idx < DELTA_TABLE_OFFSET_NUM - 1 ? entry->idx + 1 : 0;
     }
 
     if (entry->best_delta != 0) {
