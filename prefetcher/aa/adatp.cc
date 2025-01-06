@@ -76,7 +76,7 @@ void adatp_prefetcher_cycle_operate(CACHE* l2) {
     // Prefetch From Metadata PrefQ
     auto prefetch = adatp_metadata_onchip[l2->cpu].pref();
     if (prefetch.addr != 0 && !adatp[l2->cpu].recent_prefetch(prefetch.addr)) {
-        l2->prefetch_line(prefetch.addr << 6, true, 0);
+        l2->prefetch_line(prefetch.addr << 6, FILL_L2, 0);
     }
 
     // Metadate WriteQ
