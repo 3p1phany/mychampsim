@@ -6,7 +6,7 @@ import sys
 type = sys.argv[1]
 
 type_list = ["no", "stride", "stride-l1", "dbp", "cdp", "ipcp", "berti", "bop", "imp", "la864", "AA",
-             "gretch", "tyche", "domino", "isb", "misb", "triage-l1", "triangel-l1", "triangel-l2", "cmc", "catp-l1", "catp-l2",
+             "gretch", "tyche", "domino", "isb", "misb", "triage-l1", "triangel-l1", "triangel-l2", "cmc", 
              "domino-l2", "cmc-domino", "isb-l2", "cmc-isb", "misb-l2", "cmc-misb", 
              "triage-l2", "cmc-triage", "cmc-triangel"]
 
@@ -27,7 +27,7 @@ if(lines[config_line-1].find("prefetcher") == -1):
 
 if(type=="tyche"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"tyche\",' {config_fname}"
-elif(type=="stride" or type=="stride-l1" or type == "triage-l2" or type == "triangel-l2" or type == "catp-l2" or type=="misb-l2" or type=="isb-l2" or type=="domino-l2" or type=="bop"):
+elif(type=="stride" or type=="stride-l1" or type == "triage-l2" or type == "triangel-l2" or type=="misb-l2" or type=="isb-l2" or type=="domino-l2" or type=="bop"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"stride\",' {config_fname}"
 elif(type == "berti"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"berti\",' {config_fname}"
@@ -53,8 +53,6 @@ elif(type == "triage-l1"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"triage_isr\",' {config_fname}"
 elif(type == "triangel-l1"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"triangel\",' {config_fname}"
-elif(type == "catp-l1"):
-    command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"catp\",' {config_fname}"
 elif(type == "cmc" or type == "cmc-isb" or type == "cmc-misb" or type == "cmc-triage" or type == "cmc-triangel" or type == "cmc-domino"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"cmc\",' {config_fname}"
 print(command)
@@ -102,13 +100,6 @@ else:
 print(command)
 os.system(command)
 
-if(type=="catp-l1" or type=="catp-l2"):
-    command = f"sed -i 's/#define nENABLE_CATP/#define ENABLE_CATP/' inc/catp.h"
-else:
-    command = f"sed -i 's/#define ENABLE_CATP/#define nENABLE_CATP/' inc/catp.h"
-print(command)
-os.system(command)
-
 if(type == "triage-l1" or type == "triage-l2" or type == "cmc-triage"):
     command = f"sed -i 's/#define nENABLE_TRIAGE/#define ENABLE_TRIAGE/' inc/triage.h"
 else:
@@ -123,6 +114,18 @@ else:
 print(command)
 os.system(command)
 
+if(type == "AA"):
+    command = f"sed -i 's/#define nENABLE_AidOP/#define ENABLE_AidOP/' inc/aidop.h"
+else:
+    command = f"sed -i 's/#define ENABLE_AidOP/#define nENABLE_AidOP/' inc/aidop.h"
+print(command)
+os.system(command)
+if(type == "AA"):
+    command = f"sed -i 's/#define nENABLE_AdaTP/#define ENABLE_AdaTP/' inc/adatp.h"
+else:
+    command = f"sed -i 's/#define ENABLE_AdaTP/#define nENABLE_AdaTP/' inc/adatp.h"
+print(command)
+os.system(command)
 
 config_line = 69
 if(lines[config_line-1].find("virtual_prefetch") == -1):
@@ -144,16 +147,14 @@ if(lines[config_line-1].find("prefetcher") == -1):
 
 if(type == "ipcp"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"ipcp_l2c\",' {config_fname}"
-elif(type == "no" or type == "stride" or type == "berti" or type == "dbp" or type == "cdp" or type == "domino" or type == "isb" or type == "misb" or type == "cmc" or type == "triage-l1" or type == "triangel" or type == "catp" or type == "la864"):
+elif(type == "no" or type == "stride" or type == "berti" or type == "dbp" or type == "cdp" or type == "domino" or type == "isb" or type == "misb" or type == "cmc" or type == "triage-l1" or type == "triangel" or type == "la864"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"no\",' {config_fname}"
 elif(type == "AA"):
-    command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"aidop\",' {config_fname}"
+    command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"aa\",' {config_fname}"
 elif(type == "triage-l2" or type == "cmc-triage"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"triage_isr\",' {config_fname}"
 elif(type == "triangel-l2" or type == "cmc-triangel"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"triangel\",' {config_fname}"
-elif(type == "catp-l2"):
-    command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"catp\",' {config_fname}"
 elif(type == "isb-l2" or type == "cmc-isb" or type == "misb-l2" or type == "cmc-misb"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"misb\",' {config_fname}"
 elif(type == "domino-l2" or type == "cmc-domino"):
@@ -172,7 +173,7 @@ command = f"sed -i '{config_line},{config_line}c\        \"virtual_prefetch\": f
 print(command)
 os.system(command)
 
-if(type=="isb-l2" or type=="cmc-isb" or type=="misb-l2" or type=="cmc-misb" or type=="triage-l2" or type=="triangel-l2" or type == "catp-l2" or type=="cmc-triage"  or type=="cmc-triangel" or type=="domino-l2" or type=="cmc-domino"):
+if(type=="isb-l2" or type=="cmc-isb" or type=="misb-l2" or type=="cmc-misb" or type=="triage-l2" or type=="triangel-l2" or type=="cmc-triage"  or type=="cmc-triangel" or type=="domino-l2" or type=="cmc-domino"):
     command = f"sed -i 's/#define TEMPORAL_L1D true/#define TEMPORAL_L1D false/' inc/prefetch.h"
 else:
     command = f"sed -i 's/#define TEMPORAL_L1D false/#define TEMPORAL_L1D true/' inc/prefetch.h"

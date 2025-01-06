@@ -13,11 +13,11 @@
 
 using namespace std;
 
-#define nENABLE_CATP
-#define CATP_MAX_ASSOC 16
-#define CATP_METADATA_INTERVAL 30000000
+#define ENABLE_AdaTP
+#define AdaTP_MAX_ASSOC 16
+#define AdaTP_METADATA_INTERVAL 30000000
 
-struct CATPConfig {
+struct AdaTPConfig {
     uint32_t cpu;
 
     uint32_t criticality_mode; // 0 for disable; 1 for use cycle and mshr occurpancy; 2 for instruction issue count;
@@ -48,7 +48,7 @@ struct CATPConfig {
     uint64_t metadata_delay;
 };
 
-class CATP {
+class AdaTP {
     private:
         uint32_t cpu;
 
@@ -119,11 +119,11 @@ class CATP {
     uint64_t total_pattern_enable = 0;
 
     public:
-    void init(CATPConfig* config);
-    void catp_cache_miss(uint64_t ip, uint64_t addr);
-    void catp_cache_fill(uint64_t addr, uint64_t current_cycle, uint8_t prefetch);
-    void catp_cycle_op();
-    void catp_issue_op();
+    void init(AdaTPConfig* config);
+    void adatp_cache_miss(uint64_t ip, uint64_t addr);
+    void adatp_cache_fill(uint64_t addr, uint64_t current_cycle, uint8_t prefetch);
+    void adatp_cycle_op();
+    void adatp_issue_op();
     void training_table_update_on_refill(uint64_t ip, uint64_t addr, uint64_t criticality, uint64_t current_cycle);
     void training_table_update_on_access(uint64_t ip, uint64_t addr, bool cache_hit, uint64_t current_cycle, uint64_t current_inst);
     void print_stats();
@@ -133,20 +133,20 @@ class CATP {
     bool recent_prefetch(uint64_t addr);
 };
 
-struct CATPMetaDataEntry{
+struct AdaTPMetaDataEntry{
     uint64_t next_addr;
     uint8_t conf;
 };
 
-struct catp_read_entry{
+struct adatp_read_entry{
     uint64_t ip;
     uint64_t addr;
     uint64_t cycle;
     uint64_t depth;
 };
 
-struct catp_write_entry{
-    CATPMetaDataEntry* entry;
+struct adatp_write_entry{
+    AdaTPMetaDataEntry* entry;
     bool first_write;
     uint64_t index;
     uint64_t way;
@@ -155,16 +155,16 @@ struct catp_write_entry{
     uint64_t cycle;
 };
 
-struct catp_prefetch_entry{
+struct adatp_prefetch_entry{
     uint64_t ip;
     uint64_t addr;
     uint64_t cycle;
 };
 
-class CATP_MetaData_OnChip {
+class AdaTP_MetaData_OnChip {
     private:
         uint32_t cpu;
-        std::vector<std::map<uint64_t, CATPMetaDataEntry>> entries;
+        std::vector<std::map<uint64_t, AdaTPMetaDataEntry>> entries;
 
         uint32_t assoc;    // Numbers of Cache ways that are used to store metadata
         uint64_t num_sets; // Number of Cache Sets 
@@ -186,21 +186,21 @@ class CATP_MetaData_OnChip {
         uint64_t ACCESS_CNT = 0, ASSOC_SUM = 0;
 
     public:
-        deque<catp_write_entry> writeQ;
-        deque<catp_read_entry> readQ;
-        deque<catp_prefetch_entry> prefQ;
+        deque<adatp_write_entry> writeQ;
+        deque<adatp_read_entry> readQ;
+        deque<adatp_prefetch_entry> prefQ;
 
     public:
-        void init(CATPConfig* config);
+        void init(AdaTPConfig* config);
         bool RQ_is_full();
         bool WQ_is_full();
         bool PQ_is_full();
         void add_rq(uint64_t ip, uint64_t addr, uint64_t cycle, uint64_t depth);
         void add_pq(uint64_t ip, uint64_t addr, uint64_t cycle);
-        void add_wq(CATPMetaDataEntry* entry, bool first_write, uint64_t index, uint64_t way, uint64_t addr1, uint64_t addr2, uint64_t conf, uint64_t cycle);
+        void add_wq(AdaTPMetaDataEntry* entry, bool first_write, uint64_t index, uint64_t way, uint64_t addr1, uint64_t addr2, uint64_t conf, uint64_t cycle);
         void read(uint64_t num, uint64_t cycle);
         void write(uint64_t num, uint64_t cycle);
-        catp_prefetch_entry pref();
+        adatp_prefetch_entry pref();
         void insert(uint64_t ip, uint64_t addr1, uint64_t addr2, uint64_t cycle);
         void access(uint64_t ip, uint64_t addr, uint64_t cycle);
         void adjust_assoc(uint32_t assoc);
@@ -209,3 +209,9 @@ class CATP_MetaData_OnChip {
         uint64_t get_tag(uint64_t addr);
         void print_stats();
 };
+
+void adatp_prefetcher_initialize(CACHE* l2); 
+uint64_t adatp_prefetcher_cache_operate(CACHE* l2, uint64_t addr, uint64_t ip, uint8_t cache_hit, bool hit_pref, uint8_t type, uint64_t metadata_in);
+uint64_t adatp_prefetcher_cache_fill(CACHE* l2, uint64_t addr, uint32_t set, uint32_t way, uint8_t prefetch, uint64_t evicted_addr, uint64_t metadata_in, int64_t ret_val);
+void adatp_prefetcher_cycle_operate(CACHE* l2);
+void adatp_prefetcher_final_stats(CACHE* l2);

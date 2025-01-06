@@ -2,15 +2,15 @@
 #include "cache.h"
 #include "prefetch.h"
 #include "memory_data.h"
-#include "catp.h"
+#include "adatp.h"
 
 extern MEMORY_DATA mem_data[NUM_CPUS];
 
-extern CATP catp[NUM_CPUS];
-extern CATP_MetaData_OnChip catp_metadata_onchip[NUM_CPUS];
-extern CATPConfig catp_config[NUM_CPUS];
+extern AdaTP adatp[NUM_CPUS];
+extern AdaTP_MetaData_OnChip adatp_metadata_onchip[NUM_CPUS];
+extern AdaTPConfig adatp_config[NUM_CPUS];
 
-void CATP::init(CATPConfig* config) {
+void AdaTP::init(AdaTPConfig* config) {
     cpu = config->cpu;
 
     criticality_mode = config->criticality_mode;
@@ -55,7 +55,7 @@ void CATP::init(CATPConfig* config) {
     meta_cnt.resize(cache_ways);
 }
 
-void CATP::catp_cache_miss(uint64_t ip, uint64_t addr) {
+void AdaTP::adatp_cache_miss(uint64_t ip, uint64_t addr) {
     addr = addr >> 6;
     assert(missing_status.size() <= missing_status_size);
     for (auto& entry : missing_status) {
@@ -69,7 +69,7 @@ void CATP::catp_cache_miss(uint64_t ip, uint64_t addr) {
     missing_status.push_back({addr, {ip}, 0});
 }
 
-void CATP::catp_cache_fill(uint64_t addr, uint64_t current_cycle, uint8_t prefetch) {
+void AdaTP::adatp_cache_fill(uint64_t addr, uint64_t current_cycle, uint8_t prefetch) {
     addr = addr >> 6;
     auto it = std::find_if(missing_status.begin(), missing_status.end(), [addr](const MissingStatusEntry& entry) { return entry.addr == addr; });
     if (it != missing_status.end()) {
@@ -82,7 +82,7 @@ void CATP::catp_cache_fill(uint64_t addr, uint64_t current_cycle, uint8_t prefet
     }
 }
 
-void CATP::catp_cycle_op() {
+void AdaTP::adatp_cycle_op() {
     for (auto& entry : missing_status) {
         if (criticality_mode == 1) {
             entry.criticality += (missing_status_size / missing_status.size());
@@ -90,7 +90,7 @@ void CATP::catp_cycle_op() {
     }
 }
 
-void CATP::catp_issue_op() {
+void AdaTP::adatp_issue_op() {
     for (auto& entry : missing_status) {
         if (criticality_mode == 2) {
             entry.criticality += 1;
@@ -98,7 +98,7 @@ void CATP::catp_issue_op() {
     }
 }
 
-void CATP::training_table_update_on_refill(uint64_t ip, uint64_t addr, uint64_t criticality, uint64_t current_cycle) {
+void AdaTP::training_table_update_on_refill(uint64_t ip, uint64_t addr, uint64_t criticality, uint64_t current_cycle) {
     auto it = std::find_if(training_table.begin(), training_table.end(), [ip](const TrainingEntry& entry) { return entry.ip == ip; });
     if (it != training_table.end()) {
         if (criticality_mode == 0){
@@ -145,7 +145,7 @@ void CATP::training_table_update_on_refill(uint64_t ip, uint64_t addr, uint64_t 
     }
 }
 
-void CATP::training_table_update_on_access(uint64_t ip, uint64_t addr, bool cache_hit, uint64_t current_cycle, uint64_t current_inst) {
+void AdaTP::training_table_update_on_access(uint64_t ip, uint64_t addr, bool cache_hit, uint64_t current_cycle, uint64_t current_inst) {
     addr = addr >> 6;
     if(!cache_hit) {
         set_dueller_check(addr, false, false, current_cycle);
@@ -164,16 +164,16 @@ void CATP::training_table_update_on_access(uint64_t ip, uint64_t addr, bool cach
 
         if (it->pattern_conf >= 1 || !pattern_train_dynamic_enable || !pattern_train_enable) {
             if (!cache_hit && it->critical_conf >= critical_conf_threshold){
-                catp_metadata_onchip[cpu].insert(ip, it->last_addr, addr, current_cycle);
-                catp_metadata_onchip[cpu].access(ip, addr, current_cycle);
+                adatp_metadata_onchip[cpu].insert(ip, it->last_addr, addr, current_cycle);
+                adatp_metadata_onchip[cpu].access(ip, addr, current_cycle);
                 set_dueller_check(it->last_addr, true, true, current_cycle);
             }
             else if (cache_hit && it->critical_conf >= critical_conf_threshold){
-                catp_metadata_onchip[cpu].access(ip, addr, current_cycle);
+                adatp_metadata_onchip[cpu].access(ip, addr, current_cycle);
                 set_dueller_check(it->last_addr, true, true, current_cycle);
             }
             else {
-                catp_metadata_onchip[cpu].access(ip, addr, current_cycle);
+                adatp_metadata_onchip[cpu].access(ip, addr, current_cycle);
                 set_dueller_check(it->last_addr, true, false, current_cycle);
             }
         }
@@ -217,7 +217,7 @@ void CATP::training_table_update_on_access(uint64_t ip, uint64_t addr, bool cach
     }
 }
 
-void CATP::set_dueller_check(uint64_t addr, bool meta, bool meta_write, uint64_t current_cycle){
+void AdaTP::set_dueller_check(uint64_t addr, bool meta, bool meta_write, uint64_t current_cycle){
     if (meta) {
         for (uint64_t i = 0; i < set_dueller_size; i++){
             auto set_dueller_entry = &set_dueller[i];
@@ -310,66 +310,15 @@ void CATP::set_dueller_check(uint64_t addr, bool meta, bool meta_write, uint64_t
     }
 }
 
-void CATP::set_dueller_adjust(uint64_t inst_num) {
-    static uint64_t trigger_inst = CATP_METADATA_INTERVAL;
+void AdaTP::set_dueller_adjust(uint64_t inst_num) {
+    static uint64_t trigger_inst = AdaTP_METADATA_INTERVAL;
     if (inst_num > 0 && inst_num >= trigger_inst) {
-        trigger_inst += CATP_METADATA_INTERVAL;
-        #if TEMPORAL_L1D == true
-        uint64_t cache_threshold_alloc = cache_cnt[0] / 50;
-        uint64_t cache_threshold_demand = cache_cnt[0] / 80;
-        uint64_t meta_threshold = meta_cnt[0] / 100;
-        uint64_t cache_alloc_ways = 0;
-        uint64_t cache_demand_ways = 0;
-        uint64_t meta_alloc_ways = 0;
-
+        trigger_inst += AdaTP_METADATA_INTERVAL;
         bool critical_metadata = false;
-        if (criticality_threshold >= 1500) {
-            cache_threshold_alloc = cache_cnt[0] / 10;
-            cache_threshold_demand = cache_cnt[0] / 20;
-            critical_metadata = true;
-        }
-        for (uint64_t i = 0; i < cache_ways; i++){
-            if (cache_cnt[i] > cache_threshold_demand) {
-                cache_demand_ways++;
-            }
-            if (cache_cnt[i] > cache_threshold_alloc) {
-                cache_alloc_ways++;
-            }
-            if (meta_cnt[i] > meta_threshold) {
-                meta_alloc_ways++;
-            }
-        }
-
-        uint64_t delta = 0;
-        bool increase_delta = false;
-        bool decrease_delta = false;
-        if (cache_demand_ways + meta_alloc_ways > cache_ways) {
-            delta = cache_demand_ways + meta_alloc_ways - cache_ways;
-            increase_delta = true;
-        }
-        else if (cache_demand_ways + meta_alloc_ways < cache_ways) {
-            delta = cache_ways - cache_demand_ways - meta_alloc_ways;
-            decrease_delta = true;
-        }
-
-        if (!critical_metadata && cache_demand_ways + meta_alloc_ways < cache_ways) {
-            cache_threshold_alloc = cache_cnt[0] / 50;
-            meta_threshold = 0;
-            cache_alloc_ways = 0;
-            meta_alloc_ways = 0;
-            for (uint64_t i = 0; i < cache_ways; i++){
-                if (cache_cnt[i] > cache_threshold_alloc) {
-                    cache_alloc_ways++;
-                }
-                if (meta_cnt[i] > meta_threshold) {
-                    meta_alloc_ways++;
-                }
-            }
-        }
-        #else
-        bool critical_metadata = false;
-        uint64_t cache_threshold = std::accumulate(cache_cnt.begin(), cache_cnt.end(), 0) * 0.75;
-        uint64_t meta_threshold = meta_cnt[0] / 100;
+        // uint64_t cache_threshold = std::accumulate(cache_cnt.begin(), cache_cnt.end(), 0) * 0.75;
+        // uint64_t meta_threshold = meta_cnt[0] / 100;
+        uint64_t cache_threshold = std::accumulate(cache_cnt.begin(), cache_cnt.end(), 0) * 0.5;
+        uint64_t meta_threshold =  std::accumulate(meta_cnt.begin(), meta_cnt.end(), 0) * 0.5;
         uint64_t cache_alloc_ways = 0;
         uint64_t meta_alloc_ways = 0;
 
@@ -395,13 +344,12 @@ void CATP::set_dueller_adjust(uint64_t inst_num) {
             delta = cache_ways - cache_alloc_ways - meta_alloc_ways;
             decrease_delta = true;
         }
-        #endif
 
         if (use_dynamic_assoc){
             if (cache_alloc_ways + meta_alloc_ways < cache_ways) {
                 if (meta_alloc_ways > target_assoc)
                     target_assoc = meta_alloc_ways;
-                else if (trigger_inst == 2*CATP_METADATA_INTERVAL) {
+                else if (trigger_inst == 2*AdaTP_METADATA_INTERVAL) {
                     target_assoc = meta_alloc_ways;
                 }
                 else if (target_assoc + cache_alloc_ways > cache_ways)
@@ -454,7 +402,7 @@ void CATP::set_dueller_adjust(uint64_t inst_num) {
     }
 }
 
-bool CATP::recent_prefetch(uint64_t addr) {
+bool AdaTP::recent_prefetch(uint64_t addr) {
     bool flag = false;
     for (auto& prefetch_addr : prefetch_addrs) {
         if (addr == prefetch_addr) {
@@ -468,11 +416,11 @@ bool CATP::recent_prefetch(uint64_t addr) {
     return flag;
 }
 
-uint32_t CATP::get_target_assoc() {
+uint32_t AdaTP::get_target_assoc() {
     return target_assoc;
 }
 
-void CATP::print_stats() {
+void AdaTP::print_stats() {
     printf("----training table----\n");
     for (auto& entry : training_table) {
         if (entry.occur_cnt > 0)
@@ -483,7 +431,7 @@ void CATP::print_stats() {
 }
 
 /****** MetaData_OnChip ******/ 
-void CATP_MetaData_OnChip::init(CATPConfig* config) {
+void AdaTP_MetaData_OnChip::init(AdaTPConfig* config) {
     cpu = config->cpu;
     entries.resize(config->num_sets);
 
@@ -506,43 +454,43 @@ void CATP_MetaData_OnChip::init(CATPConfig* config) {
     index_length = lg2(num_sets);
 }
 
-bool CATP_MetaData_OnChip::RQ_is_full() {
+bool AdaTP_MetaData_OnChip::RQ_is_full() {
     return readQ.size() == RQ_SIZE;
 }
 
-bool CATP_MetaData_OnChip::WQ_is_full() {
+bool AdaTP_MetaData_OnChip::WQ_is_full() {
     return writeQ.size() == WQ_SIZE;
 }
 
-bool CATP_MetaData_OnChip::PQ_is_full() {
+bool AdaTP_MetaData_OnChip::PQ_is_full() {
     return prefQ.size() == PQ_SIZE;
 }
 
-void CATP_MetaData_OnChip::adjust_assoc(uint32_t new_assoc) {
+void AdaTP_MetaData_OnChip::adjust_assoc(uint32_t new_assoc) {
     assoc = new_assoc;
 }
 
-uint32_t CATP_MetaData_OnChip::get_assoc() {
+uint32_t AdaTP_MetaData_OnChip::get_assoc() {
     return assoc;
 }
 
-uint64_t CATP_MetaData_OnChip::get_set_id(uint64_t addr) {
+uint64_t AdaTP_MetaData_OnChip::get_set_id(uint64_t addr) {
     uint64_t set_id = addr & index_mask;
     assert(set_id < num_sets);
     return set_id;
 } 
 
-uint64_t CATP_MetaData_OnChip::get_tag(uint64_t addr) {
+uint64_t AdaTP_MetaData_OnChip::get_tag(uint64_t addr) {
     uint64_t tag = addr >> index_length;
     return tag;
 }
 
-void CATP_MetaData_OnChip::add_rq(uint64_t ip, uint64_t addr, uint64_t cycle, uint64_t depth){
+void AdaTP_MetaData_OnChip::add_rq(uint64_t ip, uint64_t addr, uint64_t cycle, uint64_t depth){
     if (RQ_is_full()) {
         RQ_FULL_CNT++;
         readQ.pop_front();
     }
-    catp_read_entry new_entry;
+    adatp_read_entry new_entry;
     new_entry.ip = ip;
     new_entry.addr = addr;
     new_entry.cycle = cycle;
@@ -550,13 +498,13 @@ void CATP_MetaData_OnChip::add_rq(uint64_t ip, uint64_t addr, uint64_t cycle, ui
     readQ.push_back(new_entry);
 }
 
-void CATP_MetaData_OnChip::add_wq(CATPMetaDataEntry* entry, bool first_write, uint64_t index, uint64_t way, uint64_t addr1, uint64_t addr2, uint64_t conf, uint64_t cycle) {
+void AdaTP_MetaData_OnChip::add_wq(AdaTPMetaDataEntry* entry, bool first_write, uint64_t index, uint64_t way, uint64_t addr1, uint64_t addr2, uint64_t conf, uint64_t cycle) {
     if (WQ_is_full()) {
         WQ_FULL_CNT++;
         writeQ.pop_front();
     }
     trigger_addr.insert(addr1);
-    catp_write_entry new_entry;
+    adatp_write_entry new_entry;
     new_entry.entry = entry;
     new_entry.first_write = first_write;
     new_entry.index = index;
@@ -567,19 +515,19 @@ void CATP_MetaData_OnChip::add_wq(CATPMetaDataEntry* entry, bool first_write, ui
     writeQ.push_back(new_entry);
 }
 
-void CATP_MetaData_OnChip::add_pq(uint64_t ip, uint64_t addr, uint64_t cycle) {
+void AdaTP_MetaData_OnChip::add_pq(uint64_t ip, uint64_t addr, uint64_t cycle) {
     if (PQ_is_full()) {
         PQ_FULL_CNT++;
         prefQ.pop_front();
     }
-    catp_prefetch_entry new_entry;
+    adatp_prefetch_entry new_entry;
     new_entry.ip = ip;
     new_entry.addr = addr;
     new_entry.cycle = cycle;
     prefQ.push_back(new_entry);
 }
 
-void CATP_MetaData_OnChip::read(uint64_t num, uint64_t current_cycle) {
+void AdaTP_MetaData_OnChip::read(uint64_t num, uint64_t current_cycle) {
     for (uint64_t i = 0; i < num; i++) {
         if (readQ.size() == 0) {
             return;
@@ -596,8 +544,8 @@ void CATP_MetaData_OnChip::read(uint64_t num, uint64_t current_cycle) {
             uint64_t set_id = get_set_id(read_addr);
             uint64_t tag = get_tag(read_addr);
 
-            map<uint64_t, CATPMetaDataEntry>& entry_map = entries[set_id];
-            map<uint64_t, CATPMetaDataEntry>::iterator it = entry_map.find(tag);
+            map<uint64_t, AdaTPMetaDataEntry>& entry_map = entries[set_id];
+            map<uint64_t, AdaTPMetaDataEntry>::iterator it = entry_map.find(tag);
 
             if (it != entry_map.end()) {
                 prefetch_addr = it->second.next_addr;
@@ -615,12 +563,12 @@ void CATP_MetaData_OnChip::read(uint64_t num, uint64_t current_cycle) {
     }
 }
 
-void CATP_MetaData_OnChip::write(uint64_t num, uint64_t current_cycle) {
+void AdaTP_MetaData_OnChip::write(uint64_t num, uint64_t current_cycle) {
     for (uint64_t i = 0; i < num; i++) {
         if (writeQ.size() == 0) {
             return;
         }
-        catp_write_entry write = writeQ.front();
+        adatp_write_entry write = writeQ.front();
         if (current_cycle >= write.cycle + metadata_delay && !write.first_write) {
             write.entry->next_addr = write.addr2;
             write.entry->conf = write.conf;
@@ -629,26 +577,26 @@ void CATP_MetaData_OnChip::write(uint64_t num, uint64_t current_cycle) {
     }
 }
 
-catp_prefetch_entry CATP_MetaData_OnChip::pref() {
+adatp_prefetch_entry AdaTP_MetaData_OnChip::pref() {
     if(prefQ.size() == 0) {
         return {0,0};
     }
     else {
-        catp_prefetch_entry ret = prefQ.front();
+        adatp_prefetch_entry ret = prefQ.front();
         prefQ.pop_front();
         return ret;
     }
 }
 
-void CATP_MetaData_OnChip::insert(uint64_t ip, uint64_t addr1, uint64_t addr2, uint64_t cycle) {
+void AdaTP_MetaData_OnChip::insert(uint64_t ip, uint64_t addr1, uint64_t addr2, uint64_t cycle) {
     if (assoc == 0) {
         return;
     }
 
     uint64_t set_id = get_set_id(addr1);
     uint64_t tag    = get_tag(addr1);
-    map<uint64_t, CATPMetaDataEntry>& entry_map = entries[set_id];
-    map<uint64_t, CATPMetaDataEntry>::iterator it = entry_map.find(tag);
+    map<uint64_t, AdaTPMetaDataEntry>& entry_map = entries[set_id];
+    map<uint64_t, AdaTPMetaDataEntry>::iterator it = entry_map.find(tag);
 
     if (it != entry_map.end()) {
         bool need_write = true;
@@ -687,30 +635,30 @@ void CATP_MetaData_OnChip::insert(uint64_t ip, uint64_t addr1, uint64_t addr2, u
             uint64_t way_num = (rand() % assoc);
             auto it = entry_map.begin();
             std::advance(it, way_num);
-            auto write_it = find_if(writeQ.begin(), writeQ.end(), [it](const catp_write_entry& entry) { return entry.entry == &(it->second); });
+            auto write_it = find_if(writeQ.begin(), writeQ.end(), [it](const adatp_write_entry& entry) { return entry.entry == &(it->second); });
             if (write_it != writeQ.end()) {
                 writeQ.erase(write_it);
             }
             entry_map.erase(it);
         }
 
-        CATPMetaDataEntry entry;
+        AdaTPMetaDataEntry entry;
         entry.next_addr = addr2;
         entry.conf = 2;
         entry_map[tag] = entry;
 
         add_wq(&(entry_map[tag]), new_alloc, set_id / 16, way_num, addr1, addr2, 2, cycle);
 
-        assert(entry_map.size() <= CATP_MAX_ASSOC);
+        assert(entry_map.size() <= AdaTP_MAX_ASSOC);
     }
 }
 
-void CATP_MetaData_OnChip::access(uint64_t ip, uint64_t addr, uint64_t cycle) {
+void AdaTP_MetaData_OnChip::access(uint64_t ip, uint64_t addr, uint64_t cycle) {
     ACCESS_CNT++; ASSOC_SUM+=assoc;
     add_rq(ip, addr, cycle, 1);
 }
 
-void CATP_MetaData_OnChip::print_stats() {
+void AdaTP_MetaData_OnChip::print_stats() {
     printf("----metadata stats----\n");
     printf("RQ_FULL_CNT: %lu\n", RQ_FULL_CNT);
     printf("WQ_FULL_CNT: %lu\n", WQ_FULL_CNT);

@@ -26,7 +26,7 @@
 #include "ir2.h"
 #include "ins.h"
 #include "cmc.h"
-#include "catp.h"
+#include "adatp.h"
 #include "dbp.h"
 #include "memory_data.h"
 #include "triage.h"
@@ -81,9 +81,9 @@ DBPLoadRet dbp_load_ret[NUM_CPUS];
 DBPLoadIdentity dbp_load_identity[NUM_CPUS];
 DBPPrefQ dbp_prefq[NUM_CPUS];
 
-CATP catp[NUM_CPUS];
-CATPConfig catp_config[NUM_CPUS];
-CATP_MetaData_OnChip catp_metadata_onchip[NUM_CPUS];
+AdaTP adatp[NUM_CPUS];
+AdaTPConfig adatp_config[NUM_CPUS];
+AdaTP_MetaData_OnChip adatp_metadata_onchip[NUM_CPUS];
 
 #ifdef ENABLE_TRIAGE
     Triage triage[NUM_CPUS];
@@ -903,8 +903,8 @@ void O3_CPU::schedule_instruction()
         // remember this rob_index in the Ready-To-Execute array 1
         assert(ready_to_execute.size() < ROB.size());
         ready_to_execute.push(rob_it);
-        #ifdef ENABLE_CATP
-        catp[cpu].catp_issue_op();
+        #ifdef ENABLE_AdaTP
+        adatp[cpu].adatp_issue_op();
         #endif
 
         DP(if (warmup_complete[cpu]) {

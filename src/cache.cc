@@ -28,7 +28,7 @@
 #include "cdp.h"
 #include "triage.h"
 #include "cmc.h"
-#include "catp.h"
+#include "adatp.h"
 #include "berti.h"
 
 extern std::array<O3_CPU*, NUM_CPUS> ooo_cpu;
@@ -40,8 +40,8 @@ extern CMC_AGQ cmc_agq[NUM_CPUS];
 extern MetaData_OnChip metadata_onchip[NUM_CPUS];
 #endif
 
-#ifdef ENABLE_CATP
-extern CATP_MetaData_OnChip catp_metadata_onchip[NUM_CPUS];
+#ifdef ENABLE_AdaTP
+extern AdaTP_MetaData_OnChip adatp_metadata_onchip[NUM_CPUS];
 #endif
 
 #ifdef ENABLE_TRIAGE
@@ -510,10 +510,10 @@ void CACHE::operate()
     metadata_onchip[cpu].read(reads_available_this_cycle,current_cycle);
   }
   #endif
-  #ifdef ENABLE_CATP
+  #ifdef ENABLE_AdaTP
   if (NAME.rfind("LLC") != std::string::npos) {
-    catp_metadata_onchip[cpu].write(writes_available_this_cycle,current_cycle);
-    catp_metadata_onchip[cpu].read(reads_available_this_cycle,current_cycle);
+    adatp_metadata_onchip[cpu].write(writes_available_this_cycle,current_cycle);
+    adatp_metadata_onchip[cpu].read(reads_available_this_cycle,current_cycle);
   }
   #endif
   #ifdef ENABLE_TRIAGE
