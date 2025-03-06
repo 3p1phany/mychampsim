@@ -1,7 +1,7 @@
 {
     "executable_name": "bin/champsim",
     "block_size": 64,
-    "page_size": 2097152,
+    "page_size": 16384,
     "heartbeat_frequency": 10000000,
     "num_cores": 4,
 
@@ -140,7 +140,7 @@
         "prefetch_as_load": true,
         "virtual_prefetch": true,
         "prefetch_activate": "LOAD,PREFETCH",
-        "prefetcher": "cmc",
+        "prefetcher": "no",
         "replacement": "lru",
         "packet_can_merge": false
     },
@@ -226,7 +226,7 @@
         "ways": 16,
         "rq_size": 128,
         "wq_size": 128,
-        "pq_size": 32,
+        "pq_size": 128,
         "mshr_size": 256,
         "latency": 20,
         "max_read": 1,

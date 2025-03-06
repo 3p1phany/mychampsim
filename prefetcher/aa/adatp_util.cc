@@ -315,10 +315,8 @@ void AdaTP::set_dueller_adjust(uint64_t inst_num) {
     if (inst_num > 0 && inst_num >= trigger_inst) {
         trigger_inst += AdaTP_METADATA_INTERVAL;
         bool critical_metadata = false;
-        // uint64_t cache_threshold = std::accumulate(cache_cnt.begin(), cache_cnt.end(), 0) * 0.75;
-        // uint64_t meta_threshold = meta_cnt[0] / 100;
-        uint64_t cache_threshold = std::accumulate(cache_cnt.begin(), cache_cnt.end(), 0) * 0.5;
-        uint64_t meta_threshold =  std::accumulate(meta_cnt.begin(), meta_cnt.end(), 0) * 0.5;
+        uint64_t cache_threshold = std::accumulate(cache_cnt.begin(), cache_cnt.end(), 0) * 0.75;
+        uint64_t meta_threshold = meta_cnt[0] / 100;
         uint64_t cache_alloc_ways = 0;
         uint64_t meta_alloc_ways = 0;
 

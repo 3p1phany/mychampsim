@@ -13,7 +13,7 @@
 
 using namespace std;
 
-#define ENABLE_AdaTP
+#define nENABLE_AdaTP
 #define AdaTP_MAX_ASSOC 16
 #define AdaTP_METADATA_INTERVAL 30000000
 

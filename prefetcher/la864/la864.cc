@@ -54,11 +54,11 @@ class IP_TABLE_L1 {
     pat_last                3
     useline                 1
 	
-	Total 					126
+	Total 					131
 
 	Full Table Storage Overhead: 
 
-	48 entries * 126 bits = 6048 bits = 756 Bytes
+	48 entries * 131 bits = 6288 bits = 786 Bytes
 */
 
 class GLOBAL_TABLE_L1 {
