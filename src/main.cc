@@ -186,10 +186,6 @@ void print_queue_stats(uint32_t cpu){
     cout << "STOREQ FULL: " << ooo_cpu[cpu]->STOREQ_FULL << endl;
     cout << "ROB_FULL_CYCLE: " << ooo_cpu[cpu]->ROB_FULL_CYCLE << endl;
     cout << "RETIRE_STALL_CYCLE: " << ooo_cpu[cpu]->RETIRE_STALL_CYCLE << endl;
-    cout << "DCT FULL: " << dct[cpu].IDM_ISSSUEQ_FULL << endl;
-    cout << "AGQ FULL: " << agq[cpu].AGQ_FULL << endl;
-    cout << "AGQ CLEAR: " << agq[cpu].AGQ_CLEAR << endl;
-    cout << "AGQ ALU_ALONE: " << agq[cpu].AGQ_ALU_ALONE << endl;
     cout << endl;
 }
 

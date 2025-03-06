@@ -25,9 +25,7 @@
 #include "prefetch.h"
 #include "ir2.h"
 #include "ins.h"
-#include "cmc.h"
 #include "adatp.h"
-#include "dbp.h"
 #include "memory_data.h"
 #include "triage.h"
 
@@ -64,22 +62,6 @@ pt_format_t pt[NUM_CPUS][64] = {0};
 #if (defined DECODE_COLLECT_INFO) || (defined MISS_COLLECT_INFO) 
     uint8_t complex_infect_info[NUM_CPUS][64] = {0};
 #endif
-
-DCT dct[NUM_CPUS];
-AGQ agq[NUM_CPUS];
-
-CMCConfig cmc_config[NUM_CPUS];
-LoadRet load_ret[NUM_CPUS];
-CMC_AGQ cmc_agq[NUM_CPUS];
-LoadIdentity load_identity[NUM_CPUS];
-MetaData_OnChip metadata_onchip[NUM_CPUS];
-LoadCounter_t load_counter[NUM_CPUS];
-bool cmc_mode[NUM_CPUS];
-
-DBPConfig dbp_config[NUM_CPUS];
-DBPLoadRet dbp_load_ret[NUM_CPUS];
-DBPLoadIdentity dbp_load_identity[NUM_CPUS];
-DBPPrefQ dbp_prefq[NUM_CPUS];
 
 AdaTP adatp[NUM_CPUS];
 AdaTPConfig adatp_config[NUM_CPUS];

@@ -25,9 +25,6 @@
 #include "vmem.h"
 #include "memory_data.h"
 #include "prefetch.h"
-#include "cdp.h"
-#include "triage.h"
-#include "cmc.h"
 #include "adatp.h"
 #include "berti.h"
 
@@ -780,7 +777,6 @@ int CACHE::add_pq(PACKET* packet)
             ret->return_data(packet);
 
         if(NAME.rfind("L1D") != std::string::npos){
-            idm_load_return(packet->cpu, packet->v_address);
             #ifdef ENABLE_CMC
                 cmc_agq[cpu].load_return(packet->v_address);
             #endif

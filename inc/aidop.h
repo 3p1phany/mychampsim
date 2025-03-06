@@ -1,10 +1,12 @@
 #include "cache.h"
 #include "prefetch.h"
 
-#define nENABLE_AidOP
+#define ENABLE_AidOP
 #define DELTA_TABLE_ENTRY_NUM (1+48+8)
 #define DELTA_TABLE_OFFSET_NUM 16
 #define DELTA_TABLE_DELTA_NUM 4
+
+#define AIDOP_INTERVAL 1024
 
 class delta_table_entry {
     public:
@@ -42,6 +44,18 @@ class delta_table_entry {
             conf[i] = 0;
         }
     }
+};
+
+class AidOP {
+    public:
+    uint32_t cpu;
+
+    vector<uint64_t> missing_addr;
+    uint64_t total_miss = 0;  // 10 bits
+    uint64_t total_cycle = 0; // 20 bits 
+    uint64_t avg_delay = 200; 
+
+    delta_table_entry delta_table[DELTA_TABLE_ENTRY_NUM];
 };
 
 void aidop_prefetcher_initialize(CACHE* l2); 
