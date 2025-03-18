@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import os
-import re
 import sys
 import json
 import time
@@ -20,15 +19,14 @@ core_list = config["core_list"]
 cpu_num = len(core_list)
 
 machine_name = "multi"
-# machine_name = task_list[0].split("/")[-1].split(".")[0][5:]
 
 if(mode == "collect_instr"):
     print("Start Collect Info!")
 else:
     print("Strat Run Simulation!")
 
-default_warmup_len = 10000000
-default_sim_len = 90000000
+default_warmup_len = 100000000
+default_sim_len = 100000000
 
 #### For Single Core
 program_list = []
@@ -63,76 +61,31 @@ for program in program_list:
             count += 1
     print(f"The Slice Number of {program}: {count}")
 
-#### For Mix Multi Core
-mix_num = 48
-trace_num = 0
-# if machine_name == "simpoint1" or machine_name == "simpoint3" or machine_name == "simpoint1_8c" or machine_name == "simpoint3_8c":
-#     mix_num = 25
-# elif machine_name == "epyc" or machine_name == "xeon" or machine_name == "epyc_8c" or machine_name == "xeon_8c":
-#     mix_num = 14
-# elif machine_name == "simpoint2" or machine_name == "simpoint2_8c":
-#     mix_num = 22
-# else:
-#     print("Invalid machine_name!")
-#     exit(1)
-
-trace_pool = []
-for file in os.listdir("../../TraceMix"):
-    if file.find(".champsim.trace.xz") != -1:
-        trace_pool.append("../../TraceMix/"+file)
-
-trace_num = len(trace_pool)
-
-mix_trace_list_4c = []
-# mix_trace_list_8c = []
-for i in range(mix_num):
-    mix_trace = ""
-    for i in range(4):
-        mix_trace += random.choice(trace_pool) + " "
-    mix_trace_list_4c.append(mix_trace)
-
-#     mix_trace = ""
-#     for i in range(8):
-#         mix_trace += random.choice(trace_pool) + " "
-#     mix_trace_list_8c.append(mix_trace)
-
 
 job_list = []
 for binary in binary_list:
     result_dir = "./result/" + time.strftime('%Y%m%d-%H%M%S') + "-" + binary
     os.system(f"mkdir -p {result_dir}")
-    if binary[-9:] == "hetero-4c":
-        id = 0
-        for trace_item in mix_trace_list_4c:
-            job_list.append([binary, trace_item, result_dir, id])
-            id += 1
-    # elif binary[-9:] == "hetero-8c":
-    #     id = 0
-    #     for trace_item in mix_trace_list_8c:
-    #         job_list.append([binary, trace_item, result_dir, id])
-    #         id += 1
-    else:
-        for trace_item in trace_list:
-            if "-md-conflict" in binary or "Trace/LA/spec" not in trace_item[0]:
-                trace_item[1] = 0
+    for trace_item in trace_list:
+        if "-md-conflict" in binary or "Trace/LA/spec" not in trace_item[0]:
+            trace_item[1] = 0
 
-            if(binary.split("-")[-1] == "4c"):
-                core_num = 4
-            elif(binary.split("-")[-1] == "8c"):
-                core_num = 8
-            else:
-                core_num = 1
-                only_spec = "-degree-" in binary
-                if only_spec and "Trace/LA/spec" not in trace_item[0]:
-                    continue
-            full_trace = (trace_item[0]+" ")*core_num
-            job_list.append([binary] + trace_item + [result_dir, full_trace])
+        if(binary.split("-")[-1] == "4c"):
+            core_num = 4
+        elif(binary.split("-")[-1] == "8c"):
+            core_num = 8
+        else:
+            core_num = 1
+            only_spec = "-degree-" in binary
+            if only_spec and "Trace/LA/spec" not in trace_item[0]:
+                continue
+        full_trace = (trace_item[0]+" ")*core_num
+        job_list.append([binary] + trace_item + [result_dir, full_trace])
 
 job_num = len(job_list)
 
 print(f"Single Binary List Num: {len(binary_list)}")
 print(f"Single Binary List: {',  '.join(binary_list)}")
-print(f"Trace Pool Size: {trace_num}")
 print(f"The Total Slice Number: {len(trace_list)}")
 print(f"The Total Job Number: {job_num}")
 

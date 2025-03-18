@@ -14,7 +14,8 @@
         "omnetpp/ref",
         "astar/lakes",
         "perlbench/diffmail",
-        "xalancbmk/ref"
+        "xalancbmk/ref",
+        "sphinx3/ref"
     ],
 
     "spec17": [
