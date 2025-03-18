@@ -1,17 +1,2 @@
-bad_tests = [
-    "spec06_gcc_200",
-    "spec06_gcc_c-typeck",
-    "spec06_gcc_cp-decl",
-    "spec06_gcc_expr",
-    "spec06_gcc_expr2",
-    "spec06_gcc_scilab",
-    "spec06_perlbench_diffmail",
-    "spec17_gcc_pp-O2",
-    "spec17_gcc_pp-O3",
-    "spec17_gcc_ref32-O3",
-    "spec17_gcc_ref32-O5",
-    "spec17_cactuBSSN_ref"
-]
-
-interest_tests = [
-]
+interest_tests = ['SPEC06.GemsFDTD', 'SPEC06.astar', 'SPEC06.bwaves', 'SPEC06.cactusADM', 'SPEC06.dealII', 'SPEC06.gcc', 'SPEC06.lbm', 'SPEC06.leslie3d', 'SPEC06.libquantum', 'SPEC06.mcf', 'SPEC06.milc', 'SPEC06.omnetpp', 'SPEC06.soplex', 'SPEC06.sphinx3', 'SPEC06.wrf', 'SPEC06.xalanc', 'SPEC06.zeusmp', 'SPEC17.bwaves', 'SPEC17.cactuBSSN', 'SPEC17.fotonik3d', 'SPEC17.gcc', 'SPEC17.lbm', 'SPEC17.mcf', 'SPEC17.omnetpp', 'SPEC17.parest', 'SPEC17.roms', 'SPEC17.wrf', 'SPEC17.xalanc', 'SPEC17.xz']
+bad_tests = ['SPEC06.bzip2', 'SPEC06.calculix', 'SPEC06.gamess', 'SPEC06.gcc_166', 'SPEC06.gcc_200', 'SPEC06.gcc_c-typeck', 'SPEC06.gcc_cp-decl', 'SPEC06.gcc_expr', 'SPEC06.gcc_expr2', 'SPEC06.gcc_g23', 'SPEC06.gcc_s04', 'SPEC06.gcc_scilab', 'SPEC06.gobmk', 'SPEC06.gromacs', 'SPEC06.h264ref', 'SPEC06.hmmer', 'SPEC06.namd', 'SPEC06.perlbench', 'SPEC06.povray', 'SPEC06.sjeng', 'SPEC06.tonto', 'SPEC17.blender', 'SPEC17.cam4', 'SPEC17.deepsjeng', 'SPEC17.exchange2', 'SPEC17.gcc_pp-O2', 'SPEC17.gcc_pp-O3', 'SPEC17.gcc_ref32-O3', 'SPEC17.gcc_ref32-O5', 'SPEC17.gcc_small', 'SPEC17.imagick', 'SPEC17.leela', 'SPEC17.nab', 'SPEC17.namd', 'SPEC17.perlbench', 'SPEC17.povray', 'SPEC17.x264']

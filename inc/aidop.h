@@ -1,7 +1,7 @@
 #include "cache.h"
 #include "prefetch.h"
 
-#define ENABLE_AidOP
+#define nENABLE_AidOP
 #define DELTA_TABLE_ENTRY_NUM (1+48+8)
 #define DELTA_TABLE_OFFSET_NUM 16
 #define DELTA_TABLE_DELTA_NUM 4

@@ -16,11 +16,9 @@ with open('cov_acc_time.json') as f :
     cov_acc_time = js.load(f)
 
 input = [
-    ["stride", "SP"],
-    ["berti", "BERTI"],
     ["ipcp", "IPCP"],
-    ["bop", "BOP"],
-    ["la", "LA864"],
+    ["berti", "BERTI"],
+    ["la864", "IPCP-E"],
 ]
 color = [
     '#f3d27d',
@@ -30,7 +28,7 @@ color = [
     '#dfa677',
 ] 
 
-save_path = '../pdf/4.result.cover_acc_time.pdf'
+save_path = '../pdf/5.cover_acc_time.pdf'
 
 work_list = [datum[0] for datum in input]
 label = [datum[1] for datum in input]
@@ -45,22 +43,22 @@ for interest in interest_tests :
 tests_list = interest_tests + tests_list
 
 def cal_cov(data) :
-    if data['L2C_origin_miss'] == 0:
+    if data['L1D_origin_miss'] == 0:
         return 1
     else:
-        return (1 - data['L2C_pref_miss']/data['L2C_origin_miss'])
+        return (1 - data['L1D_pref_miss']/data['L1D_origin_miss'])
 
 def cal_acc(data) :
-    if data['L2C_pref_total_num'] == 0:
+    if data['L1D_pref_total_num'] == 0:
         return 0
     else:
-        return (1 - data['L2C_pref_useless_num'] / data['L2C_pref_total_num'])
+        return (1 - data['L1D_pref_useless_num'] / data['L1D_pref_total_num'])
 
 def cal_timeliness(data) :
-    if data['L2C_pref_total_num'] == 0:
+    if data['L1D_pref_total_num'] == 0:
         return 0
     else:
-        return (1 - data['L2C_pref_late_num'] / data['L2C_pref_total_num'])
+        return (1 - data['L1D_pref_late_num'] / data['L1D_pref_total_num'])
 
 xs      = []
 cov_ydata = []
@@ -104,6 +102,7 @@ timeliness_ydata = np.array(timeliness_ydata)
 
 def pre_hook_func() :
     plt.gca().set_yticks([ x for x in np.arange(0,1.01,0.25)])
+    plt.subplots_adjust(bottom=0.2)
 
     
 def my_set_xtickslabel_size(ax,cfg):
@@ -117,8 +116,7 @@ def gen_config(data, axlabel:str, first:bool, last:bool):
         plt.xlim(-0.5, len(xs)-0.5)
         plt.ylim(0,1)
         def format_func(value, tick_number):
-            if value == 0:  # or any condition you want
-                # return "0"
+            if value == 0:
                 return '0'
             else:
                 return '{:.0%}'.format(value)
@@ -142,13 +140,13 @@ def gen_config(data, axlabel:str, first:bool, last:bool):
             'xgroup_kwargs': {
             'delimiter': myutil.delimiter,
             'minlevel': 1,
-            'yfactor': 2.2,
+            'yfactor': 5.0,
             'yoffset': 0.05,
             'line_kwargs': {
                 'lw': 0.7,
             },
             'text_kwargs': lambda lvl: {
-                'rotation': 45 if lvl == 0 else 0,
+                'rotation': 90 if lvl == 0 else 0,
                 'fontsize': 13,
             },
         },
@@ -179,8 +177,8 @@ def gen_config(data, axlabel:str, first:bool, last:bool):
                     'frameon' : False,
                     'ncol' : 8,
                     'loc' : 'upper center',
-                    'bbox_to_anchor' : (0.5, 1.28),
-                    'fontsize' : 17,
+                    'bbox_to_anchor' : (0.5, 1.18),
+                    'fontsize' : 14,
                     'columnspacing': 1.2,
                     'handletextpad' : 0.6,
                 },
@@ -200,7 +198,7 @@ if use_subplot_example:
     acc = dict(gen_config(acc_ydata, "Accuracy", False, False), pos=(1, 0))
     timeliness = dict(gen_config(timeliness_ydata, "Timeliness", False, True), pos=(2, 0))
     fig_cfg = {
-        "figsize": [12, 7.5],
+        "figsize": [12, 9.5],
         "subplot": True,
         "gridspec_kwargs": {
             "nrows": 3,

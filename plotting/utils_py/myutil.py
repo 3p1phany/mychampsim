@@ -54,13 +54,11 @@ def nth_repl(s, sub, repl, n):
 
 delimiter = '.'
 
-    #     if(name.find("32pad0") != -1):
-    #         return 'ListInsert-32'
-    #     elif(name.find("32pad3") != -1):
-    #         return 'ListInsert-56'
+def preprocess_name(name) :
+    if name.find(".") != -1:
+        return name
     else:
         return " ."+name
-    return name
 
 
 def cal_gmean(data) :
@@ -70,6 +68,23 @@ def cal_gmean(data) :
         a = a * b
     l = len(list)
     return pow(a, 1/l)
+
+def cal_avg(data) :
+    list = [data[key] for key in data.keys()]
+    return sum(list) / len(list)
+
+def cal_gmean_nohealth(data) :
+    list = [data[key] for key in data.keys() if key.find("health_") == -1]
+    a = 1
+    for b in list:
+        a = a * b
+    l = len(list)
+    return pow(a, 1/l)
+
+def cal_avg_nohealth(data) :
+    list = [data[key] for key in data.keys() if key.find("health_") == -1]
+    return sum(list) / len(list)
+
 
 class pltcolor:
     __rgb_blue0 = [[ 91,155,213], [222,235,247], [189,215,238], \
@@ -84,6 +99,7 @@ class pltcolor:
                     [255,217,102], [191,144,  0], [126, 96,  0]]
     __rgb_green  = [[112,173, 71], [226,240,217], [197,224,180], \
                     [169,209,142], [ 84,130, 53], [ 56, 87, 35]]
+    __rgb_black  = [[  0,  0,  0], [128,128,128], [ 89, 89, 89], \
                     [ 64, 64, 64], [ 38, 38, 38], [ 13, 13, 13]]
     __rgb_grey0  = [[255,255,255], [242,242,242], [217,217,217], \
                     [191,191,191], [166,166,166], [126,126,126]]

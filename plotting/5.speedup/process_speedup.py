@@ -15,13 +15,10 @@ with open('speedup.json') as f :
     js_data = js.load(f)
 
 input = [
-    # ["no", "NO"],
-    ["stride", "SP"],
+    ["no", "NO"],
     ["ipcp", "IPCP"],
     ["berti", "BERTI"],
-    # ["bop", "BOP"],
-    ["la864", "LA864"],
-    ["AA", "LA864+AidOP+AdaTP"],
+    ["la864", "IPCP-E"],
 ]
 color = [
     '#f3d27d',
@@ -30,7 +27,7 @@ color = [
     '#688fc6',
     '#dfa677',
 ] 
-save_path = '../pdf/4.result.speedup.pdf'
+save_path = '../pdf/5.speedup.pdf'
 label_pos = (0.5, 1.19)
 label_fontsize = 12
 
@@ -80,8 +77,8 @@ for i in range(len(ydata)):
     print('xs: {0}, ydata: {1}'.format(xs[i], ydata[i]))
 
 def pre_hook_func() :
-    plt.gca().set_yticks([ x/100.0 for x in range(50,160,20)])
-    plt.ylim(bottom=0.5,top=1.6)
+    plt.gca().set_yticks([ x/100.0 for x in range(50,200,30)])
+    plt.ylim(bottom=0.5,top=2.0)
     return
 
 def post_hook_func() :
@@ -91,20 +88,26 @@ def post_hook_func() :
 
 def my_set_xtickslabel_size(ax,cfg):
     ax.set_yticklabels(ax.get_yticklabels(), fontsize=14)
-    height = 2.1
+    height = 2.0
 
-    for rect in ax.containers[-2].patches:
-        if rect.get_height() > 1.5:
+    for rect in ax.containers[-3].patches:
+        if rect.get_height() > 2.0:
             x = rect.get_x() + rect.get_width() / 2
             y = rect.get_y() + rect.get_height() 
-            ax.text(x - 1.31, height, '%.2f' % y, ha='left', va='bottom', fontsize=9)
+            ax.text(x - 0.70, height, '%.2f' % y, ha='left', va='bottom', fontsize=8)
+
+    for rect in ax.containers[-2].patches:
+        if rect.get_height() > 2.0:
+            x = rect.get_x() + rect.get_width() / 2
+            y = rect.get_y() + rect.get_height() 
+            ax.text(x - 0.30, height, '%.2f' % y, ha='left', va='bottom', fontsize=8)
 
 
     for rect in ax.containers[-1].patches:
-        if rect.get_height() > 1.5:
+        if rect.get_height() > 2.0:
             x = rect.get_x() + rect.get_width() / 2
             y = rect.get_y() + rect.get_height() 
-            ax.text(x - 0.01, height, '%.2f' % y, ha='left', va='bottom', fontsize=9)
+            ax.text(x + 0.05 , height, '%.2f' % y, ha='left', va='bottom', fontsize=8)
 
 fig_cfg = {
     'type': 'linebar',
@@ -114,13 +117,13 @@ fig_cfg = {
     'xgroup_kwargs': {
         'delimiter': myutil.delimiter,
         'minlevel': 1,
-        'yfactor': 1.3,
+        'yfactor': 2.3,
         'yoffset': 0.1,
         'line_kwargs': {
-            'lw': 0.7,
+            'lw': 0.9,
         },
         'text_kwargs': lambda lvl: {
-            'rotation': 90 if lvl == 0 else 0,
+            'rotation': 70 if lvl == 0 else 0,
             'fontsize': 12,
         },
     },
@@ -152,11 +155,11 @@ fig_cfg = {
                 'columnspacing': 1.45,
                 'handletextpad' : 0.85,
             },
-            # 'post_yax_hook': my_set_xtickslabel_size,
+            'post_yax_hook': my_set_xtickslabel_size,
         },
     ],
 
-    'figsize' : [14,4.5],
+    'figsize' : [14,5.5],
 
     'pre_main_hook': pre_hook_func,
     'post_main_hook': post_hook_func,

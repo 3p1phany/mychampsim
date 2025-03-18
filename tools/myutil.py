@@ -1,4 +1,3 @@
-
 def begin_print(data_dir, type):
     if data_dir[-1] == "/":
         print_info = "Starting Collect "+ type + " of " + data_dir.split('/')[-2]+"..."

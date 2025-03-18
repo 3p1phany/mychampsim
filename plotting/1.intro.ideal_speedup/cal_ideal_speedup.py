@@ -1,15 +1,15 @@
 #!/usr/bin/python3
 
+import os
 import sys
 import json
 import numpy as np
 sys.path.append("../utils_py/")
-from rename import rename
 
-file_list=["no","stride","berti","ipcp","la864","bop","AA"]
+file_list=["ipcp","berti"]
 weights = json.load(open("../../batch_run/task_list/weight.json"))
 
-print("\nStarting Calculate SpeedUp...")
+print("\nStarting Calculate Ideal SpeedUp...")
 
 raw_data = {}
 for f_name in file_list:
@@ -19,15 +19,15 @@ for f_name in file_list:
     for key, value in file.items():
         sp_key = key.split('_')
         weight = weights[key]
-        name = rename("_".join(sp_key[:-1]))
+        name = "_".join(sp_key[:-1])
 
         if name in tmp_dict.keys():
             tmp_dict[name]["weight"].append(weight)
-            tmp_dict[name]["ipc"].append(float(value["IPC"]))
+            tmp_dict[name]["speedup"].append(float(value["IPC2"])/float(value["IPC1"]))
         else:
             tmptmp_dict = {}
             tmptmp_dict["weight"] = [weight]
-            tmptmp_dict["ipc"] = [float(value["IPC"])]
+            tmptmp_dict["speedup"] = [float(value["IPC2"])/float(value["IPC1"])]
             tmp_dict[name] = tmptmp_dict
     raw_data[f_name] = tmp_dict
 
@@ -36,9 +36,9 @@ for key, value in raw_data.items():
     result[key] = {}
     for sub_key, sub_value in value.items():
         weight_array = np.array(sub_value["weight"])
-        ipc_array = np.array(sub_value["ipc"])
-        ipc = 1 / (np.sum(weight_array * (1 / ipc_array)))
-        result[key][sub_key] = ipc
+        speedup_array = np.array(sub_value["speedup"])
+        speedup = 1 / (np.sum(weight_array * (1 / speedup_array)))
+        result[key][sub_key] = speedup
 
-json.dump(result, open("speedup.json", "w"), indent=True , ensure_ascii=False)
-print("SpeedUp Calculation Success!\n")
+json.dump(result, open("ideal_speedup.json", "w"), indent=True , ensure_ascii=False)
+print("Ideal SpeedUp Calculation Success!\n")

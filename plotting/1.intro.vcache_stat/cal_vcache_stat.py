@@ -1,12 +1,13 @@
 #!/usr/bin/python3
 
+import os
 import sys
 import json
 import numpy as np
 sys.path.append("../utils_py/")
 from rename import rename
 
-file_list = ["stride", "ipcp", "berti", "bop", "la864"]
+file_list = ["ipcp", "berti"]
 
 weights = json.load(open("../../batch_run/task_list/weight.json"))
 
@@ -19,13 +20,11 @@ for f_name in file_list:
     for key, value in file.items():
         sp_key = key.split('_')
         weight = weights[key]
-        test_name = rename("_".join(sp_key[:-1]))
-
-        tmp_dict = {"L2C_pref_miss": 0,
-                    "L2C_pref_total_num": 0,
-                    "L2C_pref_useless_num": 0,
-                    "L2C_pref_late_num": 0,
-                    "L2C_origin_miss": 0,
+        test_name = "_".join(sp_key[:-1])
+        tmp_dict = {"L2C_load_hit_num": 0,
+                    "L2C_load_miss_num": 0,
+                    "L2C_pref_hit_num": 0,
+                    "L2C_pref_miss_num": 0,
                     }
         for sub_key, sub_value in value.items():
             tmp_dict[sub_key] += weight*sub_value
@@ -35,5 +34,5 @@ for f_name in file_list:
         else:
             result[f_name][test_name] = tmp_dict
 
-json.dump(result, open("cov_acc_time.json", "w"), indent=True , ensure_ascii=False)
-print("Cov, Acc & Timeliness Calculation Success!\n")
+json.dump(result, open("vcache_stat.json", "w"), indent=True , ensure_ascii=False)
+print("VCache Stat Calculation Success!\n")

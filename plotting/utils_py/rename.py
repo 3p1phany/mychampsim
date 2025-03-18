@@ -1,27 +1,25 @@
 def rename(raw_name):
     new_name = ""
-    if raw_name[0:6] == "spec06":
+    if raw_name[0:6] == "spec17":
         sp_name = raw_name.split("_")
-        new_name = sp_name[1]
-        if(sp_name[1] != "gcc"):
-            new_name += "06"
         if sp_name[1] == "gcc":
-            new_name = new_name + "_" + sp_name[2]
-        elif sp_name[2] == "lakes":
-            new_name = new_name + "_lakes"
-        elif sp_name[2] == "pds":
-            new_name = new_name + "_pds"
-    elif raw_name[0:6] == "spec00":
+            if sp_name[2] == "smaller":
+                new_name = "SPEC17." + sp_name[1] + "_small"
+            else:
+                new_name = "SPEC17." + sp_name[1] + "_" + sp_name[2]
+        elif sp_name[1] == "xalancbmk":
+            new_name = "SPEC17.xalanc"
+        else:
+            new_name = "SPEC17." + sp_name[1]
+    elif raw_name[0:6] == "spec06":
         sp_name = raw_name.split("_")
-        new_name = sp_name[1]+"00"
-    elif raw_name[0:6] == "health":
-        return raw_name
-    elif raw_name[0:3] == "llu":
-        return raw_name
-    elif raw_name[0:7] == "treeadd":
-        return raw_name
-    elif raw_name[0:3] == "tsp":
-        return raw_name
+        if sp_name[1] == "gcc":
+            new_name = "SPEC06." + sp_name[1] + "_" + sp_name[2]
+        elif sp_name[1] == "xalancbmk":
+            new_name = "SPEC06.xalanc"
+        else:
+            new_name = "SPEC06." + sp_name[1]
+            
     else:
         return raw_name
         # print("Unknown Name")
