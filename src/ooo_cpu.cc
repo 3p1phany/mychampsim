@@ -72,7 +72,6 @@ AdaTP_MetaData_OnChip adatp_metadata_onchip[NUM_CPUS];
 #endif
 
 extern uint64_t print_ip[14];
-extern uint64_t print_rec_ip[4];
 
 uint32_t warmup_finish_instr[NUM_CPUS] = {};
 
@@ -1597,87 +1596,6 @@ void O3_CPU::retire_rob()
         }
       }
     }
-
-#ifdef ENABLE_CMC
-    if(op_is_load((LA_OPCODE)ROB.front().op)){
-      bool is_recursive = load_identity[cpu].is_recursive(ROB.front().ip) && ROB.front().ls_size == SIZE_DWORD;
-      bool is_data = load_identity[cpu].is_data(ROB.front().ip) || ROB.front().ls_size != SIZE_DWORD;
-      assert(!(is_recursive && is_data));
-
-      bool base_is_sp = ROB.front().source_registers[0] == 3;
-
-      uint64_t producer_ip = 0;
-      if(!base_is_sp)
-        producer_ip = load_ret[cpu].lookup(ROB.front().ip, ROB.front().source_reg_val[0], is_data); // TODO
-
-#ifdef PRINT_LOADRET_LOOKUP
-        if(find(begin(print_rec_ip), end(print_rec_ip), ROB.front().ip) != end(print_rec_ip)){
-          cout << "[info] cycle: " << current_cycle
-               << ", ip: " << hex << ROB.front().ip << dec 
-               << ", is_rec: " << +is_recursive
-               << ", is_data: " << +is_data
-               << ", producer_ip: " << hex << producer_ip << dec
-               << ", addr: " << hex << ROB.front().source_memory[0] << dec
-               << ", base_addr:" << hex << ROB.front().source_memory[0] - ROB.front().source_reg_val[1] << dec
-               << ", offset:" << hex << ROB.front().source_reg_val[1] << dec
-               << ", ret: " << hex << ROB.front().ret_val << dec
-               << endl;
-        }
-#endif
-      bool is_consumer = producer_ip != 0;
-      if(is_consumer){
-        // TODO: if src[1] is not constant, ignore it!
-        uint64_t offset = ROB.front().source_reg_val[1];
-        if (op_is_load_ldptr((LA_OPCODE) ROB.front().op)){
-            offset = (offset << 2);
-        }
-        load_identity[cpu].set_info(ROB.front().ip, producer_ip, offset, ROB.front().ls_size);
-      }
-
-      if(!base_is_sp){
-        uint8_t size = ROB.front().ls_size;
-        load_ret[cpu].insert(ROB.front().ip, ROB.front().ret_val, is_consumer, ROB.front().instr_id, ROB.front().source_memory[0], size, current_cycle);
-      }
-
-      if(is_recursive){
-        assert(ROB.front().ls_size == SIZE_DWORD);
-      }
-    }
-#endif
-
-    //// Search DCT
-#ifdef ENABLE_TYCHE
-    uint64_t trace_ip = (trace_type == TRACE_TYPE_LOONGARCH)? (ROB.front().ip >> 2) : ROB.front().ip;
-    int64_t dct_hit_idx = dct[cpu].search_pc(trace_ip);
-    if(dct_hit_idx != -1){
-        if(dct[cpu].buffer[dct_hit_idx].head && dct[cpu].buffer[dct_hit_idx].cnt == 0){
-            vector<uint64_t> cand = {(uint64_t) dct_hit_idx};
-            while(!cand.empty()){
-                uint64_t index = cand.back();
-                cand.pop_back();
-
-                for(auto it = dct[cpu].buffer.begin(); it != dct[cpu].buffer.end(); it++){
-                    if(it->valid && !it->head && it->last_dct_ptr == index){
-                        if(it->cnt > 115){
-                            it->dense = true;
-                        } else{
-                            it->dense = false;
-                        }
-
-                        it->cnt = 0;
-                        cand.push_back(distance(dct[cpu].buffer.begin(), it));
-                    }
-                }
-            }
-        }
-
-        if(dct[cpu].buffer[dct_hit_idx].head){
-            dct[cpu].buffer[dct_hit_idx].cnt++;
-        } else if(dct[cpu].buffer[dct_hit_idx].cnt < 255){
-            dct[cpu].buffer[dct_hit_idx].cnt++;
-        }
-    }
-#endif
 
     // release ROB entry
     DP(if (warmup_complete[cpu]) { cout << "[ROB] " << __func__ << " instr_id: " << ROB.front().instr_id << " is retired" << endl; });

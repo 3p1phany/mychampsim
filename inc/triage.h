@@ -14,6 +14,8 @@
 #define nENABLE_TRIAGE
 #define nCONFLICT_DEBUG
 
+#define METADATA_INTERVAL 30000000
+
 struct TriageConfig {
     int lookahead;
     int degree;

@@ -6,7 +6,6 @@
 
 using namespace std;
 
-extern uint64_t print_rec_ip[4];
 // #define DEBUG
 
 #ifdef DEBUG
@@ -14,9 +13,6 @@ extern uint64_t print_rec_ip[4];
 #else
 #define debug_cout if (0) cerr
 #endif
-
-#include "cmc.h"
-extern LoadIdentity load_identity[NUM_CPUS];
 
 void Triage::test() {
     // train(0, 0, 0);
@@ -102,73 +98,11 @@ bool Triage::add_rq(uint64_t ip, uint64_t addr, uint64_t cur_degree, bool insert
     return true;
 }
 bool Triage::add_wq(uint64_t pc, uint64_t trigger_addr, Metadata new_entry, uint64_t cycle) {
-    bool in_recursive = trigger_addr_recursive.find(trigger_addr) != trigger_addr_recursive.end();
-    bool in_data = trigger_addr_data.find(trigger_addr) != trigger_addr_data.end();
-    if (load_identity[cpu].is_recursive(pc)) {
-        trigger_addr_recursive.insert(trigger_addr);
-        trigger_addr_data.erase(trigger_addr);
-        trigger_addr_other.erase(trigger_addr);
-        trigger_cnt_recursive++;
-    } else if (load_identity[cpu].is_link_data(pc)) {
-        if(!in_recursive){
-            trigger_addr_data.insert(trigger_addr);
-        }
-        trigger_addr_other.erase(trigger_addr);
-        trigger_cnt_data++;
-    } else {
-        if(!in_recursive && !in_data){
-            trigger_addr_other.insert(trigger_addr);
-        }
-        trigger_cnt_other++;
-    }
-    if (warmup_complete[cpu]) trigger_addr_all.insert(trigger_addr);
-
-    // if (load_identity[cpu].is_recursive(pc)) {
-    //     trigger_addr_recursive.insert(trigger_addr);
-    //     trigger_addr_data.erase(trigger_addr);
-    //     trigger_addr_other.erase(trigger_addr);
-    // } else if (load_identity[cpu].is_link_data(pc)) {
-    //     trigger_addr_data.insert(trigger_addr);
-    //     // trigger_addr_recursive.erase(trigger_addr);
-    //     trigger_addr_other.erase(trigger_addr);
-    // } else {
-    //     trigger_addr_other.insert(trigger_addr);
-    //     // trigger_addr_recursive.erase(trigger_addr);
-    //     // trigger_addr_data.erase(trigger_addr);
-    // }
-
     Metadata next_entry = on_chip_data.get_next_entry(trigger_addr, pc, false);
     if(next_entry == new_entry) {
         conf_inc++;
-        #ifdef CONFLICT_DEBUG
-        cout << "confirm: " << hex << pc << " trigger " << trigger_addr << " to " << new_entry.addr << dec << "\n";
-        #endif
-        if(find(begin(print_rec_ip), end(print_rec_ip), pc) != end(print_rec_ip)){
-            ip_conf_inc++;
-        }
     } else if(next_entry.valid) {
         conf_dec_retain++;
-        if (load_identity[cpu].is_recursive(pc)) {
-            #ifdef CONFLICT_DEBUG
-            cout << "recursive: " << hex << pc << " trigger " << trigger_addr << " to " << new_entry.addr << dec << "\n";
-            #endif
-            conf_dec_recursive++;
-        } 
-        else if (load_identity[cpu].is_link_data(pc)) {
-            #ifdef CONFLICT_DEBUG
-            cout << "data: " << hex << pc << " trigger " << trigger_addr << " to " << new_entry.addr << dec << "\n";
-            #endif
-            conf_dec_data++;
-        }
-        else {
-            #ifdef CONFLICT_DEBUG
-            cout << "other: " << hex << pc << " trigger " << trigger_addr << " to " << new_entry.addr << dec << "\n";
-            #endif
-            conf_dec_other++;
-        }
-        if(find(begin(print_rec_ip), end(print_rec_ip), pc) != end(print_rec_ip)){
-            ip_conf_dec_retain++;
-        }
     }
 
     if (WQ_is_full()) {

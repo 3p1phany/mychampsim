@@ -46,11 +46,6 @@
 #include "associative_set_impl.hh"
 #include <cmath>
 
-#include "cmc.h"
-extern LoadIdentity load_identity[NUM_CPUS];
-
-extern 
-
 int Triangel::target_size=0;
 int Triangel::current_size=0;
 int64_t Triangel::global_timestamp=0;
@@ -556,14 +551,6 @@ void Triangel::calculatePrefetch(bool load, uint64_t pc, uint64_t addr, std::vec
 		    	metadata_update_same++;
 		    } else {
 		    	metadata_update_diff++;
-
-                if (load_identity[cpu].is_recursive(pc << 2)) {
-                    conf_dec_recursive++;
-                } else if (load_identity[cpu].is_link_data(pc << 2)) {
-                    conf_dec_data++;
-                } else {
-                    conf_dec_other++;
-                }
 		    }
         }
 
@@ -577,21 +564,6 @@ void Triangel::calculatePrefetch(bool load, uint64_t pc, uint64_t addr, std::vec
 
         bool in_recursive = trigger_addr_recursive.find(index) != trigger_addr_recursive.end();
         bool in_data = trigger_addr_data.find(index) != trigger_addr_data.end();
-        if (load_identity[cpu].is_recursive(pc << 2)) {
-            trigger_addr_recursive.insert(index);
-            trigger_addr_data.erase(index);
-            trigger_addr_other.erase(index);
-        } else if (load_identity[cpu].is_link_data(pc << 2)) {
-            if(!in_recursive){
-                trigger_addr_data.insert(index);
-            }
-            trigger_addr_other.erase(index);
-        } else {
-            if(!in_recursive && !in_data){
-                trigger_addr_other.insert(index);
-            }
-        }
-		trigger_addr.insert(index);
 
 		assert(mapping != nullptr);
 		bool confident = mapping->address == target; 

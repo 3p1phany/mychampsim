@@ -16,11 +16,6 @@ std::set<uint64_t>unique_addr;
 std::map<uint64_t, uint64_t> total_usage_count;
 std::map<uint64_t, uint64_t> actual_usage_count;
 
-#include "cmc.h"
-extern CMCConfig cmc_config[NUM_CPUS];
-extern LoadIdentity load_identity[NUM_CPUS];
-extern LoadRet load_ret[NUM_CPUS];
-
 //16K entries = 64KB
 void triage_prefetcher_initialize(CACHE *cache) {
     uint32_t cpu = cache->cpu;
@@ -48,15 +43,6 @@ void triage_prefetcher_initialize(CACHE *cache) {
 
     triage[cpu].set_conf(&conf[cpu]);
     triage[cpu].test();
-
-#if TEMPORAL_L1D == true
-    cmc_config[cpu].cpu = cpu;
-    cmc_config[cpu].load_ret_size = 64; // To collect info, we use large enough structures.
-    cmc_config[cpu].load_identity_size = 256;
-
-    load_ret[cpu].init(&cmc_config[cpu]);
-    load_identity[cpu].init(&cmc_config[cpu]);
-#endif
 }
 
 uint64_t triage_prefetcher_operate(uint64_t addr, uint64_t pc, uint8_t cache_hit, uint8_t type, uint64_t metadata_in, CACHE *cache) {
@@ -157,7 +143,7 @@ void triage_prefetcher_cycle_operate(uint32_t cpu, CACHE* cache) {
         uint64_t target = prefetch.addr << LOG2_BLOCK_SIZE;
     #endif
     if(target != 0)
-        cache->prefetch_line(prefetch.pc, 0, target, true, 0);
+        cache->prefetch_line(target, true, 0);
 
     /** Handle Write*/
     TriageOnchip* t = &triage[cpu].on_chip_data;

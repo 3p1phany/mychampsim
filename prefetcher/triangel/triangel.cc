@@ -4,39 +4,10 @@
 
 Triangel* triangel[NUM_CPUS];
 
-bool triangel_stride_enable = true;
-extern IPT_L1 ipt[NUM_CPUS][IPT_NUM];
-
-#include "cmc.h"
-extern CMCConfig cmc_config[NUM_CPUS];
-extern LoadIdentity load_identity[NUM_CPUS];
-extern LoadRet load_ret[NUM_CPUS];
-
 void CACHE::prefetcher_initialize() {
     std::cout << NAME << " [Triangel] prefetcher, ";
-#if TEMPORAL_L1D == false
-    triangel_stride_enable = false;
-    cout << "Stride Prefetcher Off" << endl;
-#else
-    cout << "Stride Prefetcher On" << endl;
-#endif
 
     triangel[cpu] = new Triangel(cpu);
-    if(triangel_stride_enable){
-        for(uint32_t i = 0; i < IPT_NUM; i++){
-            ipt[cpu][i].conf = 0;
-            ipt[cpu][i].rplc_bits = i;
-        }
-    }
-
-#if TEMPORAL_L1D == true
-    cmc_config[cpu].cpu = cpu;
-    cmc_config[cpu].load_ret_size = 64;
-    cmc_config[cpu].load_identity_size = 256;
-
-    load_ret[cpu].init(&cmc_config[cpu]);
-    load_identity[cpu].init(&cmc_config[cpu]);
-#endif
 
     std::cout << "Prefetch distance: " << triangel[cpu]->get_degree()
               << ", cpu: " << triangel[cpu]->get_cpu_id()
@@ -44,13 +15,6 @@ void CACHE::prefetcher_initialize() {
 }
 
 uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cache_hit, bool hit_pref, uint8_t type, uint64_t metadata_in) { 
-    /** Stride Prefetcher */
-    if(triangel_stride_enable){
-        pair<uint64_t, uint64_t> stride = stride_cache_operate(cpu, addr, ip);
-        if(stride.first != 0){
-            int stride_succ = prefetch_line(stride.first, true, stride.second);
-        }
-    }
     std::vector<AddrPriority> prefetches;
     triangel[cpu]->calculatePrefetch(type==LOAD, ip, addr,prefetches);
     for (auto prefetch : prefetches) {
