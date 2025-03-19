@@ -1,7 +1,7 @@
 #!/bin/bash
 cd "$(dirname "$0")"
 
-item_list=("no" "stride" "berti" "ipcp" "la864" "bop" "AA")
+item_list=("no" "stride" "berti" "ipcp" "la864" "AA" "bop" "AidOP" "triage-l2" "triangel-l2" "AdaTP")
 remote_list=("epyc2")
 remote_path=/home/xuefeng/workspace/champsim-la/batch_run/result/
 

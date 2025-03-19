@@ -4,13 +4,13 @@ import sys
 import json as js
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.gridspec import GridSpec
 
 sys.path.append("../utils_py/")
 import myutil
 from myplot import MyPlot
 import matplotlib.patches as mpatches
-import math
+from test_priority import bad_tests
+from test_priority import interest_tests
 
 save_path = '../pdf/1.vcache_stat.pdf'
 
@@ -18,12 +18,19 @@ with open('vcache_stat.json') as f :
     js_data = js.load(f)
 
 input = [
-    ["berti", "BERTI"],
+    ["la864", "IPCP-E"],
 ]
 work_list = [datum[0] for datum in input]
 label = [datum[1] for datum in input]
 
 tests_list = [key for key in js_data[work_list[0]].keys()]
+for bad in bad_tests :
+    if bad in tests_list:
+        tests_list.remove(bad)
+for interest in interest_tests :
+    if interest in tests_list:
+        tests_list.remove(interest)
+tests_list = interest_tests + tests_list
 
 y1_data = []
 xs      = []
@@ -60,44 +67,29 @@ def post_hook_func() :
 def my_set_xtickslabel_size(ax,cfg):
     ax.set_yticklabels(ax.get_yticklabels(), fontsize=12)
 
-# Change need to be done in myplot:
-# group_width = 0.8 #grouped_bar_kwargs.get("group_width", 1.0)
-# padding = 0.02 #grouped_bar_kwargs.get("padding", 0.)
-
 color = [
-    # '#8eb3c8',
-    # '#b5ccc4',
-    # '#c66e60',
-    # '#f3d27d',
-    # '#688fc6',
     '#8eb3c8',
     '#dfa677',
-    # '#495a4f',
 ]
 hatch=['', '', '']
 
-import matplotlib as mpl
-mpl.rcParams['hatch.linewidth'] = 0.6  # previous pdf hatch linewidth
-
 fig_cfg = {
     'type': 'linebar',
-    #'title': 'test title',
 
     # X Data
     'x': xs,
     # X Label
-    #'xlabel': 'test x label',
     'xgroup': True,
     'xgroup_kwargs': {
         'delimiter': myutil.delimiter,
         'minlevel': 1,
-        'yfactor': 1.7,
-        'yoffset': 0.2,
+        'yfactor': 1.9,
+        'yoffset': 0.1,
         'line_kwargs': {
             'lw': 0.7,
         },
         'text_kwargs': lambda lvl: {
-            'rotation': 90 if lvl == 0 else 0,
+            'rotation': 60 if lvl == 0 else 0,
             'fontsize': 11,
         },
     },
@@ -110,7 +102,7 @@ fig_cfg = {
             'color': [color[0], color[1], color[1]],
             'hatch': hatch,
             'label': ycat,
-            'axlabel': 'Hit/Miss Percentage',
+            'axlabel': 'Hit / Miss Percentage',
             'axlabel_kwargs': {
                 'fontsize': 12,
             },

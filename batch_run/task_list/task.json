@@ -13,7 +13,7 @@
         "gcc/scilab",
         "omnetpp/ref",
         "xalancbmk/ref",
-        "h264ref/baseline",
+        "astar/lakes",
         "libquantum/ref",
         "dealII/ref",
         "milc/ref",
