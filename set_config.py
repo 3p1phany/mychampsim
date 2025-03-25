@@ -5,7 +5,7 @@ import sys
 
 type = sys.argv[1]
 
-type_list = ["no", "stride", "ipcp", "berti", "la864", "bop", "triangel-l2", "triage-l2", "AidOP", "AdaTP", "AA"]
+type_list = ["no", "stride", "ipcp", "berti", "la864", "bop", "spp", "triangel-l2", "triage-l2", "AidOP", "AdaTP", "AA"]
 
 if(type not in type_list):
     print("Please enter correct type")
@@ -30,7 +30,7 @@ elif(type == "berti"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"berti\",' {config_fname}"
 elif(type == "ipcp"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"ipcp_l1d\",' {config_fname}"
-elif(type=="la864" or type=="AA" or type == "AidOP" or type == "AdaTP" or type == "triage-l2" or type == "triangel-l2" or type=="bop"):
+elif(type=="la864" or type=="AA" or type == "AidOP" or type == "AdaTP" or type == "triage-l2" or type == "triangel-l2" or type=="bop" or type=="spp"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"la864\",' {config_fname}"
 print(command)
 os.system(command)
@@ -94,6 +94,8 @@ elif(type == "triangel-l2"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"triangel\",' {config_fname}"
 elif(type == "bop"):
     command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"bop\",' {config_fname}"
+elif(type == "spp"):
+    command = f"sed -i '{config_line},{config_line}c\        \"prefetcher\": \"spp_dev\",' {config_fname}"
 print(command)
 os.system(command)
 

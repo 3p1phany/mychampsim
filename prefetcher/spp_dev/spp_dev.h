@@ -1,6 +1,8 @@
 #ifndef SPP_H
 #define SPP_H
 
+#include "prefetch.h"
+
 // SPP functional knobs
 #define LOOKAHEAD_ON
 #define FILTER_ON
