@@ -22,8 +22,7 @@ uint64_t aidop_prefetcher_cache_operate(CACHE* l2, uint64_t addr, uint64_t ip, u
         }
         
         if (aidop[l2->cpu].total_miss == AIDOP_INTERVAL) {
-            // printf("AidOP: avg_delay = %lu / %lu = %lu\n", aidop[l2->cpu].total_cycle, aidop[l2->cpu].total_miss, aidop[l2->cpu].total_cycle / aidop[l2->cpu].total_miss);
-            aidop[l2->cpu].avg_delay = aidop[l2->cpu].total_cycle / aidop[l2->cpu].total_miss + 50;
+            aidop[l2->cpu].avg_delay = aidop[l2->cpu].total_cycle / aidop[l2->cpu].total_miss + 200;
             aidop[l2->cpu].total_cycle = 0;
             aidop[l2->cpu].total_miss = 0;
         }
@@ -68,7 +67,9 @@ uint64_t aidop_prefetcher_cache_operate(CACHE* l2, uint64_t addr, uint64_t ip, u
     }
     else {
         uint8_t max_conf = 0;
+        uint8_t sec_conf = 0;
         uint8_t max_idx = 0;
+        uint8_t sec_idx = 0;
         for (uint8_t i = 0; i < DELTA_TABLE_DELTA_NUM; i++) {
             if (entry->conf[i] > max_conf) {
                 max_conf = entry->conf[i];
@@ -76,8 +77,18 @@ uint64_t aidop_prefetcher_cache_operate(CACHE* l2, uint64_t addr, uint64_t ip, u
             }
         }
         if (max_conf > 4) {
-            entry->best_delta = entry->delta[max_idx];
+            entry->best_delta0 = entry->delta[max_idx];
         }
+        for (uint8_t i = 0; i < DELTA_TABLE_DELTA_NUM; i++) {
+            if (entry->conf[i] > sec_conf && i != max_idx) {
+                sec_conf = entry->conf[i];
+                sec_idx = i;
+            }
+        }
+        if (sec_conf > 4) {
+            entry->best_delta1 = entry->delta[sec_idx];
+        }
+
         entry->reset_offset();
         entry->reset_delta();
 
@@ -88,9 +99,17 @@ uint64_t aidop_prefetcher_cache_operate(CACHE* l2, uint64_t addr, uint64_t ip, u
         entry->idx = entry->idx < DELTA_TABLE_OFFSET_NUM - 1 ? entry->idx + 1 : 0;
     }
 
-    if (entry->best_delta != 0) {
-        uint64_t pf_addr = addr + ((entry->best_delta) << LOG2_BLOCK_SIZE);
-        l2->prefetch_line(pf_addr, FILL_L2, 0);
+    if (entry->best_delta0 != 0) {
+        uint64_t pf_addr = addr + ((entry->best_delta0) << LOG2_BLOCK_SIZE);
+        if ((pf_addr >> LOG2_PAGE_SIZE) == (addr >> LOG2_PAGE_SIZE)) {
+            l2->prefetch_line(pf_addr, FILL_L2, 0);
+        }
+    }
+    if (entry->best_delta1 != 0) {
+        uint64_t pf_addr = addr + ((entry->best_delta1) << LOG2_BLOCK_SIZE);
+        if ((pf_addr >> LOG2_PAGE_SIZE) == (addr >> LOG2_PAGE_SIZE)) {
+            l2->prefetch_line(pf_addr, FILL_L2, 0);
+        }
     }
     return metadata_in; 
 }

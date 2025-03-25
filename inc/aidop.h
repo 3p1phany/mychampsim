@@ -16,7 +16,8 @@ class delta_table_entry {
     uint8_t offset[DELTA_TABLE_OFFSET_NUM];
     int16_t delta[DELTA_TABLE_DELTA_NUM];
     uint8_t conf[DELTA_TABLE_DELTA_NUM];
-    int16_t best_delta;
+    int16_t best_delta0;
+    int16_t best_delta1;
 
     delta_table_entry() {
         page_tag = 0;
@@ -29,7 +30,8 @@ class delta_table_entry {
             delta[i] = 0;
             conf[i] = 0;
         }
-        best_delta = 0;
+        best_delta0 = 0;
+        best_delta1 = 0;
     }
 
     void reset_offset() {
