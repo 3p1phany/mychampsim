@@ -52,7 +52,7 @@ void CACHE::prefetcher_cycle_operate() {
     for (auto &prefetch : triangel[cpu]-> PrefetchQueue) {
         prefetch.delay -= 1;
         if (prefetch.delay == 0) {
-            prefetch_line(prefetch.addr, true, 0);
+            prefetch_line(prefetch.addr, FILL_L2, 0);
         }
     }
 }

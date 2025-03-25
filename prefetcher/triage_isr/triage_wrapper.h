@@ -143,7 +143,7 @@ void triage_prefetcher_cycle_operate(uint32_t cpu, CACHE* cache) {
         uint64_t target = prefetch.addr << LOG2_BLOCK_SIZE;
     #endif
     if(target != 0)
-        cache->prefetch_line(target, true, 0);
+        cache->prefetch_line(target, FILL_L2, 0);
 
     /** Handle Write*/
     TriageOnchip* t = &triage[cpu].on_chip_data;
