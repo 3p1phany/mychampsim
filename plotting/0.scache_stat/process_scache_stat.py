@@ -20,5 +20,5 @@ bad_result = [
 ]
 bad_result = sorted(bad_result)
 
-print("interest_tests = " + str(interst_result))
-print("bad_tests = " + str(bad_result))
+print("memory_tests = " + str(interst_result))
+print("no_memory_tests = " + str(bad_result))

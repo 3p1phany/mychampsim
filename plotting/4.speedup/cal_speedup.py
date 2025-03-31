@@ -6,7 +6,7 @@ import numpy as np
 sys.path.append("../utils_py/")
 from rename import rename
 
-file_list = ["no","stride-l1", "ipcp-l1", "berti-l1", "la864-l1"]
+file_list=["la864","triage-l2","triangel-l2","AdaTP"]
 weights = json.load(open("../../batch_run/task_list/weight.json"))
 
 print("\nStarting Calculate SpeedUp...")
@@ -58,5 +58,5 @@ for key, value in raw_data.items():
             gcc_ipc_sum += result[key][sub_key]
     result[key]["SPEC17.gcc"] = gcc_ipc_sum / gcc_point
 
-json.dump(result, open("speedup.json", "w+"), indent=True , ensure_ascii=False)
+json.dump(result, open("speedup.json", "w"), indent=True , ensure_ascii=False)
 print("SpeedUp Calculation Success!\n")

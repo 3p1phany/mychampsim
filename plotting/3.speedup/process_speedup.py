@@ -15,10 +15,10 @@ with open('speedup.json') as f :
     js_data = js.load(f)
 
 input = [
-    ["no", "NO"],
-    ["ipcp-l1", "IPCP"],
-    ["berti-l1", "BERTI"],
-    ["la864-l1", "IPCP-E"],
+    ["la864", "IPCP-E"],
+    ["bop", "BOP"],
+    ["spp", "SPP"],
+    ["AidOP", "AidOP"]
 ]
 color = [
     # '#f3d27d',
@@ -27,7 +27,7 @@ color = [
     '#688fc6',
     '#dfa677',
 ] 
-save_path = '../pdf/5.speedup.pdf'
+save_path = '../pdf/3.speedup.pdf'
 label_pos = (0.5, 1.19)
 label_fontsize = 12
 
@@ -77,8 +77,8 @@ for i in range(len(ydata)):
     print('xs: {0}, ydata: {1}'.format(xs[i], ydata[i]))
 
 def pre_hook_func() :
-    plt.gca().set_yticks([ x/100.0 for x in range(60,200,20)])
-    plt.ylim(bottom=0.6,top=2.0)
+    plt.gca().set_yticks([ x/100.0 for x in range(60,140,20)])
+    plt.ylim(bottom=0.6,top=1.4)
     return
 
 def post_hook_func() :
@@ -90,24 +90,24 @@ def my_set_xtickslabel_size(ax,cfg):
     ax.set_yticklabels(ax.get_yticklabels(), fontsize=14)
     height = 2.0
 
-    for rect in ax.containers[-3].patches:
-        if rect.get_height() > 2.0:
-            x = rect.get_x() + rect.get_width() / 2
-            y = rect.get_y() + rect.get_height() 
-            ax.text(x - 0.70, height, '%.2f' % y, ha='left', va='bottom', fontsize=8)
+    # for rect in ax.containers[-3].patches:
+    #     if rect.get_height() > 2.0:
+    #         x = rect.get_x() + rect.get_width() / 2
+    #         y = rect.get_y() + rect.get_height() 
+    #         ax.text(x - 0.70, height, '%.2f' % y, ha='left', va='bottom', fontsize=8)
 
-    for rect in ax.containers[-2].patches:
-        if rect.get_height() > 2.0:
-            x = rect.get_x() + rect.get_width() / 2
-            y = rect.get_y() + rect.get_height() 
-            ax.text(x - 0.30, height, '%.2f' % y, ha='left', va='bottom', fontsize=8)
+    # for rect in ax.containers[-2].patches:
+    #     if rect.get_height() > 2.0:
+    #         x = rect.get_x() + rect.get_width() / 2
+    #         y = rect.get_y() + rect.get_height() 
+    #         ax.text(x - 0.30, height, '%.2f' % y, ha='left', va='bottom', fontsize=8)
 
 
     for rect in ax.containers[-1].patches:
         if rect.get_height() > 2.0:
             x = rect.get_x() + rect.get_width() / 2
             y = rect.get_y() + rect.get_height() 
-            ax.text(x - 0.15 , height, '%.2f' % y, ha='left', va='bottom', fontsize=8)
+            ax.text(x + 0.05 , height, '%.2f' % y, ha='left', va='bottom', fontsize=8)
 
 fig_cfg = {
     'type': 'linebar',

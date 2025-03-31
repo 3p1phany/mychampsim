@@ -16,9 +16,9 @@ with open('cov_acc_time.json') as f :
     cov_acc_time = js.load(f)
 
 input = [
-    ["ipcp-l1", "IPCP"],
-    ["berti-l1", "BERTI"],
-    ["la864-l1", "IPCP-E"],
+    ["AidOP", "AidOP"],
+    ["AdaTP", "AdaTP"],
+    ["AA", "AA"],
 ]
 color = [
     # '#f3d27d',
@@ -28,7 +28,7 @@ color = [
     '#dfa677',
 ] 
 
-save_path = '../pdf/5.cover_acc_time.pdf'
+save_path = '../pdf/5.cover_acc_time_aa.pdf'
 
 work_list = [datum[0] for datum in input]
 label = [datum[1] for datum in input]
@@ -43,22 +43,22 @@ for interest in memory_tests :
 tests_list = memory_tests + tests_list
 
 def cal_cov(data) :
-    if data['L1D_origin_miss'] == 0:
+    if data['L2C_origin_miss'] == 0:
         return 1
     else:
-        return (1 - data['L1D_pref_miss']/data['L1D_origin_miss'])
+        return (1 - data['L2C_pref_miss']/data['L2C_origin_miss'])
 
 def cal_acc(data) :
-    if data['L1D_pref_total_num'] == 0:
+    if data['L2C_pref_total_num'] == 0:
         return 0
     else:
-        return (1 - data['L1D_pref_useless_num'] / data['L1D_pref_total_num'])
+        return (1 - data['L2C_pref_useless_num'] / data['L2C_pref_total_num'])
 
 def cal_timeliness(data) :
-    if data['L1D_pref_total_num'] == 0:
+    if data['L2C_pref_total_num'] == 0:
         return 0
     else:
-        return (1 - data['L1D_pref_late_num'] / data['L1D_pref_total_num'])
+        return (1 - data['L2C_pref_late_num'] / data['L2C_pref_total_num'])
 
 xs      = []
 cov_ydata = []

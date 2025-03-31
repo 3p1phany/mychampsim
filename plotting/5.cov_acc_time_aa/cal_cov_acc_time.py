@@ -6,7 +6,7 @@ import numpy as np
 sys.path.append("../utils_py/")
 from rename import rename
 
-file_list = ["stride-l1", "ipcp-l1", "berti-l1", "la864-l1"]
+file_list=["la864","AidOP","AdaTP", "AA"]
 
 weights = json.load(open("../../batch_run/task_list/weight.json"))
 
@@ -21,11 +21,11 @@ for f_name in file_list:
         weight = weights[key]
         test_name = rename("_".join(sp_key[:-1]))
 
-        tmp_dict = {"L1D_pref_miss": 0,
-                    "L1D_pref_total_num": 0,
-                    "L1D_pref_useless_num": 0,
-                    "L1D_pref_late_num": 0,
-                    "L1D_origin_miss": 0,
+        tmp_dict = {"L2C_pref_miss": 0,
+                    "L2C_pref_total_num": 0,
+                    "L2C_pref_useless_num": 0,
+                    "L2C_pref_late_num": 0,
+                    "L2C_origin_miss": 0,
                     }
         for sub_key, sub_value in value.items():
             tmp_dict[sub_key] += weight*sub_value
@@ -37,11 +37,11 @@ for f_name in file_list:
 
 for key, value in result.items():
     gcc_point = 0
-    gcc_sum = {"L1D_pref_miss": 0,
-               "L1D_pref_total_num": 0,
-               "L1D_pref_useless_num": 0,
-               "L1D_pref_late_num": 0,
-               "L1D_origin_miss": 0,
+    gcc_sum = {"L2C_pref_miss": 0,
+               "L2C_pref_total_num": 0,
+               "L2C_pref_useless_num": 0,
+               "L2C_pref_late_num": 0,
+               "L2C_origin_miss": 0,
                }
     for sub_key, sub_value in value.items():
         if sub_key[0:10] == "SPEC06.gcc":
@@ -54,11 +54,11 @@ for key, value in result.items():
 
 for key, value in result.items():
     gcc_point = 0
-    gcc_sum = {"L1D_pref_miss": 0,
-               "L1D_pref_total_num": 0,
-               "L1D_pref_useless_num": 0,
-               "L1D_pref_late_num": 0,
-               "L1D_origin_miss": 0,
+    gcc_sum = {"L2C_pref_miss": 0,
+               "L2C_pref_total_num": 0,
+               "L2C_pref_useless_num": 0,
+               "L2C_pref_late_num": 0,
+               "L2C_origin_miss": 0,
                }
     for sub_key, sub_value in value.items():
         if sub_key[0:10] == "SPEC17.gcc":

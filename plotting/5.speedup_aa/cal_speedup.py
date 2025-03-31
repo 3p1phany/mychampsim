@@ -6,7 +6,7 @@ import numpy as np
 sys.path.append("../utils_py/")
 from rename import rename
 
-file_list = ["no","stride-l1", "ipcp-l1", "berti-l1", "la864-l1"]
+file_list=["la864","AidOP","AdaTP", "AA"]
 weights = json.load(open("../../batch_run/task_list/weight.json"))
 
 print("\nStarting Calculate SpeedUp...")

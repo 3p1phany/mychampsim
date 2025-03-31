@@ -16,8 +16,8 @@ with open('cov_acc_time.json') as f :
     cov_acc_time = js.load(f)
 
 input = [
-    ["ipcp-l1", "IPCP"],
     ["berti-l1", "BERTI"],
+    ["ipcp-l1", "IPCP"],
     ["la864-l1", "IPCP-E"],
 ]
 color = [
@@ -28,7 +28,7 @@ color = [
     '#dfa677',
 ] 
 
-save_path = '../pdf/5.cover_acc_time.pdf'
+save_path = '../pdf/3.bg_cover_acc_time.pdf'
 
 work_list = [datum[0] for datum in input]
 label = [datum[1] for datum in input]
@@ -102,8 +102,7 @@ timeliness_ydata = np.array(timeliness_ydata)
 
 def pre_hook_func() :
     plt.gca().set_yticks([ x for x in np.arange(0,1.01,0.25)])
-    plt.subplots_adjust(bottom=0.2)
-
+    plt.subplots_adjust(bottom=0.18,top=0.93)
     
 def my_set_xtickslabel_size(ax,cfg):
     ax.set_yticklabels(ax.get_yticklabels(), fontsize=14)
@@ -116,7 +115,8 @@ def gen_config(data, axlabel:str, first:bool, last:bool):
         plt.xlim(-0.5, len(xs)-0.5)
         plt.ylim(0,1)
         def format_func(value, tick_number):
-            if value == 0:
+            if value == 0:  # or any condition you want
+                # return "0"
                 return '0'
             else:
                 return '{:.0%}'.format(value)
@@ -140,13 +140,13 @@ def gen_config(data, axlabel:str, first:bool, last:bool):
             'xgroup_kwargs': {
             'delimiter': myutil.delimiter,
             'minlevel': 1,
-            'yfactor': 5.0,
+            'yfactor': 4.2,
             'yoffset': 0.05,
             'line_kwargs': {
                 'lw': 0.7,
             },
             'text_kwargs': lambda lvl: {
-                'rotation': 90 if lvl == 0 else 0,
+                'rotation': 70 if lvl == 0 else 0,
                 'fontsize': 13,
             },
         },
@@ -177,8 +177,8 @@ def gen_config(data, axlabel:str, first:bool, last:bool):
                     'frameon' : False,
                     'ncol' : 8,
                     'loc' : 'upper center',
-                    'bbox_to_anchor' : (0.5, 1.18),
-                    'fontsize' : 14,
+                    'bbox_to_anchor' : (0.5, 1.28),
+                    'fontsize' : 17,
                     'columnspacing': 1.2,
                     'handletextpad' : 0.6,
                 },
@@ -198,7 +198,7 @@ if use_subplot_example:
     acc = dict(gen_config(acc_ydata, "Accuracy", False, False), pos=(1, 0))
     timeliness = dict(gen_config(timeliness_ydata, "Timeliness", False, True), pos=(2, 0))
     fig_cfg = {
-        "figsize": [12, 9.5],
+        "figsize": [12, 7.5],
         "subplot": True,
         "gridspec_kwargs": {
             "nrows": 3,

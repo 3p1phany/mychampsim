@@ -1,11 +1,11 @@
 #!/bin/bash
 cd "$(dirname "$0")"
 
-item_list=("no" "stride-l1" "berti-l1" "ipcp-l1" "la864-l1")
+item_list=("la864" "AidOP" "AdaTP" "AA")
 
 ## Generate Json File
-speedup_path=../plotting/5.speedup/
-cov_acc_path=../plotting/5.cov_acc_time/
+speedup_path=../plotting/5.speedup_aa/
+cov_acc_path=../plotting/5.cov_acc_time_aa/
 
 for i in ${item_list[@]}
 do
@@ -16,7 +16,7 @@ do
     #### Coverage & Accuracy
     if [ $i != "no" ]; then
         rm ${cov_acc_path}result/${i}.json
-        ../tools/collect_dcache_cov_acc_time.py ../result/${i}/ ${cov_acc_path}result/${i}.json
+        ../tools/collect_vcache_cov_acc_time.py ../result/${i}/ ${cov_acc_path}result/${i}.json
     fi
 done
 

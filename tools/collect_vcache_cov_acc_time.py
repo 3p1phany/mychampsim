@@ -44,7 +44,7 @@ for item in os.listdir(no_dir):
 sorted_dict = dict(sorted(result.items(), key=lambda x:x[0].lower()))
 
 if sorted_dict:
-    json.dump(sorted_dict, open(output_fname, "w"), indent=True , ensure_ascii=False)
+    json.dump(sorted_dict, open(output_fname, "w+"), indent=True , ensure_ascii=False)
 else:
     print(f"ERROR: Can Not find Information")
 

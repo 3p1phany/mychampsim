@@ -8,17 +8,17 @@ import matplotlib.pyplot as plt
 sys.path.append("../utils_py/")
 import myutil
 from myplot import MyPlot
-from test_priority import no_memory_tests
-from test_priority import memory_tests
+from test_priority import no_irregular_tests
+from test_priority import irregular_tests
 
 with open('speedup.json') as f :
     js_data = js.load(f)
 
 input = [
-    ["no", "NO"],
-    ["ipcp-l1", "IPCP"],
-    ["berti-l1", "BERTI"],
-    ["la864-l1", "IPCP-E"],
+    ["la864", "IPCP-E"],
+    ["triage-l2", "Triage"],
+    ["triangel-l2", "Triangel"],
+    ["AdaTP", "AdaTP"],
 ]
 color = [
     # '#f3d27d',
@@ -27,7 +27,7 @@ color = [
     '#688fc6',
     '#dfa677',
 ] 
-save_path = '../pdf/5.speedup.pdf'
+save_path = '../pdf/4.speedup.pdf'
 label_pos = (0.5, 1.19)
 label_fontsize = 12
 
@@ -38,15 +38,15 @@ ycat = [datum[0] for datum in input]
 label = [datum[1] for datum in input]
 
 tests_list = [key for key in js_data[base].keys()]
-for bad in no_memory_tests :
+for bad in no_irregular_tests :
     if bad in tests_list:
         tests_list.remove(bad)
-for interest in memory_tests :
+for interest in irregular_tests :
     if interest in tests_list:
         tests_list.remove(interest)
-tests_list = memory_tests + tests_list
+tests_list = irregular_tests + tests_list
 
-for bad in no_memory_tests :
+for bad in no_irregular_tests :
     if bad in js_data[base].keys():
         del js_data[base][bad]
     for method in ycat:
@@ -77,8 +77,8 @@ for i in range(len(ydata)):
     print('xs: {0}, ydata: {1}'.format(xs[i], ydata[i]))
 
 def pre_hook_func() :
-    plt.gca().set_yticks([ x/100.0 for x in range(60,200,20)])
-    plt.ylim(bottom=0.6,top=2.0)
+    plt.gca().set_yticks([ x/100.0 for x in range(50,160,20)])
+    plt.ylim(bottom=0.5,top=1.6)
     return
 
 def post_hook_func() :
@@ -88,26 +88,20 @@ def post_hook_func() :
 
 def my_set_xtickslabel_size(ax,cfg):
     ax.set_yticklabels(ax.get_yticklabels(), fontsize=14)
-    height = 2.0
-
-    for rect in ax.containers[-3].patches:
-        if rect.get_height() > 2.0:
-            x = rect.get_x() + rect.get_width() / 2
-            y = rect.get_y() + rect.get_height() 
-            ax.text(x - 0.70, height, '%.2f' % y, ha='left', va='bottom', fontsize=8)
+    height = 2.1
 
     for rect in ax.containers[-2].patches:
-        if rect.get_height() > 2.0:
+        if rect.get_height() > 1.5:
             x = rect.get_x() + rect.get_width() / 2
             y = rect.get_y() + rect.get_height() 
-            ax.text(x - 0.30, height, '%.2f' % y, ha='left', va='bottom', fontsize=8)
+            ax.text(x - 1.31, height, '%.2f' % y, ha='left', va='bottom', fontsize=9)
 
 
     for rect in ax.containers[-1].patches:
-        if rect.get_height() > 2.0:
+        if rect.get_height() > 1.5:
             x = rect.get_x() + rect.get_width() / 2
             y = rect.get_y() + rect.get_height() 
-            ax.text(x - 0.15 , height, '%.2f' % y, ha='left', va='bottom', fontsize=8)
+            ax.text(x - 0.01, height, '%.2f' % y, ha='left', va='bottom', fontsize=9)
 
 fig_cfg = {
     'type': 'linebar',
@@ -117,13 +111,13 @@ fig_cfg = {
     'xgroup_kwargs': {
         'delimiter': myutil.delimiter,
         'minlevel': 1,
-        'yfactor': 2.3,
+        'yfactor': 1.2,
         'yoffset': 0.1,
         'line_kwargs': {
-            'lw': 0.9,
+            'lw': 0.7,
         },
         'text_kwargs': lambda lvl: {
-            'rotation': 70 if lvl == 0 else 0,
+            'rotation': 45 if lvl == 0 else 0,
             'fontsize': 12,
         },
     },
@@ -155,11 +149,11 @@ fig_cfg = {
                 'columnspacing': 1.45,
                 'handletextpad' : 0.85,
             },
-            'post_yax_hook': my_set_xtickslabel_size,
+            # 'post_yax_hook': my_set_xtickslabel_size,
         },
     ],
 
-    'figsize' : [14,5.5],
+    'figsize' : [14,4.5],
 
     'pre_main_hook': pre_hook_func,
     'post_main_hook': post_hook_func,

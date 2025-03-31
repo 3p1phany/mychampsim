@@ -7,7 +7,7 @@ import numpy as np
 sys.path.append("../utils_py/")
 from rename import rename
 
-file_list = ["la864"]
+file_list = ["la864-l1"]
 
 weights = json.load(open("../../batch_run/task_list/weight.json"))
 

@@ -9,8 +9,8 @@ sys.path.append("../utils_py/")
 import myutil
 from myplot import MyPlot
 import matplotlib.patches as mpatches
-from test_priority import bad_tests
-from test_priority import interest_tests
+from test_priority import memory_tests
+from test_priority import no_memory_tests
 
 save_path = '../pdf/1.vcache_stat.pdf'
 
@@ -18,19 +18,19 @@ with open('vcache_stat.json') as f :
     js_data = js.load(f)
 
 input = [
-    ["la864", "IPCP-E"],
+    ["la864-l1", "IPCP-E"],
 ]
 work_list = [datum[0] for datum in input]
 label = [datum[1] for datum in input]
 
 tests_list = [key for key in js_data[work_list[0]].keys()]
-for bad in bad_tests :
+for bad in no_memory_tests :
     if bad in tests_list:
         tests_list.remove(bad)
-for interest in interest_tests :
+for interest in memory_tests :
     if interest in tests_list:
         tests_list.remove(interest)
-tests_list = interest_tests + tests_list
+tests_list = memory_tests + tests_list
 
 y1_data = []
 xs      = []
