@@ -3,7 +3,7 @@
 import os
 import sys
 
-supported_list = ["no", "stride", "ipcp", "berti", "la864", "bop", "triangel-l2", "triage-l2", "AidOP", "AdaTP", "AA"]
+supported_list = ["no", "stride", "ipcp", "berti", "la864", "bop", "spp", "triangel-l2", "triage-l2", "AidOP", "AdaTP", "AA"]
 
 target_list = sys.argv[1:]
 

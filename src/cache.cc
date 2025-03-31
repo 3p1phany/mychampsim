@@ -27,6 +27,7 @@
 #include "prefetch.h"
 #include "adatp.h"
 #include "berti.h"
+#include "triage.h"
 
 extern std::array<O3_CPU*, NUM_CPUS> ooo_cpu;
 extern VirtualMemory vmem;

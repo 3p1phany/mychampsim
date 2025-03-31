@@ -356,6 +356,9 @@ void AdaTP::set_dueller_adjust(uint64_t inst_num) {
             else {
                 target_assoc = cache_ways - cache_alloc_ways;
             }
+	    if (target_assoc >= 12) {
+		    target_assoc = 12;
+	    }
         }
         if (use_dynamic_threshold){
             if (increase_delta && !critical_metadata) {

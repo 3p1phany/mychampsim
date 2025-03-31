@@ -12,7 +12,7 @@ old_binary = json.load(binary_file)
 binary_file.close()
 
 ## Binary List
-single_binary_list = ["no", "stride", "ipcp", "berti", "la864", "bop", "triangel-l2", "triage-l2", "AidOP", "AdaTP", "AA"]
+single_binary_list = ["no", "stride", "ipcp", "berti", "la864", "bop", "spp", "triangel-l2", "triage-l2", "AidOP", "AdaTP", "AA"]
 
 if mode == "single":
     command = "cd ./gen_binary && ./gen_single.py " + ' '.join(map(str, single_binary_list))
