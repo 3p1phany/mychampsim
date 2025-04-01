@@ -63,7 +63,8 @@ uint64_t CACHE::prefetcher_cache_operate(uint64_t addr, uint64_t ip, uint8_t cac
             if (confidence_q[i] >= FILL_THRESHOLD) {
               prefetch_line(pf_addr, FILL_L2, 0);
             } else {
-              // prefetch_line(pf_addr, FILL_LLC, 0);
+              prefetch_line(pf_addr, FILL_LLC, 0);
+              prefetch_line(pf_addr, FILL_L2, 0);
             }
 
             if (confidence_q[i] >= FILL_THRESHOLD) {
