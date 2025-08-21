@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+# benchctl: 统一入口
+# 用法: ./benchctl <subcmd> [args...]
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPTS_DIR="${ROOT_DIR}/scripts"
+
+GEN="${SCRIPTS_DIR}/gen_benchmarks_tsv.py"
+RUN="${SCRIPTS_DIR}/run_benchmarks.sh"
+SUM="${SCRIPTS_DIR}/summarize_ipc.py"
+CMP="${SCRIPTS_DIR}/compare_ipc.py"
+
+die(){ echo "[ERR] $*" >&2; exit 2; }
+need(){ command -v "$1" >/dev/null 2>&1 || die "缺少命令: $1"; }
+
+usage(){
+  cat <<'EOF'
+benchctl - 统一的 benchmark 管理工具
+
+子命令:
+  gen         生成 benchmarks.tsv
+  run         并行运行 benchmarks.tsv （自动创建结果目录）
+  summarize   汇总某次运行的加权 IPC （生成 summary.tsv）
+  compare     对比两次运行的 IPC 差异与几何平均加速比
+
+常见示例:
+  # 1) 生成 TSV
+  ./benchctl gen --root ~/Trace/LA --out ./benchmarks.tsv --verbose
+
+  # 2) 跑一版（交互输入 label；或用 --label 非交互）
+  ./benchctl run --binary ./bin/champsim --jobs 16 --warmup 20000000 --sim 100000000 \
+                 --extra-args "--loongarch" --manifest ./benchmarks.tsv --label oracle
+
+  # 3) 汇总
+  ./benchctl summarize --results results/20250820-203125-oracle
+
+  # 4) 对比
+  ./benchctl compare \
+       --a results/20250820-203125-oracle \
+       --b results/20250820-223945-close \
+       --a-label oracle --b-label close \
+       --out results/compare_oracle_vs_close.tsv
+EOF
+}
+
+subcmd="${1:-}"; shift || true
+[[ -n "${subcmd}" ]] || { usage; exit 0; }
+
+# 基础检查
+[[ -f "$GEN" ]] || die "找不到脚本: $GEN"
+[[ -f "$RUN" ]] || die "找不到脚本: $RUN"
+[[ -f "$SUM" ]] || die "找不到脚本: $SUM"
+[[ -f "$CMP" ]] || die "找不到脚本: $CMP"
+need python3
+need bash
+need xargs
+
+case "$subcmd" in
+  gen)
+    # 透传参数给生成器
+    exec python3 "$GEN" "$@"
+    ;;
+
+  run)
+    # 解析常用参数（可选）
+    label=""
+    manifest="./benchmarks.tsv"
+    binary="./bin/champsim"
+    jobs=""
+    warmup=""
+    sim=""
+    extra=""
+    results_root=""
+    dry="0"
+
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+        --label)         label="$2"; shift 2;;
+        --manifest)      manifest="$2"; shift 2;;
+        --binary)        binary="$2"; shift 2;;
+        --jobs)          jobs="$2"; shift 2;;
+        --warmup)        warmup="$2"; shift 2;;
+        --sim)           sim="$2"; shift 2;;
+        --extra-args)    extra="$2"; shift 2;;
+        --results-root)  results_root="$2"; shift 2;;
+        --dry-run)       dry="1"; shift;;
+        -h|--help)       echo "用法: benchctl run [--label L] [--manifest file] [--binary exe] [--jobs N] [--warmup N] [--sim N] [--extra-args '...'] [--results-root DIR] [--dry-run]"; exit 0;;
+        *) echo "[WARN] 未识别参数: $1" >&2; shift;;
+      esac
+    done
+
+    # 环境变量传给 run_benchmarks.sh（它支持交互）
+    envs=()
+    [[ -n "$manifest"     ]] && envs+=( "MANIFEST=$manifest" )
+    [[ -n "$binary"       ]] && envs+=( "BINARY=$binary" )
+    [[ -n "$jobs"         ]] && envs+=( "JOBS=$jobs" )
+    [[ -n "$warmup"       ]] && envs+=( "WARMUP=$warmup" )
+    [[ -n "$sim"          ]] && envs+=( "SIM=$sim" )
+    [[ -n "$extra"        ]] && envs+=( "EXTRA_ARGS=$extra" )
+    [[ -n "$results_root" ]] && envs+=( "RESULTS_ROOT=$results_root" )
+    [[ "$dry" == "1"      ]] && envs+=( "DRY_RUN=1" )
+
+    if [[ -n "$label" ]]; then
+      # 非交互：把 label 与确认 'y' 通过 stdin 喂给脚本
+      printf "%s\ny\n" "$label" | env "${envs[@]}" bash "$RUN"
+    else
+      # 交互式
+      env "${envs[@]}" bash "$RUN"
+    fi
+    ;;
+
+  summarize)
+    # 透传参数；默认 manifest=./benchmarks.tsv
+    # 用法: benchctl summarize --results <dir> [--manifest <tsv>] [--out <tsv>] [--verbose]
+    exec python3 "$SUM" "$@"
+    ;;
+
+  compare)
+    # 用法: benchctl compare --a <results|summary.tsv> --b <...> [--a-label X] [--b-label Y] [--out file]
+    exec python3 "$CMP" "$@"
+    ;;
+
+  -h|--help|help)
+    usage
+    ;;
+
+  *)
+    echo "[ERR] 未知子命令: $subcmd" >&2
+    usage
+    exit 2
+    ;;
+esac
+
