@@ -589,8 +589,15 @@ int main(int argc, char** argv)
 
       // Memory
       trace_name = argv[optind+i];
+      std::cout << prefix_name << std::endl;
       mem_data[i].set_init_fname(prefix_name + ".memory.bin", compressed_memory);
-      mem_data[i].init();
+      if(prefix_name.find("spec06_bwaves_ref")==-1){
+        mem_data[i].init();
+      }
+      else{
+        std::cout << "fucking bwaves detected, memory bin too big!!!"<<std::endl;
+        continue;
+      } 
     }
   }
 
@@ -702,46 +709,47 @@ int main(int argc, char** argv)
       print_roi_stats(i, *it);
   }
 
-  for (auto it = caches.rbegin(); it != caches.rend(); ++it)
-    (*it)->impl_prefetcher_final_stats();
-
-  for (auto it = caches.rbegin(); it != caches.rend(); ++it)
-    (*it)->impl_replacement_final_stats();
-
-#ifndef CRC2_COMPILE
+//  for (auto it = caches.rbegin(); it != caches.rend(); ++it)
+//    (*it)->impl_prefetcher_final_stats();
+//
+//  for (auto it = caches.rbegin(); it != caches.rend(); ++it)
+//    (*it)->impl_replacement_final_stats();
+//
+//#ifndef CRC2_COMPILE
   //print_dram_stats();
+  std::cout << "print dram stats"<<std::endl;
   DRAM.PrintStats();
-  print_branch_stats();
-#endif
+  //print_branch_stats();
+//#endif
 
-  cout << "QUEUE Stats: " << endl;
-  for (uint32_t i = 0; i < NUM_CPUS; i++) {
-    print_queue_stats(i);
-  }
-
-  cout << "Read Stats: " << endl;
-  for (uint32_t i = 0; i < NUM_CPUS; i++) {
-    for (auto it = caches.rbegin(); it != caches.rend(); ++it)
-      if((*it)->NAME.find("L1D") != string::npos ||
-         (*it)->NAME.find("L2C") != string::npos ||
-         (*it)->NAME.find("LLC") != string::npos ){
-        print_roi_read_stats(i, *it);
-      }
-  }
-
-  cout << "[Tyche]: total execute instruction number: " << total_exc_num << endl;
-
-  cout << "dct_search_num: " << dct_search_num << endl;
-  cout << "dct_write_num: " << dct_write_num << endl;
-
-  cout << "isq_search_num: " << isq_search_num << endl;
-  cout << "isq_write_num: " << isq_write_num << endl;
-
-
-    cout << "ima_pref_num: " << ima_pref_num << endl;
-    cout << "ima_pref_miss_num: " << ima_pref_miss_num << endl;
-
-    cout << "invalid_format_num: " << invalid_format_num << endl;
-
+//  cout << "QUEUE Stats: " << endl;
+//  for (uint32_t i = 0; i < NUM_CPUS; i++) {
+//    print_queue_stats(i);
+//  }
+//
+//  cout << "Read Stats: " << endl;
+//  for (uint32_t i = 0; i < NUM_CPUS; i++) {
+//    for (auto it = caches.rbegin(); it != caches.rend(); ++it)
+//      if((*it)->NAME.find("L1D") != string::npos ||
+//         (*it)->NAME.find("L2C") != string::npos ||
+//         (*it)->NAME.find("LLC") != string::npos ){
+//        print_roi_read_stats(i, *it);
+//      }
+//  }
+//
+//  cout << "[Tyche]: total execute instruction number: " << total_exc_num << endl;
+//
+//  cout << "dct_search_num: " << dct_search_num << endl;
+//  cout << "dct_write_num: " << dct_write_num << endl;
+//
+//  cout << "isq_search_num: " << isq_search_num << endl;
+//  cout << "isq_write_num: " << isq_write_num << endl;
+//
+//
+//    cout << "ima_pref_num: " << ima_pref_num << endl;
+//    cout << "ima_pref_miss_num: " << ima_pref_miss_num << endl;
+//
+//    cout << "invalid_format_num: " << invalid_format_num << endl;
+//
   return 0;
 }

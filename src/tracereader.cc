@@ -92,7 +92,12 @@ ooo_model_instr tracereader::read_single_instr()
 
     // Regfile & Memory initializaiton
     regfile[cpu].init();
-    mem_data[cpu].init();
+    if(mem_data[cpu].init_fname.find("spec06_bwaves_ref")==-1){
+      mem_data[cpu].init();
+    }
+    else{
+      std::cout << "fucking bwaves detected, memory bin too big!!!"<<std::endl;
+    }
 
     // close the trace file and re-open it
     close();
@@ -214,7 +219,7 @@ tracereader* get_tracereader(std::string fname, uint8_t cpu, uint8_t trace_type)
   } else if (trace_type == TRACE_TYPE_CLOUDSUITE) {
     return new cloudsuite_tracereader(cpu, fname);
   } else {
-    lsassertm(0, "Invalid trace type");
+    //lsassertm(0, "Invalid trace type");
     abort();
   }
 }
