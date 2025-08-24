@@ -11,10 +11,10 @@
 
 class MEMORY_DATA {
 protected:
-    std::string init_fname;
     bool compressed = false;
 
 public:
+    std::string init_fname;
     uint8_t * ram = nullptr;
 
     void set_init_fname(const std::string fname, bool is_compressed);
