@@ -16,12 +16,13 @@ batch_run/result*/
 /trace/
 /output/
 /result/
+/results/
 /batch_run/result/
 /pictures/
 /plotting/**/*.json
 
 .vscode/
-
+*.tsv
 *.pdf
 *.bkp
 *_raw.json
