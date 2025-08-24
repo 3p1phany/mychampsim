@@ -4,15 +4,25 @@
 set -euo pipefail
 
 # ===== 可通过环境变量覆盖的配置 =====
-MANIFEST="${MANIFEST:-./benchmarks.tsv}"     # 四列：benchmark\tslice\tweight\ttrace_path
-BINARY="${BINARY:-${1:-./bin/champsim}}"     # ChampSim 可执行文件
+MANIFEST="${MANIFEST:-./benchmarks.test.tsv}"     # 四列：benchmark\tslice\tweight\ttrace_path
+BINARY="${BINARY:-${1:-./bin/champsim}}"     # ChampSim 可执行文件（允许相对路径）
 RESULTS_ROOT="${RESULTS_ROOT:-./results}"    # 根结果目录
 JOBS=64
 WARMUP="${WARMUP:-20000000}"
 SIM="${SIM:-100000000}"
-EXTRA_ARGS="${EXTRA_ARGS:--loongarch}"                 # 额外参数（可为空）
+EXTRA_ARGS="${EXTRA_ARGS:--loongarch}"       # 额外参数（可为空）
 DRY_RUN="${DRY_RUN:-0}"                      # 1=只打印命令，不执行
 # ====================================
+
+# 把路径转成绝对路径（兼容没有 readlink -f 的环境）
+abs_path() {
+  local p="$1"
+  if [[ "$p" = /* ]]; then
+    printf "%s\n" "$p"
+  else
+    printf "%s/%s\n" "$(cd "$(dirname "$p")" && pwd -P)" "$(basename "$p")"
+  fi
+}
 
 fmt_hms() { # 秒 -> HH:MM:SS
   local s=$1
@@ -23,100 +33,90 @@ fmt_hms() { # 秒 -> HH:MM:SS
 [[ -f "$MANIFEST" ]] || { echo "找不到清单文件: $MANIFEST" >&2; exit 1; }
 [[ -x "$BINARY" ]] || { echo "找不到可执行的 ChampSim binary: $BINARY" >&2; echo "提示: 可用 BINARY=... 覆盖" >&2; exit 1; }
 
+# 规范化为绝对路径
+BINARY_ABS="$(abs_path "$BINARY")"
+MANIFEST_ABS="$(abs_path "$MANIFEST")"
+RESULTS_ROOT_ABS="$(abs_path "$RESULTS_ROOT")"
+PWD0="$(pwd -P)"
+
 # 交互式输入 label
 read -rp "请输入本次运行的 label（例如 micro-tune-1）: " USER_LABEL
 USER_LABEL="${USER_LABEL:-nolabel}"
 USER_LABEL_CLEAN="$(echo "$USER_LABEL" | tr ' /:\\' '____' )"
 RUN_ID="$(date +%Y%m%d-%H%M%S)-${USER_LABEL_CLEAN}"
-BASE="${RESULTS_ROOT}/${RUN_ID}"
+BASE="${RESULTS_ROOT_ABS}/${RUN_ID}"
 mkdir -p "$BASE"
 
 echo "================ 运行配置 ================"
-echo "Manifest:     $MANIFEST"
-echo "Binary:       $BINARY"
+echo "Manifest:     $MANIFEST_ABS"
+echo "Binary:       $BINARY_ABS"
 echo "并行度:        $JOBS"
 echo "Warmup:       $WARMUP"
 echo "Sim:          $SIM"
 echo "Extra args:   ${EXTRA_ARGS:-<无>}"
 echo "结果目录:       $BASE"
 echo "DRY_RUN:      $DRY_RUN"
+echo "每切片独立CWD:  是（方案A）"
 echo "=========================================="
 
 read -rp "确认开始？[y/N] " go
 [[ "${go:-}" =~ ^[Yy]$ ]] || { echo "已取消。"; exit 0; }
 RUN_T0=$(date +%s)
 
-# 逐行读取 TSV（跳过空行与注释；容忍首行表头）
-# 列: benchmark \t slice \t weight \t trace_path
-# 逐行读取 TSV（跳过空行与注释；容忍首行表头；兼容 BOM/CRLF）
-# ===== 可通过环境变量覆盖的配置 =====
-# ====================================
 # 生成命令清单
 CMDS_FILE="$(mktemp)"
 trap 'rm -f "$CMDS_FILE"' EXIT
 
-# 用 awk 解析（兼容 TAB/多空格/BOM/CRLF/注释/表头）
-# 任何失败都不会让整个脚本退出（不受 set -e 影响）
+# 用 awk 解析（兼容 TAB/多空格/BOM/CRLF/表头/注释）
 awk -v BASE="$BASE" \
-    -v BINARY="$BINARY" \
+    -v BINARY="$BINARY_ABS" \
     -v WARMUP="$WARMUP" \
     -v SIM="$SIM" \
-    -v EXTRA_ARGS="${EXTRA_ARGS:--loongarch}" '
-BEGIN {
-  FS = "[ \t]+";   # TAB 或若干空格
-}
+    -v EXTRA_ARGS="$EXTRA_ARGS" \
+    -v PWD0="$PWD0" '
+BEGIN { FS = "[ \t]+"; }
 {
-  # 去 CRLF
-  sub(/\r$/, "", $0)
-  # 去 BOM
-  if (NR==1) sub(/^\xef\xbb\xbf/, "", $0)
-  # 跳过空行/注释
-  if ($0 ~ /^[[:space:]]*$/) next
-  if ($1 ~ /^#/) next
-  # 跳过表头
-  if (tolower($1)=="benchmark" && tolower($2)=="slice") next
+  sub(/\r$/, "", $0);                    # 去 CR
+  if (NR==1) sub(/^\xef\xbb\xbf/, "", $0); # 去 BOM
+  if ($0 ~ /^[[:space:]]*$/) next;       # 空行
+  if ($1 ~ /^#/) next;                   # 注释
+  if (tolower($1)=="benchmark" && tolower($2)=="slice") next; # 表头
 
   bench=$1; slice=$2; weight=$3; trace=$4
   if (bench=="" || slice=="" || weight=="" || trace=="") {
-    # 列不完整
-    printf("[WARN] 列不完整（跳过）：%s\n", $0) > "/dev/stderr"
-    next
+    printf("[WARN] 列不完整（跳过）：%s\n", $0) > "/dev/stderr"; next
   }
+
+  # 规范 trace 为绝对路径（以脚本启动时的目录为基准）
+  if (trace !~ "^/") trace = PWD0 "/" trace
 
   outdir = BASE "/" bench "/" slice
-  # 创建输出目录（失败不终止脚本）
-  cmd = "mkdir -p " q(outdir)
-  system(cmd)
+  system("mkdir -p " q(outdir))
 
-  # 检查 trace 存在
-  testcmd = "test -f " q(trace)
-  if (system(testcmd) != 0) {
-    printf("[WARN] 未找到 trace 文件（跳过）: %s\n", trace) > "/dev/stderr"
-    next
+  # 提前校验 trace 存在
+  if (system("test -f " q(trace)) != 0) {
+    printf("[WARN] 未找到 trace 文件（跳过）: %s\n", trace) > "/dev/stderr"; next
   }
 
-  # 拼装一条命令写进命令清单
-  # 注意 %% 以便 echo 里的 date 展开在运行时再计算
+  # 在独立目录里运行，使 DRAMSim3 的 output_dir="./" 指向该切片目录
   printf("echo \"[START $(date +%%H:%%M:%%S)] %s/%s 开始\"; ", bench, slice)
-  printf("%s --warmup_instructions %s --simulation_instructions %s %s %s > %s 2>&1; ",
-         q(BINARY), WARMUP, SIM, EXTRA_ARGS, q(trace), q(outdir "/run.log"))
+  printf("(cd %s && %s --warmup_instructions %s --simulation_instructions %s %s %s > run.log 2>&1); ",
+         q(outdir), q(BINARY), WARMUP, SIM, EXTRA_ARGS, q(trace))
   printf("echo \"[END $(date +%%H:%%M:%%S)] %s/%s 结束\"\n", bench, slice)
 }
 function q(s) { return "\"" s "\"" }
-' "$MANIFEST" > "$CMDS_FILE"
-
+' "$MANIFEST_ABS" > "$CMDS_FILE"
 
 # 调试：看看是否写出任务
 echo "调试：CMDS_FILE=$CMDS_FILE"
 if [[ ! -s "$CMDS_FILE" ]]; then
   echo "[ERROR] 没有生成任何任务。检查 TSV 的前几行如下：" >&2
-  head -n 5 "$MANIFEST" >&2
+  head -n 5 "$MANIFEST_ABS" >&2
   exit 2
 fi
 echo "任务条数：$(wc -l < "$CMDS_FILE")"
 echo "前3条命令示例："
 sed -n '1,3p' "$CMDS_FILE"
-
 
 if [[ "$DRY_RUN" == "1" ]]; then
   echo
@@ -135,8 +135,6 @@ echo
 # 避免 set -e 在有任务失败时中断统计总耗时
 set +e
 xargs -r -P "${JOBS}" -I{} bash -c '{}' < "$CMDS_FILE"
-
-
 XARGS_STATUS=$?
 set -e
 
