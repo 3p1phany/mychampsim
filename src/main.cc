@@ -571,35 +571,35 @@ int main(int argc, char** argv)
   }
 
   // Regfile & Memory initializaiton
-  if(trace_type==TRACE_TYPE_LOONGARCH){
-    for (uint64_t i = 0; i < NUM_CPUS; i++) {
-      // Regfile
-      std::string trace_name = argv[optind+i];
-      int pos = trace_name.find(".champsim.xz");
-      if(pos == -1){
-        pos = trace_name.find(".champsim.trace.xz");
-      }
-      if(pos == -1){
-        std::cout << "Trace Name Error!" << std::endl;
-      }
-      string prefix_name = trace_name.substr(0, pos);
-
-      regfile[i].set_init_fname(prefix_name + ".regfile.txt");
-      regfile[i].init();
-
-      // Memory
-      trace_name = argv[optind+i];
-      std::cout << prefix_name << std::endl;
-      mem_data[i].set_init_fname(prefix_name + ".memory.bin", compressed_memory);
-      if(prefix_name.find("spec06_bwaves_ref")==-1){
-        mem_data[i].init();
-      }
-      else{
-        std::cout << "fucking bwaves detected, memory bin too big!!!"<<std::endl;
-        continue;
-      } 
-    }
-  }
+//  if(trace_type==TRACE_TYPE_LOONGARCH){
+//    for (uint64_t i = 0; i < NUM_CPUS; i++) {
+//      // Regfile
+//      std::string trace_name = argv[optind+i];
+//      int pos = trace_name.find(".champsim.xz");
+//      if(pos == -1){
+//        pos = trace_name.find(".champsim.trace.xz");
+//      }
+//      if(pos == -1){
+//        std::cout << "Trace Name Error!" << std::endl;
+//      }
+//      string prefix_name = trace_name.substr(0, pos);
+//
+//      regfile[i].set_init_fname(prefix_name + ".regfile.txt");
+//      regfile[i].init();
+//
+//      // Memory
+//      trace_name = argv[optind+i];
+//      std::cout << prefix_name << std::endl;
+//      mem_data[i].set_init_fname(prefix_name + ".memory.bin", compressed_memory);
+//      if(prefix_name.find("spec06_bwaves_ref")==-1){
+//        mem_data[i].init();
+//      }
+//      else{
+//        std::cout << "fucking bwaves detected, memory bin too big!!!"<<std::endl;
+//        continue;
+//      } 
+//    }
+//  }
 
   for (auto it = caches.rbegin(); it != caches.rend(); ++it) {
     (*it)->impl_prefetcher_initialize();
@@ -709,6 +709,7 @@ int main(int argc, char** argv)
       print_roi_stats(i, *it);
   }
 
+  DRAM.PrintStats();
 //  for (auto it = caches.rbegin(); it != caches.rend(); ++it)
 //    (*it)->impl_prefetcher_final_stats();
 //
@@ -717,8 +718,7 @@ int main(int argc, char** argv)
 //
 //#ifndef CRC2_COMPILE
   //print_dram_stats();
-  std::cout << "print dram stats"<<std::endl;
-  DRAM.PrintStats();
+//  std::cout << "print dram stats"<<std::endl;
   //print_branch_stats();
 //#endif
 

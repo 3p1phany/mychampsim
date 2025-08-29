@@ -91,13 +91,13 @@ ooo_model_instr tracereader::read_single_instr()
     std::cout << "*** Reached end of trace: " << trace_string <<  std::endl;
 
     // Regfile & Memory initializaiton
-    regfile[cpu].init();
-    if(mem_data[cpu].init_fname.find("spec06_bwaves_ref")==-1){
-      mem_data[cpu].init();
-    }
-    else{
-      std::cout << "fucking bwaves detected, memory bin too big!!!"<<std::endl;
-    }
+    //regfile[cpu].init();
+    //if(mem_data[cpu].init_fname.find("spec06_bwaves_ref")==-1){
+    //  mem_data[cpu].init();
+    //}
+    //else{
+    //  std::cout << "fucking bwaves detected, memory bin too big!!!"<<std::endl;
+    //}
 
     // close the trace file and re-open it
     close();
