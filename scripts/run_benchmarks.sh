@@ -3,6 +3,7 @@
 set -euo pipefail
 
 # ===== 可通过环境变量覆盖的配置 =====
+#MANIFEST="${MANIFEST:-./benchmarks.tsv}"     # 四列：benchmark\tslice\tweight\ttrace_path
 MANIFEST="${MANIFEST:-./benchmarks.tsv}"     # 四列：benchmark\tslice\tweight\ttrace_path
 BINARY="${BINARY:-${1:-./bin/champsim}}"     # ChampSim 可执行文件（允许相对路径）
 RESULTS_ROOT="${RESULTS_ROOT:-./results}"    # 根结果目录

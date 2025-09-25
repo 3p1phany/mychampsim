@@ -548,10 +548,21 @@ int main(int argc, char** argv)
   std::cout << "LLC Latency: " << (caches[0]->HIT_LATENCY) << " cycles" << std::endl;
 
   std::cout << std::endl;
-  for (int i = optind; i < argc; i++) {
-    std::cout << "CPU " << traces.size() << " runs " << argv[i] << std::endl;
+  
 
-    traces.push_back(get_tracereader(argv[i], traces.size(), trace_type));
+  // Vector to store the original trace file paths provided by the user
+  std::vector<std::string> trace_paths;
+
+  // First, read all trace paths from the command line
+  for (int i = optind; i < argc; i++) {
+    trace_paths.push_back(argv[i]);
+  }
+
+  // Now, create the initial set of trace readers
+  for (size_t i = 0; i < trace_paths.size(); ++i) {
+    std::cout << "CPU " << traces.size() << " runs " << trace_paths[i] << std::endl;
+
+    traces.push_back(get_tracereader(trace_paths[i].c_str(), traces.size(), trace_type));
 
     if (traces.size() > NUM_CPUS) {
       printf("\n*** Too many traces for the configured number of cores ***\n\n");
@@ -559,10 +570,50 @@ int main(int argc, char** argv)
     }
   }
 
+  // --- REPLICATION LOGIC STARTS HERE ---
+  // If we have at least one trace but not enough for all cores, replicate them
+  size_t num_provided_traces = traces.size();
+  if (num_provided_traces > 0 && num_provided_traces < NUM_CPUS) {
+    std::cout << "\n*** Not enough traces; replicating provided traces to fill all " << NUM_CPUS << " cores. ***" << std::endl;
+    
+    // Loop to fill the remaining CPU slots
+    for (size_t i = num_provided_traces; i < NUM_CPUS; ++i) {
+      // Use the modulo operator to cycle through the provided traces in a round-robin fashion
+      std::string path_to_reuse = trace_paths[i % num_provided_traces];
+      
+      std::cout << "CPU " << i << " runs " << path_to_reuse << std::endl;
+      
+      // Create a NEW and SEPARATE reader instance for the new core
+      traces.push_back(get_tracereader(path_to_reuse.c_str(), i, trace_type));
+    }
+    std::cout << std::endl;
+  }
+
+  // Final check: ensure that after replication (or if originally correct), we have exactly NUM_CPUS traces.
+  // This will primarily catch the case where zero traces were provided.
   if (traces.size() != NUM_CPUS) {
-    printf("\n*** Not enough traces for the configured number of cores ***\n\n");
+    printf("\n*** Error: Not enough traces for the configured number of cores, and none were provided to replicate. ***\n\n");
     assert(0);
   }
+
+  
+//  for (int i = optind; i < argc; i++) {
+//    std::cout << "CPU " << traces.size() << " runs " << argv[i] << std::endl;
+//
+//    traces.push_back(get_tracereader(argv[i], traces.size(), trace_type));
+//
+//    if (traces.size() > NUM_CPUS) {
+//      printf("\n*** Too many traces for the configured number of cores ***\n\n");
+//      assert(0);
+//    }
+//  }
+//  
+//
+//
+//  if (traces.size() != NUM_CPUS) {
+//    printf("\n*** Not enough traces for the configured number of cores ***\n\n");
+//    assert(0);
+//  }
   // end trace file setup
 
   // SHARED CACHE
