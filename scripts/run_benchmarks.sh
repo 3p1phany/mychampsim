@@ -8,7 +8,7 @@ BINARY="${BINARY:-${1:-./bin/champsim}}"     # ChampSim 可执行文件（允许
 RESULTS_ROOT="${RESULTS_ROOT:-./results}"    # 根结果目录
 JOBS="${JOBS:-64}"
 WARMUP="${WARMUP:-20000000}"
-SIM="${SIM:-100000000}"
+SIM="${SIM:-80000000}"
 EXTRA_ARGS="${EXTRA_ARGS:--loongarch}"       # 额外参数（可为空）
 DRY_RUN="${DRY_RUN:-0}"                      # 1=只打印命令，不执行
 # ====================================
