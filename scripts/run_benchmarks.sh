@@ -7,7 +7,7 @@ set -euo pipefail
 MANIFEST="${MANIFEST:-./benchmarks.tsv}"     # 四列：benchmark\tslice\tweight\ttrace_path
 BINARY="${BINARY:-${1:-./bin/champsim}}"     # ChampSim 可执行文件（允许相对路径）
 RESULTS_ROOT="${RESULTS_ROOT:-./results}"    # 根结果目录
-JOBS="${JOBS:-64}"
+JOBS="${JOBS:-128}"
 WARMUP="${WARMUP:-20000000}"
 SIM="${SIM:-80000000}"
 EXTRA_ARGS="${EXTRA_ARGS:--loongarch}"       # 额外参数（可为空）
