@@ -168,7 +168,7 @@
     },
 
     "physical_memory": {
-        "dramsim3_config": "/home/xuhan/smartPRE/champsim-la/dramsim3_configs/DDR5_64GB_4ch_4800.ini",
+        "dramsim3_config": "/root/data/smartPRE/champsim-la/dramsim3_configs/DDR5_64GB_4ch_4800.ini",
         "frequency": 2400,
         "channels": 4,
         "ranks": 1,
