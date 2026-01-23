@@ -706,6 +706,13 @@ with open(constants_header_name, 'wt') as wfp:
     wfp.write('#endif\n')
 
 # Makefile
+dramsim3_root = os.environ.get('DRAMSIM3_ROOT')
+if dramsim3_root:
+    dramsim3_root = os.path.expanduser(os.path.expandvars(dramsim3_root))
+    default_ldlibs = f'-L{dramsim3_root} -ldramsim3'
+else:
+    default_ldlibs = '-L/root/data/smartPRE/dramsim3 -ldramsim3'
+
 with open('Makefile', 'wt') as wfp:
     wfp.write('CC := ' + config_file.get('CC', 'gcc') + '\n')
     wfp.write('CXX := ' + config_file.get('CXX', 'g++') + '\n')
@@ -714,7 +721,7 @@ with open('Makefile', 'wt') as wfp:
     wfp.write('CPPFLAGS := ' + config_file.get('CPPFLAGS', '') + ' -Iinc -MMD -MP -Iloongarch -g\n')
     wfp.write('LDFLAGS := ' + config_file.get('LDFLAGS', '') + '\n')
     wfp.write('LDLIBS := ' + config_file.get('LDLIBS', '') + '\n')
-    wfp.write('LDLIBS := ' + config_file.get('LDLIBS', '-L/root/data/smartPRE/dramsim3 -ldramsim3') + '\n')
+    wfp.write('LDLIBS := ' + config_file.get('LDLIBS', default_ldlibs) + '\n')
     wfp.write('\n')
     wfp.write('.phony: all clean\n\n')
     wfp.write('all: ' + config_file['executable_name'] + '\n\n')
@@ -741,4 +748,3 @@ with open('Makefile', 'wt') as wfp:
 # Configuration cache
 with open(config_cache_name, 'wt') as wfp:
     json.dump(libfilenames, wfp)
-
