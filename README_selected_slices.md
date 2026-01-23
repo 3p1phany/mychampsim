@@ -33,11 +33,19 @@
 ## 快速运行（新机器）
 
 1) 准备 trace 并设置根目录：
-   - `TRACE_ROOT=/path/to/Trace/LA`
-2) 检查 `champsim_config.json` 里的 DRAMSim3 配置路径：
+   - `export TRACE_ROOT=/path/to/Trace/LA`
+2) 创建目录结构（一次性）：
+   - `mkdir -p "$TRACE_ROOT/crono/PageRank/higgs"`
+   - `mkdir -p "$TRACE_ROOT/crono/PageRank/soc-pokec"`
+   - `mkdir -p "$TRACE_ROOT/hashjoin/hj-2-NPO_st"`
+3) 把 trace 文件放到对应目录（文件名保持不变）：
+   - `mv /path/to/crono_PageRank_higgs_0.champsim.trace.xz "$TRACE_ROOT/crono/PageRank/higgs/"`
+   - `mv /path/to/crono_PageRank_soc-pokec.champsim.trace.xz "$TRACE_ROOT/crono/PageRank/soc-pokec/"`
+   - `mv /path/to/hj-2-NPO_st_290000000.champsim.trace.xz "$TRACE_ROOT/hashjoin/hj-2-NPO_st/"`
+4) 检查 `champsim_config.json` 里的 DRAMSim3 配置路径：
    - `physical_memory.dramsim3_config` 当前为绝对路径，需按本机更新
-3) 运行：
-   - `TRACE_ROOT=/path/to/Trace/LA BINARY=./bin/champsim ./scripts/run_selected_slices.sh`
+5) 运行：
+   - `TRACE_ROOT="$TRACE_ROOT" BINARY=./bin/champsim ./scripts/run_selected_slices.sh`
 
 说明：
 - 脚本会提示输入 label 并确认。
