@@ -1,0 +1,4 @@
+# benchmark	slice	weight	trace_rel
+crono/PageRank/higgs	0	1.000000000000	crono/PageRank/higgs/crono_PageRank_higgs_0.champsim.trace.xz
+crono/PageRank/soc-pokec	0	1.000000000000	crono/PageRank/soc-pokec/crono_PageRank_soc-pokec.champsim.trace.xz
+hashjoin/hj-2-NPO_st	0	0.450980000000	hashjoin/hj-2-NPO_st/hj-2-NPO_st_290000000.champsim.trace.xz
