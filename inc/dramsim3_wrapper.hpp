@@ -13,6 +13,12 @@ namespace dramsim3 {
 
 extern uint8_t all_warmup_complete;
 
+// ===== Epoch PC Hash for DRAM access patterns =====
+// Enable with -DENABLE_EPOCH_STATS compile flag
+#ifdef ENABLE_EPOCH_STATS
+extern uint64_t epoch_pc_hash;  // Defined in main.cc
+#endif
+
 // This is a wrapper so DRAMSim (which only returns trans. addr) can communicate
 // with ChampSim API (which requires explicit packet->to_return->return_data calls)
 // We maintain a "Meta-RQ" to send callbacks to LLC (relies on LLC MSHR to merge duplicate reqs)
@@ -67,6 +73,11 @@ public:
         // Call to DRAMSim
         memory_system_->AddTransaction(packet->address, false);
 
+#ifdef ENABLE_EPOCH_STATS
+        // Epoch PC Hash: accumulate PC of memory-accessing instruction
+        epoch_pc_hash ^= packet->ip;
+#endif
+
         // Add to RQ
         // Remember this packet to later return data
         // *rq_it = *packet;
@@ -109,6 +120,12 @@ public:
         // Avoid delaying WB before sending them to memory by just not doing WB at all
         // Call to DRAMSim
         memory_system_->AddTransaction(packet->address, true);
+
+#ifdef ENABLE_EPOCH_STATS
+        // Epoch PC Hash: accumulate PC of memory-accessing instruction
+        epoch_pc_hash ^= packet->ip;
+#endif
+
         return 0;
     }
 
@@ -166,6 +183,17 @@ public:
         //DEBUG std::cout << "[ACT] Ch-" << ch << " Ra-" << ra << " Ba-" << ba << " Ro-" << ro << std::endl;
     }
     void PrintStats() { memory_system_->PrintStats(); }
+
+#ifdef ENABLE_EPOCH_STATS
+    // Epoch Stats Reset (for Oracle Timeout data collection)
+    void ResetEpochStats() {
+        extern uint64_t dramsim3_epoch_row_hits;
+        extern uint64_t dramsim3_epoch_row_misses;
+        dramsim3_epoch_row_hits = 0;
+        dramsim3_epoch_row_misses = 0;
+    }
+#endif
+
 protected:
     dramsim3::MemorySystem* memory_system_;
     std::vector<PACKET> RQ{DRAM_RQ_SIZE*DRAM_CHANNELS}; // Meta-RQ for callbacks

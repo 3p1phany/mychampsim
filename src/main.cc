@@ -44,6 +44,20 @@ uint64_t total_inst_num = 0;
 uint64_t total_load_num = 0;
 uint64_t decode_inst_num = 0;
 uint64_t decode_load_num = 0;
+
+// ===== Epoch Logging Configuration =====
+// Enable with -DENABLE_EPOCH_STATS compile flag
+#ifdef ENABLE_EPOCH_STATS
+static constexpr uint64_t EPOCH_INSTRUCTIONS = 10000;  // 每 10K 指令一个 epoch
+uint64_t epoch_id = 0;
+uint64_t epoch_start_cycle = 0;
+uint64_t epoch_start_instr = 0;
+uint64_t epoch_pc_hash = 0;  // XOR hash of DRAM-accessing instruction PCs
+
+// Row Buffer stats (from DRAMSim3)
+extern uint64_t dramsim3_epoch_row_hits;
+extern uint64_t dramsim3_epoch_row_misses;
+#endif // ENABLE_EPOCH_STATS
 uint64_t miss_load_num = 0;
 uint64_t miss_stride_num = 0;
 uint64_t miss_ima_num = 0;
@@ -97,6 +111,36 @@ champsim::deprecated_clock_cycle current_core_cycle;
 
 // extern MEMORY_CONTROLLER DRAM;
 extern DRAMSim3_DRAM DRAM;
+
+// ===== Epoch Stats Output Function =====
+#ifdef ENABLE_EPOCH_STATS
+void print_epoch_stats(uint32_t cpu) {
+    uint64_t epoch_cycles = ooo_cpu[cpu]->current_cycle - epoch_start_cycle;
+    uint64_t epoch_instrs = ooo_cpu[cpu]->num_retired - epoch_start_instr;
+
+    double ipc = (epoch_cycles > 0) ? (double)epoch_instrs / epoch_cycles : 0.0;
+
+    uint64_t total_accesses = dramsim3_epoch_row_hits + dramsim3_epoch_row_misses;
+    double rbhr = (total_accesses > 0) ?
+                  (double)dramsim3_epoch_row_hits / total_accesses : 0.0;
+
+    // Output format: epoch_id, pc_hash, rbhr, ipc
+    std::cout << "[EPOCH] " << epoch_id
+              << "," << std::hex << epoch_pc_hash << std::dec
+              << "," << std::fixed << std::setprecision(4) << rbhr
+              << "," << std::fixed << std::setprecision(6) << ipc
+              << std::endl;
+
+    // Reset epoch state
+    epoch_id++;
+    epoch_start_cycle = ooo_cpu[cpu]->current_cycle;
+    epoch_start_instr = ooo_cpu[cpu]->num_retired;
+    epoch_pc_hash = 0;
+
+    // Notify DRAMSim3 to reset epoch counters
+    DRAM.ResetEpochStats();
+}
+#endif // ENABLE_EPOCH_STATS
 extern VirtualMemory vmem;
 extern std::array<O3_CPU*, NUM_CPUS> ooo_cpu;
 extern std::array<CACHE*, NUM_CACHES> caches;
@@ -704,6 +748,15 @@ int main(int argc, char** argv)
         ooo_cpu[i]->last_sim_instr = ooo_cpu[i]->num_retired;
         ooo_cpu[i]->last_sim_cycle = ooo_cpu[i]->current_cycle;
       }
+
+      // ===== Epoch Stats Output =====
+#ifdef ENABLE_EPOCH_STATS
+      // Only output after warmup and every EPOCH_INSTRUCTIONS
+      if (warmup_complete[i] &&
+          (ooo_cpu[i]->num_retired - epoch_start_instr) >= EPOCH_INSTRUCTIONS) {
+        print_epoch_stats(i);
+      }
+#endif // ENABLE_EPOCH_STATS
 
       // check for warmup
       // warmup complete
