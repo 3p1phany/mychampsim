@@ -6,6 +6,7 @@
 #include "operable.h"
 #include "dramsim3.h"
 #include "util.h"
+#include <cstdlib>  // for getenv
 
 namespace dramsim3 {
     class MemorySystem;
@@ -26,16 +27,36 @@ class DRAMSim3_DRAM: public champsim::operable, public MemoryRequestConsumer
 {
 public:
     DRAMSim3_DRAM(double freq_scale, const std::string& config_file, const std::string& output_dir):
-        champsim::operable(freq_scale), 
-        MemoryRequestConsumer(std::numeric_limits<unsigned>::max()) {
-            memory_system_ = new dramsim3::MemorySystem(config_file, output_dir,
+        champsim::operable(freq_scale),
+        MemoryRequestConsumer(std::numeric_limits<unsigned>::max()),
+        default_config_file_(config_file),
+        output_dir_(output_dir) {
+            // Check for environment variable override
+            const char* env_config = std::getenv("DRAMSIM3_CONFIG");
+            std::string actual_config = (env_config != nullptr) ? std::string(env_config) : config_file;
+
+            memory_system_ = new dramsim3::MemorySystem(actual_config, output_dir,
                                             std::bind(&DRAMSim3_DRAM::ReadCallBack, this, std::placeholders::_1),
                                             std::bind(&DRAMSim3_DRAM::WriteCallBack, this, std::placeholders::_1));
-            std::cout << "DRAMSim3_DRAM init -- fixed meta-RQ size" << std::endl;   
-            memory_system_->RegisterACTCallback(std::bind(&DRAMSim3_DRAM::ACTCallBack, this, 
-                                                std::placeholders::_1, std::placeholders::_2, 
+            std::cout << "DRAMSim3_DRAM init -- config: " << actual_config << std::endl;
+            memory_system_->RegisterACTCallback(std::bind(&DRAMSim3_DRAM::ACTCallBack, this,
+                                                std::placeholders::_1, std::placeholders::_2,
                                                 std::placeholders::_3, std::placeholders::_4));
         }
+
+    // Reinitialize with a new config file (called from main after parsing args)
+    void reinit(const std::string& config_file) {
+        if (memory_system_ != nullptr) {
+            delete memory_system_;
+        }
+        memory_system_ = new dramsim3::MemorySystem(config_file, output_dir_,
+                                        std::bind(&DRAMSim3_DRAM::ReadCallBack, this, std::placeholders::_1),
+                                        std::bind(&DRAMSim3_DRAM::WriteCallBack, this, std::placeholders::_1));
+        std::cout << "DRAMSim3_DRAM reinit -- config: " << config_file << std::endl;
+        memory_system_->RegisterACTCallback(std::bind(&DRAMSim3_DRAM::ACTCallBack, this,
+                                            std::placeholders::_1, std::placeholders::_2,
+                                            std::placeholders::_3, std::placeholders::_4));
+    }
 
 
     int add_rq(PACKET* packet) override {
@@ -197,6 +218,8 @@ public:
 protected:
     dramsim3::MemorySystem* memory_system_;
     std::vector<PACKET> RQ{DRAM_RQ_SIZE*DRAM_CHANNELS}; // Meta-RQ for callbacks
+    std::string default_config_file_;  // Store default config for reference
+    std::string output_dir_;           // Store output dir for reinit
 };
 
 #endif

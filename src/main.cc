@@ -526,6 +526,7 @@ int main(int argc, char** argv)
 
   // check to see if knobs changed using getopt_long()
   int traces_encountered = 0;
+  std::string dramsim3_config_override = "";  // DRAM config override from command line
   static struct option long_options[] = {{"warmup_instructions", required_argument, 0, 'w'},
                                          {"simulation_instructions", required_argument, 0, 'i'},
                                          {"hide_heartbeat", no_argument, 0, 'h'},
@@ -533,6 +534,7 @@ int main(int argc, char** argv)
                                          {"cloudsuite", no_argument, 0, 'c'},
                                          {"loongarch", no_argument, 0, 'l'},
                                          {"compressed_mem", no_argument, 0, 'p'},
+                                         {"dramsim3_config", required_argument, 0, 'd'},
                                          {"traces", no_argument, &traces_encountered, 1},
                                          {0, 0, 0, 0}};
 
@@ -563,11 +565,19 @@ int main(int argc, char** argv)
     case 'p':
       compressed_memory = true;
       break;
+    case 'd':
+      dramsim3_config_override = optarg;
+      break;
     case 0:
       break;
     default:
       abort();
     }
+  }
+
+  // Reinitialize DRAM with override config if provided via command line
+  if (!dramsim3_config_override.empty()) {
+      DRAM.reinit(dramsim3_config_override);
   }
 
   cout << "Warmup Instructions: " << warmup_instructions << endl;
