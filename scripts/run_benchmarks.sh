@@ -12,6 +12,13 @@ WARMUP="${WARMUP:-20000000}"
 SIM="${SIM:-80000000}"
 EXTRA_ARGS="${EXTRA_ARGS:--loongarch}"       # 额外参数（可为空）
 DRY_RUN="${DRY_RUN:-0}"                      # 1=只打印命令，不执行
+# 邮件通知（需要安装并配置 msmtp）
+EMAIL_SEND="${EMAIL_SEND:-1}"                # 1=发送邮件
+EMAIL_TO="${EMAIL_TO:-xuhan_2333@163.com}"   # 收件人（必填）
+EMAIL_FROM="${EMAIL_FROM:-xuhan_2333@163.com}" # 发件人（可选，未填则用 msmtp 配置）
+EMAIL_SUBJECT_PREFIX="${EMAIL_SUBJECT_PREFIX:-[champsim]}"  # 主题前缀
+EMAIL_ACCOUNT="${EMAIL_ACCOUNT:-}"           # msmtp account（可选）
+MSMTP_BIN="${MSMTP_BIN:-msmtp}"              # msmtp 命令名
 # ====================================
 
 abs_path() {  # 把路径转成绝对路径（兼容没有 readlink -f 的环境）
@@ -20,6 +27,40 @@ abs_path() {  # 把路径转成绝对路径（兼容没有 readlink -f 的环境
 }
 fmt_hms() { local s=$1; printf "%02d:%02d:%02d" $((s/3600)) $(((s%3600)/60)) $((s%60)); }
 q() { printf '"%s"' "$1"; }
+count_tsv() { awk 'BEGIN{c=0} !/^[[:space:]]*($|#)/{c++} END{print c}' "$1"; }
+send_mail() {
+  if [[ "$EMAIL_SEND" != "1" ]]; then return 0; fi
+  if [[ -z "$EMAIL_TO" ]]; then echo "[WARN] EMAIL_SEND=1 但 EMAIL_TO 为空，跳过邮件。" >&2; return 0; fi
+  if ! command -v "$MSMTP_BIN" >/dev/null 2>&1; then echo "[WARN] 未找到 $MSMTP_BIN，跳过邮件。" >&2; return 0; fi
+
+  local subject="${EMAIL_SUBJECT_PREFIX} label=${USER_LABEL_CLEAN} rc=${XARGS_STATUS}"
+  local mail_cmd=("$MSMTP_BIN" -t)
+  if [[ -n "$EMAIL_ACCOUNT" ]]; then mail_cmd=("$MSMTP_BIN" -a "$EMAIL_ACCOUNT" -t); fi
+
+  {
+    [[ -n "$EMAIL_FROM" ]] && echo "From: $EMAIL_FROM"
+    echo "To: $EMAIL_TO"
+    echo "Subject: $subject"
+    echo "Date: $(date -R)"
+    echo
+    echo "label: $USER_LABEL_CLEAN"
+    echo "run_dir: $BASE"
+    echo "start_epoch: $RUN_T0"
+    echo "end_epoch: $RUN_T1"
+    echo "elapsed_seconds: $TOTAL_ELAPSED"
+    echo "elapsed_hms: $TOTAL_HMS"
+    echo "xargs_exit_code: $XARGS_STATUS"
+    echo "planned_tasks: $TASKS"
+    echo "remaining_tasks: $REMAINING_COUNT"
+    echo "failed_tasks: $FAILED_COUNT"
+    echo "succeeded_tasks: $SUCCESS_COUNT"
+    echo
+    echo "pending_list: $BASE/PENDING.tsv"
+    echo "remaining_list: $BASE/REMAINING.tsv"
+    echo "failed_list: $BASE/FAILED.tsv"
+    echo "summary_file: $BASE/TOTAL_TIME.txt"
+  } | "${mail_cmd[@]}"
+}
 
 # 基本检查
 [[ -f "$MANIFEST" ]] || { echo "找不到清单文件: $MANIFEST" >&2; exit 1; }
@@ -110,6 +151,7 @@ BEGIN { FS = "[ \t]+"; print "# benchmark\tslice\tweight\ttrace_path" > PENDING_
 }
 function q(s) { return "\"" s "\"" }
 ' "$MANIFEST_ABS" > "$CMDS_FILE"
+mv -f "$PENDING_TMP" "${BASE}/PENDING.tsv"
 
 echo "调试：CMDS_FILE=$CMDS_FILE"
 TASKS=$(wc -l < "$CMDS_FILE" | tr -d ' ')
@@ -194,6 +236,11 @@ function q(s) { return "\"" s "\"" }
 ' "$MANIFEST_ABS" > "$FAILED_TMP2"
 mv -f "$FAILED_TMP2" "${BASE}/FAILED.tsv"
 
+REMAINING_COUNT=$(count_tsv "${BASE}/REMAINING.tsv")
+FAILED_COUNT=$(count_tsv "${BASE}/FAILED.tsv")
+SUCCESS_COUNT=$(( TASKS - REMAINING_COUNT ))
+if [[ "$SUCCESS_COUNT" -lt 0 ]]; then SUCCESS_COUNT=0; fi
+
 # 写本轮统计（注意：不再包含时间戳 run_id）
 {
   echo "run_dir=${BASE}"
@@ -203,6 +250,10 @@ mv -f "$FAILED_TMP2" "${BASE}/FAILED.tsv"
   echo "elapsed_seconds=${TOTAL_ELAPSED}"
   echo "elapsed_hms=${TOTAL_HMS}"
   echo "xargs_exit_code=${XARGS_STATUS}"
+  echo "planned_tasks=${TASKS}"
+  echo "remaining_tasks=${REMAINING_COUNT}"
+  echo "failed_tasks=${FAILED_COUNT}"
+  echo "succeeded_tasks=${SUCCESS_COUNT}"
 } > "${BASE}/TOTAL_TIME.txt"
 
 echo
@@ -211,3 +262,5 @@ echo "本轮耗时：${TOTAL_ELAPSED}s（${TOTAL_HMS}）"
 echo "并行执行退出码：${XARGS_STATUS}（0 表示全部成功）"
 echo "待跑清单：${BASE}/PENDING.tsv（本轮开始前） / ${BASE}/REMAINING.tsv（本轮结束后）"
 echo "失败清单：${BASE}/FAILED.tsv"
+
+send_mail
