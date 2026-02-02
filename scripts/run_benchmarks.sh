@@ -79,8 +79,39 @@ USER_LABEL_CLEAN="$(echo "$USER_LABEL" | tr ' /:\\' '____' )"
 BASE="${RESULTS_ROOT_ABS}/${USER_LABEL_CLEAN}"
 mkdir -p "$BASE"
 
+# 断点续跑：优先使用已有的 manifest 快照，并提示剩余清单
+MANIFEST_SNAPSHOT="${BASE}/MANIFEST.tsv"
+RUN_MANIFEST="$MANIFEST_ABS"
+RESUME_NOTE=""
+if [[ -f "$MANIFEST_SNAPSHOT" ]]; then
+  RUN_MANIFEST="$MANIFEST_SNAPSHOT"
+  RESUME_NOTE="发现已有 manifest 快照，按上次配置续跑"
+  if [[ "$MANIFEST_ABS" != "$RUN_MANIFEST" ]]; then
+    echo "[INFO] label 已存在，忽略当前 MANIFEST，使用 ${MANIFEST_SNAPSHOT}" >&2
+  fi
+else
+  cp -f "$MANIFEST_ABS" "$MANIFEST_SNAPSHOT"
+fi
+if [[ -f "$BASE/REMAINING.tsv" ]]; then
+  remaining_count=$(count_tsv "$BASE/REMAINING.tsv")
+  if [[ "$remaining_count" -gt 0 ]]; then
+    if [[ -n "$RESUME_NOTE" ]]; then
+      RESUME_NOTE="${RESUME_NOTE}；检测到未完成清单，继续剩余切片（${remaining_count}）"
+    else
+      RESUME_NOTE="检测到未完成清单，继续剩余切片（${remaining_count}）"
+    fi
+  fi
+fi
+RUN_MANIFEST_ABS="$(abs_path "$RUN_MANIFEST")"
+
 echo "================ 运行配置 ================"
-echo "Manifest:     $MANIFEST_ABS"
+echo "Manifest:     $RUN_MANIFEST_ABS"
+if [[ "$RUN_MANIFEST_ABS" != "$MANIFEST_ABS" ]]; then
+  echo "Manifest(输入): $MANIFEST_ABS"
+fi
+if [[ -n "$RESUME_NOTE" ]]; then
+  echo "断点续跑:     $RESUME_NOTE"
+fi
 echo "Binary:       $BINARY_ABS"
 echo "并行度:        $JOBS"
 echo "Warmup:       $WARMUP"
@@ -150,7 +181,7 @@ BEGIN { FS = "[ \t]+"; print "# benchmark\tslice\tweight\ttrace_path" > PENDING_
   printf("echo \"[END $(date +%%H:%%M:%%S)] %s/%s rc=$?\"\n", bench, slice);
 }
 function q(s) { return "\"" s "\"" }
-' "$MANIFEST_ABS" > "$CMDS_FILE"
+' "$RUN_MANIFEST_ABS" > "$CMDS_FILE"
 mv -f "$PENDING_TMP" "${BASE}/PENDING.tsv"
 
 echo "调试：CMDS_FILE=$CMDS_FILE"
@@ -205,7 +236,7 @@ BEGIN { FS = "[ \t]+"; print "# benchmark\tslice\tweight\ttrace_path" }
   }
 }
 function q(s) { return "\"" s "\"" }
-' "$MANIFEST_ABS" > "$REMAINING_TMP"
+' "$RUN_MANIFEST_ABS" > "$REMAINING_TMP"
 mv -f "$REMAINING_TMP" "${BASE}/REMAINING.tsv"
 
 FAILED_TMP2="${BASE}/FAILED.tsv.tmp"
@@ -233,7 +264,7 @@ BEGIN { FS = "[ \t]+"; print "# benchmark\tslice\tweight\ttrace_path" }
   }
 }
 function q(s) { return "\"" s "\"" }
-' "$MANIFEST_ABS" > "$FAILED_TMP2"
+' "$RUN_MANIFEST_ABS" > "$FAILED_TMP2"
 mv -f "$FAILED_TMP2" "${BASE}/FAILED.tsv"
 
 REMAINING_COUNT=$(count_tsv "${BASE}/REMAINING.tsv")
