@@ -39,7 +39,7 @@ protected:
 public:
   tracereader(const tracereader& other) = delete;
   tracereader(uint8_t cpu, std::string _ts);
-  ~tracereader();
+  virtual ~tracereader();
   void open(std::string trace_string);
   void close();
 

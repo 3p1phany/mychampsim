@@ -865,5 +865,9 @@ int main(int argc, char** argv)
 //
 //    cout << "invalid_format_num: " << invalid_format_num << endl;
 //
+  for (auto* t : traces)
+      delete t;
+  traces.clear();
+
   return 0;
 }
