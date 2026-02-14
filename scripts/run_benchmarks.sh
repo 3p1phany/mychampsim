@@ -30,6 +30,7 @@ q() { printf '"%s"' "$1"; }
 count_tsv() { awk 'BEGIN{c=0} !/^[[:space:]]*($|#)/{c++} END{print c}' "$1"; }
 send_mail() {
   if [[ "$EMAIL_SEND" != "1" ]]; then return 0; fi
+  if [[ -z "$XARGS_STATUS" ]]; then return 0; fi  # 仿真尚未开始，无需发邮件
   if [[ -z "$EMAIL_TO" ]]; then echo "[WARN] EMAIL_SEND=1 但 EMAIL_TO 为空，跳过邮件。" >&2; return 0; fi
   if ! command -v "$MSMTP_BIN" >/dev/null 2>&1; then echo "[WARN] 未找到 $MSMTP_BIN，跳过邮件。" >&2; return 0; fi
 
@@ -59,7 +60,8 @@ send_mail() {
     echo "remaining_list: $BASE/REMAINING.tsv"
     echo "failed_list: $BASE/FAILED.tsv"
     echo "summary_file: $BASE/TOTAL_TIME.txt"
-  } | "${mail_cmd[@]}"
+  } | "${mail_cmd[@]}" && echo "[INFO] 邮件已发送至 $EMAIL_TO" >&2 \
+                       || echo "[WARN] 邮件发送失败（msmtp 退出码 $?），请检查 msmtp 配置。" >&2
 }
 
 # 基本检查
@@ -125,7 +127,10 @@ echo "=========================================="
 read -rp "确认开始？[y/N] " go
 [[ "${go:-}" =~ ^[Yy]$ ]] || { echo "已取消。"; exit 0; }
 
-CMDS_FILE="$(mktemp)"; trap 'rm -f "$CMDS_FILE"' EXIT
+# 初始化 send_mail 依赖的变量（防止 trap 触发时变量未设置）
+XARGS_STATUS="" RUN_T0="" RUN_T1="" TOTAL_ELAPSED="" TOTAL_HMS=""
+TASKS="" REMAINING_COUNT="" FAILED_COUNT="" SUCCESS_COUNT=""
+CMDS_FILE="$(mktemp)"; trap 'send_mail; rm -f "$CMDS_FILE"' EXIT
 PENDING_TMP="${BASE}/PENDING.tsv.tmp"
 FAILED_TMP="${BASE}/FAILED.tsv.tmp"
 : > "$PENDING_TMP"
@@ -293,5 +298,3 @@ echo "本轮耗时：${TOTAL_ELAPSED}s（${TOTAL_HMS}）"
 echo "并行执行退出码：${XARGS_STATUS}（0 表示全部成功）"
 echo "待跑清单：${BASE}/PENDING.tsv（本轮开始前） / ${BASE}/REMAINING.tsv（本轮结束后）"
 echo "失败清单：${BASE}/FAILED.tsv"
-
-send_mail
