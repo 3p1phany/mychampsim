@@ -135,7 +135,7 @@ def main():
         )
     )
     ap.add_argument("--results", required=True, help="结果目录，如 results/20250820-203125-oracle")
-    ap.add_argument("--manifest", default="./benchmarks.tsv", help="benchmarks.tsv 路径")
+    ap.add_argument("--manifest", default="./benchmarks_selected.tsv", help="benchmarks.tsv 路径")
     ap.add_argument("--out", default=None, help="输出 TSV（默认 <results>/summary.tsv）")
     ap.add_argument("--verbose", action="store_true", help="打印缺失/无法解析的切片细节")
     args = ap.parse_args()
