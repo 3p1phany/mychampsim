@@ -13,7 +13,7 @@ SIM="${SIM:-80000000}"
 EXTRA_ARGS="${EXTRA_ARGS:--loongarch}"       # 额外参数（可为空）
 DRY_RUN="${DRY_RUN:-0}"                      # 1=只打印命令，不执行
 # 邮件通知（需要安装并配置 msmtp）
-EMAIL_SEND="${EMAIL_SEND:-1}"                # 1=发送邮件
+EMAIL_SEND="${EMAIL_SEND:-0}"                # 1=发送邮件（默认禁用，需要代理隧道）
 EMAIL_TO="${EMAIL_TO:-xuhan_2333@163.com}"   # 收件人（必填）
 EMAIL_FROM="${EMAIL_FROM:-xuhan_2333@163.com}" # 发件人（可选，未填则用 msmtp 配置）
 EMAIL_SUBJECT_PREFIX="${EMAIL_SUBJECT_PREFIX:-[champsim]}"  # 主题前缀
