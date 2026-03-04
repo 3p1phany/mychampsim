@@ -28,3 +28,5 @@ batch_run/result*/
 *_raw.json
 
 __pycache__/
+ddr.txt
+ddr.json
