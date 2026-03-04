@@ -30,3 +30,4 @@ batch_run/result*/
 __pycache__/
 ddr.txt
 ddr.json
+ddrepoch.json
