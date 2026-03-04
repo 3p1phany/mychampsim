@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Aggregate per-slice CRAFT DRAM stats into a benchmark-level behavior table.
 
-Reads ddr.json from each slice in a CRAFT results directory, sums CRAFT counters
-across channels and slices (weighted by benchmarks_selected.tsv weights), and
-joins with IPC data from summary.tsv and a baseline comparison TSV.
+Reads ddr.json from each slice in a CRAFT results directory, applies slice
+weights from benchmarks_selected.tsv, and produces weighted benchmark-level
+metrics joined with IPC data.
 
 Output: TSV with columns:
-  benchmark, ipc_CRAFT, ipc_GS, pct_vs_GS,
+  benchmark, ipc_CRAFT, ipc_<baseline>, pct_vs_<baseline>,
   craft_conflicts, craft_escalations, craft_deescalations,
   timeout_low_pct, timeout_mid_pct, timeout_high_pct
 """
@@ -15,11 +15,10 @@ import json
 import os
 import sys
 from collections import defaultdict
-from pathlib import Path
 
 
 def load_manifest(path):
-    """Load benchmarks_selected.tsv → {(benchmark, slice): weight}"""
+    """Load benchmarks_selected.tsv -> {(benchmark, slice): weight}"""
     manifest = {}
     with open(path) as f:
         for line in f:
@@ -35,7 +34,7 @@ def load_manifest(path):
 
 
 def load_summary(path):
-    """Load summary.tsv → {benchmark: weighted_ipc}"""
+    """Load summary.tsv -> {benchmark: weighted_ipc}"""
     summary = {}
     with open(path) as f:
         for line in f:
@@ -50,7 +49,7 @@ def load_summary(path):
 
 
 def load_comparison(path):
-    """Load compare TSV → {benchmark: (ipc_baseline, pct_change)}"""
+    """Load compare TSV -> {benchmark: (ipc_baseline, pct_change)}"""
     comp = {}
     with open(path) as f:
         for line in f:
@@ -65,49 +64,46 @@ def load_comparison(path):
 
 
 def extract_craft_stats(ddr_json_path):
-    """Extract CRAFT counters from a ddr.json file, summing across channels."""
+    """Extract CRAFT counters and raw timeout bin counts from ddr.json.
+
+    Returns dict with scalar counter totals (summed across channels)
+    and raw timeout bin counts for low/mid/high/total.
+    """
     with open(ddr_json_path) as f:
         data = json.load(f)
 
     totals = defaultdict(int)
-    timeout_bins = defaultdict(int)
-    keys = ['craft_conflicts', 'craft_escalations', 'craft_deescalations',
-            'craft_timeout_precharges', 'craft_timeout_wrong', 'craft_timeout_correct']
+    counter_keys = [
+        'craft_conflicts', 'craft_escalations', 'craft_deescalations',
+        'craft_timeout_precharges', 'craft_timeout_wrong', 'craft_timeout_correct',
+    ]
 
-    for ch_key, ch_data in data.items():
+    low = 0
+    mid = 0
+    high = 0
+    total_bins = 0
+
+    for ch_data in data.values():
         if not isinstance(ch_data, dict):
             continue
-        for k in keys:
+        for k in counter_keys:
             totals[k] += ch_data.get(k, 0)
 
-        # Extract histogram bins from the binned keys
         for k, v in ch_data.items():
-            if k.startswith('craft_timeout_value_sum['):
-                timeout_bins[k] += v
+            if not k.startswith('craft_timeout_value_sum['):
+                continue
+            total_bins += v
+            if '[0-99]' in k:
+                low += v
+            elif '[200-299]' in k:
+                mid += v
+            elif '[3200-]' in k:
+                high += v
 
-    # Categorize timeout bins
-    low = 0   # [0-99]
-    mid = 0   # [200-299]
-    high = 0  # [3200-]
-    total_timeout = 0
-    for k, v in timeout_bins.items():
-        total_timeout += v
-        if '[0-99]' in k:
-            low += v
-        elif '[200-299]' in k:
-            mid += v
-        elif '[3200-]' in k:
-            high += v
-
-    if total_timeout > 0:
-        totals['timeout_low_pct'] = round(100.0 * low / total_timeout, 1)
-        totals['timeout_mid_pct'] = round(100.0 * mid / total_timeout, 1)
-        totals['timeout_high_pct'] = round(100.0 * high / total_timeout, 1)
-    else:
-        totals['timeout_low_pct'] = 0.0
-        totals['timeout_mid_pct'] = 0.0
-        totals['timeout_high_pct'] = 0.0
-
+    totals['timeout_bin_low'] = low
+    totals['timeout_bin_mid'] = mid
+    totals['timeout_bin_high'] = high
+    totals['timeout_bin_total'] = total_bins
     return dict(totals)
 
 
@@ -116,8 +112,10 @@ def main():
     parser.add_argument('--results', required=True, help='CRAFT results directory')
     parser.add_argument('--manifest', required=True, help='benchmarks_selected.tsv')
     parser.add_argument('--summary', required=True, help='CRAFT summary.tsv')
-    parser.add_argument('--compare', required=True, help='Baseline comparison TSV (e.g., compare_GS_1c_vs_CRAFT_1c.tsv)')
-    parser.add_argument('--baseline-label', default='GS', help='Baseline label for column header')
+    parser.add_argument('--compare', required=True,
+                        help='Baseline comparison TSV')
+    parser.add_argument('--baseline-label', default='GS',
+                        help='Baseline label for column header')
     parser.add_argument('--out', required=True, help='Output TSV path')
     args = parser.parse_args()
 
@@ -130,37 +128,68 @@ def main():
     for (bench, sl), weight in manifest.items():
         bench_slices[bench].append((sl, weight))
 
-    # Aggregate CRAFT stats per benchmark (sum across slices)
-    bench_stats = {}
-    stat_keys = ['craft_conflicts', 'craft_escalations', 'craft_deescalations',
-                 'craft_timeout_precharges', 'craft_timeout_wrong', 'craft_timeout_correct']
+    counter_keys = [
+        'craft_conflicts', 'craft_escalations', 'craft_deescalations',
+        'craft_timeout_precharges', 'craft_timeout_wrong', 'craft_timeout_correct',
+    ]
+    bin_keys = ['timeout_bin_low', 'timeout_bin_mid', 'timeout_bin_high',
+                'timeout_bin_total']
 
-    for bench, slices in sorted(bench_slices.items()):
-        agg = defaultdict(int)
-        agg_float = defaultdict(float)
-        n_slices = 0
+    bench_stats = {}
+    missing_slices = []
+
+    for bench in sorted(bench_slices.keys()):
+        slices = bench_slices[bench]
+        w_counters = defaultdict(float)
+        w_bins = defaultdict(float)
+        total_weight = 0.0
+        n_ok = 0
 
         for sl, weight in slices:
             ddr_path = os.path.join(args.results, bench, sl, 'ddr.json')
             if not os.path.exists(ddr_path):
+                missing_slices.append(f'{bench}/{sl}')
                 continue
 
             stats = extract_craft_stats(ddr_path)
-            n_slices += 1
+            n_ok += 1
+            total_weight += weight
 
-            for k in stat_keys:
-                agg[k] += stats.get(k, 0)
-            for k in ['timeout_low_pct', 'timeout_mid_pct', 'timeout_high_pct']:
-                agg_float[k] += stats.get(k, 0.0)
+            for k in counter_keys:
+                w_counters[k] += weight * stats.get(k, 0)
+            for k in bin_keys:
+                w_bins[k] += weight * stats.get(k, 0)
 
-        if n_slices == 0:
-            continue
+        if n_ok == 0:
+            print(f'ERROR: {bench} has no valid slices', file=sys.stderr)
+            sys.exit(1)
 
-        # Average the percentages across slices
-        for k in ['timeout_low_pct', 'timeout_mid_pct', 'timeout_high_pct']:
-            agg_float[k] /= n_slices
+        # Normalize weighted counters by total weight
+        norm = {}
+        for k in counter_keys:
+            norm[k] = round(w_counters[k] / total_weight)
 
-        bench_stats[bench] = {**dict(agg), **dict(agg_float), 'n_slices': n_slices}
+        # Compute timeout percentages from weighted bin totals
+        wt = w_bins['timeout_bin_total']
+        if wt > 0:
+            norm['timeout_low_pct'] = round(100.0 * w_bins['timeout_bin_low'] / wt, 1)
+            norm['timeout_mid_pct'] = round(100.0 * w_bins['timeout_bin_mid'] / wt, 1)
+            norm['timeout_high_pct'] = round(100.0 * w_bins['timeout_bin_high'] / wt, 1)
+        else:
+            norm['timeout_low_pct'] = 0.0
+            norm['timeout_mid_pct'] = 0.0
+            norm['timeout_high_pct'] = 0.0
+
+        bench_stats[bench] = norm
+
+    # Self-check diagnostics
+    if missing_slices:
+        print(f'WARNING: {len(missing_slices)} manifest slices missing from results:',
+              file=sys.stderr)
+        for s in missing_slices[:10]:
+            print(f'  {s}', file=sys.stderr)
+        if len(missing_slices) > 10:
+            print(f'  ... and {len(missing_slices) - 10} more', file=sys.stderr)
 
     # Write output
     bl = args.baseline_label
@@ -176,10 +205,13 @@ def main():
             ipc_bl, pct = comparison.get(bench, (0.0, 0.0))
 
             f.write(f'{bench}\t{ipc:.6f}\t{ipc_bl:.6f}\t{pct:.2f}\t'
-                    f'{s["craft_conflicts"]}\t{s["craft_escalations"]}\t{s["craft_deescalations"]}\t'
-                    f'{s["timeout_low_pct"]:.1f}\t{s["timeout_mid_pct"]:.1f}\t{s["timeout_high_pct"]:.1f}\n')
+                    f'{s["craft_conflicts"]}\t{s["craft_escalations"]}'
+                    f'\t{s["craft_deescalations"]}\t'
+                    f'{s["timeout_low_pct"]:.1f}\t{s["timeout_mid_pct"]:.1f}'
+                    f'\t{s["timeout_high_pct"]:.1f}\n')
 
-    print(f'Written: {args.out} ({len(bench_stats)} benchmarks)')
+    print(f'Written: {args.out} ({len(bench_stats)} benchmarks, '
+          f'{len(missing_slices)} missing slices)')
 
 
 if __name__ == '__main__':
