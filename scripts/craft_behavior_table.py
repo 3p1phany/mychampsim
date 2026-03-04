@@ -16,6 +16,13 @@ import os
 import sys
 from collections import defaultdict
 
+COUNTER_KEYS = [
+    'craft_conflicts', 'craft_escalations', 'craft_deescalations',
+    'craft_timeout_precharges', 'craft_timeout_wrong', 'craft_timeout_correct',
+]
+BIN_KEYS = ['timeout_bin_low', 'timeout_bin_mid', 'timeout_bin_high',
+            'timeout_bin_total']
+
 
 def load_manifest(path):
     """Load benchmarks_selected.tsv -> {(benchmark, slice): weight}"""
@@ -73,10 +80,6 @@ def extract_craft_stats(ddr_json_path):
         data = json.load(f)
 
     totals = defaultdict(int)
-    counter_keys = [
-        'craft_conflicts', 'craft_escalations', 'craft_deescalations',
-        'craft_timeout_precharges', 'craft_timeout_wrong', 'craft_timeout_correct',
-    ]
 
     low = 0
     mid = 0
@@ -86,7 +89,7 @@ def extract_craft_stats(ddr_json_path):
     for ch_data in data.values():
         if not isinstance(ch_data, dict):
             continue
-        for k in counter_keys:
+        for k in COUNTER_KEYS:
             totals[k] += ch_data.get(k, 0)
 
         for k, v in ch_data.items():
@@ -128,13 +131,6 @@ def main():
     for (bench, sl), weight in manifest.items():
         bench_slices[bench].append((sl, weight))
 
-    counter_keys = [
-        'craft_conflicts', 'craft_escalations', 'craft_deescalations',
-        'craft_timeout_precharges', 'craft_timeout_wrong', 'craft_timeout_correct',
-    ]
-    bin_keys = ['timeout_bin_low', 'timeout_bin_mid', 'timeout_bin_high',
-                'timeout_bin_total']
-
     bench_stats = {}
     missing_slices = []
 
@@ -155,9 +151,9 @@ def main():
             n_ok += 1
             total_weight += weight
 
-            for k in counter_keys:
+            for k in COUNTER_KEYS:
                 w_counters[k] += weight * stats.get(k, 0)
-            for k in bin_keys:
+            for k in BIN_KEYS:
                 w_bins[k] += weight * stats.get(k, 0)
 
         if n_ok == 0:
@@ -166,7 +162,7 @@ def main():
 
         # Normalize weighted counters by total weight
         norm = {}
-        for k in counter_keys:
+        for k in COUNTER_KEYS:
             norm[k] = round(w_counters[k] / total_weight)
 
         # Compute timeout percentages from weighted bin totals
