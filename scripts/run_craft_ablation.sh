@@ -1,157 +1,98 @@
 #!/usr/bin/env bash
 # =============================================================================
-# CRAFT Ablation Experiment Runner
-#
-# Sequentially runs all ablation experiments defined in
-# docs/experiments/craft_ablation_experiment_plan.md
-#
-# For each experiment:
-#   1. Modify feature flags in dramsim3/src/command_queue.h
-#   2. Rebuild DRAMSim3 + ChampSim
-#   3. Run all benchmarks with the experiment label
+# CRAFT Ablation Experiment Runner (one-click, method 3: dedicated config JSON)
 #
 # Usage:
-#   TRACE_ROOT=/root/data/Trace/LA ./scripts/run_craft_ablation.sh [PHASE]
-#
-# PHASE (optional):
-#   1  = Core ablation only         (A0-A6, 6 new experiments)
-#   2  = Interaction analysis        (B1-B5, 5 experiments)
-#   3  = Parameter sensitivity       (S1-S6, 6 experiments)
-#   all = All phases (default)
-#
-# Environment variables:
-#   TRACE_ROOT       - path to trace directory (REQUIRED)
-#   MANIFEST_SRC     - path to selected_slices.tsv (default: ./scripts/selected_slices.tsv)
-#   JOBS             - parallelism for benchmark runs (default: 128)
-#   SKIP_EXISTING    - if 1, skip experiments whose results/<label>/.done exists (default: 1)
-#   DRY_RUN          - if 1, only show what would be done (default: 0)
+#   ./scripts/run_craft_ablation.sh                # Phase 1+2+3, full benchmark set
+#   PHASE=1   ./scripts/run_craft_ablation.sh      # Phase 1 only (core ablation, 7 experiments)
+#   PHASE=12  ./scripts/run_craft_ablation.sh      # Phase 1+2
+#   USE_SELECTED=1 ./scripts/run_craft_ablation.sh # 3-benchmark quick test
+#   JOBS=64   ./scripts/run_craft_ablation.sh      # custom parallelism
+#   DRY_RUN=1 ./scripts/run_craft_ablation.sh      # print only, no execution
 # =============================================================================
 set -euo pipefail
 
-# ── Paths ──
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CHAMPSIM_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-PROJECT_ROOT="$(cd "$CHAMPSIM_DIR/.." && pwd)"
-DRAMSIM3_DIR="$PROJECT_ROOT/dramsim3"
+# ======================== Paths ========================
+PROJ_ROOT="/root/data/smartPRE"
+CHAMPSIM_DIR="$PROJ_ROOT/champsim-la"
+DRAMSIM3_DIR="$PROJ_ROOT/dramsim3"
 HEADER="$DRAMSIM3_DIR/src/command_queue.h"
-RESULTS_DIR="$CHAMPSIM_DIR/results"
+CRAFT_CONFIG_JSON="$CHAMPSIM_DIR/champsim_config_CRAFT.json"
 
-# ── Config ──
-TRACE_ROOT="${TRACE_ROOT:-}"
-MANIFEST_SRC="${MANIFEST_SRC:-$CHAMPSIM_DIR/scripts/selected_slices.tsv}"
+# ======================== Options ========================
+PHASE="${PHASE:-123}"
+USE_SELECTED="${USE_SELECTED:-0}"
 JOBS="${JOBS:-128}"
-SKIP_EXISTING="${SKIP_EXISTING:-1}"
 DRY_RUN="${DRY_RUN:-0}"
-PHASE="${1:-all}"
+SKIP_EXISTING="${SKIP_EXISTING:-1}"
 
-# ── Validate ──
-if [[ -z "$TRACE_ROOT" ]]; then
-    echo "ERROR: TRACE_ROOT is required. Example:" >&2
-    echo "  TRACE_ROOT=/root/data/Trace/LA $0" >&2
-    exit 1
-fi
-[[ -d "$TRACE_ROOT" ]] || { echo "ERROR: TRACE_ROOT not found: $TRACE_ROOT" >&2; exit 1; }
-[[ -f "$HEADER" ]] || { echo "ERROR: Header not found: $HEADER" >&2; exit 1; }
-[[ -f "$MANIFEST_SRC" ]] || { echo "ERROR: Manifest not found: $MANIFEST_SRC" >&2; exit 1; }
+export LD_LIBRARY_PATH="$DRAMSIM3_DIR:${LD_LIBRARY_PATH:-}"
+export JOBS
+export DRY_RUN
 
-# ── Log ──
-LOG_DIR="$CHAMPSIM_DIR/logs"
-mkdir -p "$LOG_DIR"
-MASTER_LOG="$LOG_DIR/ablation_$(date +%Y%m%d_%H%M%S).log"
-log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$MASTER_LOG"; }
-
-# =============================================================================
-# Feature flag manipulation
-# =============================================================================
+# ======================== Helpers ========================
+log() { printf "[%s] %s\n" "$(date '+%H:%M:%S')" "$*"; }
 
 set_flag() {
-    # Usage: set_flag FLAG_NAME true|false
-    local name="$1" value="$2"
-    sed -i "s/\(static constexpr bool ${name} = \)\(true\|false\)/\1${value}/" "$HEADER"
+    sed -i "s/\(static constexpr bool ${1} = \)\(true\|false\)/\1${2}/" "$HEADER"
 }
 
 set_param() {
-    # Usage: set_param PARAM_NAME value
-    local name="$1" value="$2"
-    sed -i "s/\(static constexpr int  ${name} = \)[0-9]*/\1${value}/" "$HEADER"
+    sed -i "s/\(static constexpr int *${1} = \)[0-9]*/\1${2}/" "$HEADER"
 }
 
-reset_all_flags() {
-    # Reset all feature flags to false and parameters to defaults
+all_flags_off() {
     set_flag CRAFT_PHASE_RESET_ENABLED   false
     set_flag CRAFT_QDSD_ENABLED          false
     set_flag CRAFT_RIGHT_STREAK_ENABLED  false
     set_flag CRAFT_RW_ENABLED            false
     set_flag CRAFT_STREAK_DECAY_ENABLED  false
-    # Reset parameters to defaults
+}
+
+default_params() {
     set_param CRAFT_PHASE_THRESHOLD 4
     set_param CRAFT_QDSD_SCALE_CAP  4
     set_param CRAFT_RIGHT_THRESHOLD 4
 }
 
-enable_all_flags() {
-    set_flag CRAFT_PHASE_RESET_ENABLED   true
-    set_flag CRAFT_QDSD_ENABLED          true
-    set_flag CRAFT_RIGHT_STREAK_ENABLED  true
-    set_flag CRAFT_RW_ENABLED            true
-    set_flag CRAFT_STREAK_DECAY_ENABLED  true
+show_config() {
+    grep -E "CRAFT_(PHASE_RESET|QDSD|RIGHT_STREAK|RW|STREAK_DECAY)_ENABLED" "$HEADER" | sed 's/.*bool /    /'
+    grep -E "CRAFT_(PHASE_THRESHOLD|QDSD_SCALE_CAP|RIGHT_THRESHOLD) " "$HEADER" | sed 's/.*int */    /'
 }
 
-show_flags() {
-    grep -E 'CRAFT_(PHASE_RESET_ENABLED|QDSD_ENABLED|RIGHT_STREAK_ENABLED|RW_ENABLED|STREAK_DECAY_ENABLED|PHASE_THRESHOLD|QDSD_SCALE_CAP|RIGHT_THRESHOLD) =' "$HEADER" \
-        | sed 's/static constexpr [a-z]* */  /'
+# ======================== Build ========================
+build_all() {
+    # 1. Rebuild DRAMSim3 (feature flags changed)
+    log "  build DRAMSim3..."
+    (cd "$DRAMSIM3_DIR/build" && make -j8) > /dev/null 2>&1
+
+    # 2. Regenerate ChampSim with CRAFT config JSON & rebuild
+    log "  build ChampSim (champsim_config_CRAFT.json)..."
+    cd "$CHAMPSIM_DIR"
+    python3 config.sh champsim_config_CRAFT.json > /dev/null 2>&1
+    make -j8 > /dev/null 2>&1
+
+    log "  build OK"
 }
 
-# =============================================================================
-# Build
-# =============================================================================
-
-build_dramsim3() {
-    log "  Building DRAMSim3..."
-    (cd "$DRAMSIM3_DIR/build" && make -j8) >> "$MASTER_LOG" 2>&1
-}
-
-build_champsim() {
-    log "  Building ChampSim..."
-    (cd "$CHAMPSIM_DIR" && make -j8) >> "$MASTER_LOG" 2>&1
-}
-
-rebuild_all() {
-    build_dramsim3
-    build_champsim
-    log "  Build OK"
-}
-
-# =============================================================================
-# Run benchmarks (non-interactive wrapper)
-# =============================================================================
-
-run_experiment() {
+# ======================== Run ========================
+run_one() {
     local label="$1"
+    log "========================================"
+    log "Experiment: $label"
+    show_config
 
-    # Check if already done
+    # Skip if already complete
     if [[ "$SKIP_EXISTING" == "1" ]]; then
-        local result_dir="$RESULTS_DIR/$label"
-        if [[ -d "$result_dir" ]]; then
-            # Check if all benchmarks completed
-            local remaining_file="$result_dir/REMAINING.tsv"
-            if [[ -f "$remaining_file" ]]; then
-                local remaining
-                remaining=$(awk '!/^[[:space:]]*($|#)/{c++} END{print c+0}' "$remaining_file")
-                if [[ "$remaining" -eq 0 ]]; then
-                    log "  SKIP: $label (all benchmarks already completed)"
-                    return 0
-                else
-                    log "  RESUME: $label ($remaining benchmarks remaining)"
-                fi
-            else
-                # No remaining file: check if TOTAL_TIME.txt exists with 0 remaining
-                local total_file="$result_dir/TOTAL_TIME.txt"
-                if [[ -f "$total_file" ]] && grep -q 'remaining_tasks=0' "$total_file" 2>/dev/null; then
-                    log "  SKIP: $label (completed per TOTAL_TIME.txt)"
-                    return 0
-                fi
+        local rdir="$CHAMPSIM_DIR/results/$label"
+        if [[ -f "$rdir/REMAINING.tsv" ]]; then
+            local rem
+            rem=$(awk '!/^[[:space:]]*($|#)/{c++} END{print c+0}' "$rdir/REMAINING.tsv")
+            if [[ "$rem" -eq 0 ]]; then
+                log "  SKIP (already complete)"
+                return 0
             fi
+            log "  RESUME ($rem remaining)"
         fi
     fi
 
@@ -160,259 +101,220 @@ run_experiment() {
         return 0
     fi
 
-    log "  Running benchmarks: $label"
-
-    # Prepare manifest (same logic as run_selected_slices.sh)
-    local manifest_tmp
-    manifest_tmp="$(mktemp)"
-    awk -v root="$TRACE_ROOT" '
-    BEGIN { FS = "[ \t]+"; OFS = "\t" }
-    {
-      sub(/\r$/, "", $0)
-      if ($0 ~ /^[[:space:]]*$/) { next }
-      if ($1 ~ /^#/) { print; next }
-      if (tolower($1)=="benchmark" && tolower($2)=="slice") { print; next }
-
-      bench=$1; slice=$2; weight=$3; trace=$4
-      if (bench=="" || slice=="" || weight=="" || trace=="") { next }
-      if (trace !~ "^/") trace = root "/" trace
-      print bench, slice, weight, trace
-    }
-    ' "$MANIFEST_SRC" > "$manifest_tmp"
+    build_all
 
     # Run benchmarks non-interactively
-    # Pipe label + "y" confirmation to stdin
-    local run_log="$LOG_DIR/${label}.log"
-    (
-        cd "$CHAMPSIM_DIR"
-        export LD_LIBRARY_PATH="$DRAMSIM3_DIR:${LD_LIBRARY_PATH:-}"
-        export MANIFEST="$manifest_tmp"
-        export JOBS="$JOBS"
-        printf '%s\ny\n' "$label" | scripts/run_benchmarks.sh >> "$run_log" 2>&1
-    )
-    local rc=$?
-    rm -f "$manifest_tmp"
+    log "  running benchmarks..."
+    cd "$CHAMPSIM_DIR"
 
-    if [[ $rc -ne 0 ]]; then
-        log "  WARNING: $label finished with exit code $rc (some benchmarks may have failed)"
-        log "  See log: $run_log"
+    if [[ "$USE_SELECTED" == "1" ]]; then
+        printf '%s\ny\n' "$label" | \
+            MANIFEST_SRC=./scripts/selected_slices.tsv \
+            TRACE_ROOT=/root/data/Trace/LA \
+            scripts/run_selected_slices.sh > /dev/null 2>&1 || true
     else
-        log "  DONE: $label"
+        printf '%s\ny\n' "$label" | \
+            MANIFEST=./benchmarks_selected.tsv \
+            scripts/run_benchmarks.sh > /dev/null 2>&1 || true
     fi
-    return 0  # Don't abort the whole ablation on individual experiment failure
+
+    # Verify CRAFT policy in first run.log
+    local first_log
+    first_log=$(find "$CHAMPSIM_DIR/results/$label" -name run.log -print -quit 2>/dev/null || true)
+    if [[ -n "$first_log" ]] && grep -q "row buffer policy CRAFT" "$first_log"; then
+        log "  VERIFIED: CRAFT policy active"
+    elif [[ -n "$first_log" ]]; then
+        log "  *** ERROR: CRAFT policy NOT detected! ***"
+        head -15 "$first_log" | grep "row buffer policy" || true
+    fi
+
+    # Generate summary.tsv
+    local rdir="$CHAMPSIM_DIR/results/$label"
+    if [[ -d "$rdir" ]]; then
+        local mf="$rdir/MANIFEST.tsv"
+        [[ -f "$mf" ]] || mf="$CHAMPSIM_DIR/benchmarks_selected.tsv"
+        python3 scripts/summarize_ipc.py --results "$rdir" --manifest "$mf" 2>/dev/null || true
+    fi
+
+    log "  DONE: $label"
 }
 
-# =============================================================================
-# Experiment definitions
-#
-# Each function configures flags, rebuilds, and runs.
-# =============================================================================
+# ======================== Summary ========================
+final_summary() {
+    log "========================================"
+    log "Comparisons vs CRAFT_1c baseline"
+    cd "$CHAMPSIM_DIR"
 
-run_one() {
-    # Usage: run_one LABEL setup_function
-    local label="$1"
-    shift
-    log "============================================"
-    log "Experiment: $label"
+    local baseline="results/CRAFT_1c"
+    if [[ ! -f "$baseline/summary.tsv" ]]; then
+        log "WARN: $baseline/summary.tsv not found, skip"
+        return
+    fi
 
-    # Configure flags
-    "$@"
-    log "  Flags:"
-    show_flags | while IFS= read -r line; do log "  $line"; done
+    printf "\n  %-25s %s\n" "Experiment" "GEOMEAN speedup"
+    printf "  %-25s %s\n"   "----------" "---------------"
 
-    # Build & Run
-    rebuild_all
-    run_experiment "$label"
-    log ""
+    for dir in results/CRAFT_*_1c; do
+        local label
+        label=$(basename "$dir")
+        [[ "$label" == "CRAFT_1c" || "$label" == "CRAFT_AC10" ]] && continue
+        [[ ! -f "$dir/summary.tsv" ]] && continue
+
+        python3 scripts/compare_ipc.py \
+            --a "$baseline" --b "$dir" \
+            --a-label CRAFT --b-label "$label" \
+            --out "results/compare_CRAFT_vs_${label}.tsv" 2>/dev/null || continue
+
+        local geomean
+        geomean=$(tail -1 "results/compare_CRAFT_vs_${label}.tsv" | cut -f6)
+        printf "  %-25s %s\n" "$label" "$geomean"
+    done
+    echo ""
 }
 
-# ── A0: Baseline (all off) ──
-setup_A0() { reset_all_flags; }
-
-# ── A1: Phase Reset only ──
-setup_A1() { reset_all_flags; set_flag CRAFT_PHASE_RESET_ENABLED true; }
-
-# ── A2: QDSD only ──
-setup_A2() { reset_all_flags; set_flag CRAFT_QDSD_ENABLED true; }
-
-# ── A3: Right Streak only ──
-setup_A3() { reset_all_flags; set_flag CRAFT_RIGHT_STREAK_ENABLED true; }
-
-# ── A4: Read/Write Cost only ──
-setup_A4() { reset_all_flags; set_flag CRAFT_RW_ENABLED true; }
-
-# ── A5: Streak Decay only ──
-setup_A5() { reset_all_flags; set_flag CRAFT_STREAK_DECAY_ENABLED true; }
-
-# ── A6: All enhancements ──
-setup_A6() { reset_all_flags; enable_all_flags; }
-
-# ── B1: PR + SD ──
-setup_B1() {
-    reset_all_flags
-    set_flag CRAFT_PHASE_RESET_ENABLED  true
-    set_flag CRAFT_STREAK_DECAY_ENABLED true
-}
-
-# ── B2: RW + QDSD ──
-setup_B2() {
-    reset_all_flags
-    set_flag CRAFT_RW_ENABLED   true
-    set_flag CRAFT_QDSD_ENABLED true
-}
-
-# ── B3: RS + SD ──
-setup_B3() {
-    reset_all_flags
-    set_flag CRAFT_RIGHT_STREAK_ENABLED true
-    set_flag CRAFT_STREAK_DECAY_ENABLED true
-}
-
-# ── B4: All conflict-path (PR + QDSD + RW) ──
-setup_B4() {
-    reset_all_flags
-    set_flag CRAFT_PHASE_RESET_ENABLED true
-    set_flag CRAFT_QDSD_ENABLED        true
-    set_flag CRAFT_RW_ENABLED          true
-}
-
-# ── B5: All precharge-path (RS + RW + SD) ──
-setup_B5() {
-    reset_all_flags
-    set_flag CRAFT_RIGHT_STREAK_ENABLED true
-    set_flag CRAFT_RW_ENABLED           true
-    set_flag CRAFT_STREAK_DECAY_ENABLED true
-}
-
-# ── S1: Phase Threshold = 3 ──
-setup_S1() {
-    reset_all_flags
-    set_flag  CRAFT_PHASE_RESET_ENABLED true
-    set_param CRAFT_PHASE_THRESHOLD 3
-}
-
-# ── S2: Phase Threshold = 6 ──
-setup_S2() {
-    reset_all_flags
-    set_flag  CRAFT_PHASE_RESET_ENABLED true
-    set_param CRAFT_PHASE_THRESHOLD 6
-}
-
-# ── S3: QDSD Scale Cap = 2 ──
-setup_S3() {
-    reset_all_flags
-    set_flag  CRAFT_QDSD_ENABLED true
-    set_param CRAFT_QDSD_SCALE_CAP 2
-}
-
-# ── S4: QDSD Scale Cap = 8 ──
-setup_S4() {
-    reset_all_flags
-    set_flag  CRAFT_QDSD_ENABLED true
-    set_param CRAFT_QDSD_SCALE_CAP 8
-}
-
-# ── S5: Right Threshold = 3 ──
-setup_S5() {
-    reset_all_flags
-    set_flag  CRAFT_RIGHT_STREAK_ENABLED true
-    set_param CRAFT_RIGHT_THRESHOLD 3
-}
-
-# ── S6: Right Threshold = 6 ──
-setup_S6() {
-    reset_all_flags
-    set_flag  CRAFT_RIGHT_STREAK_ENABLED true
-    set_param CRAFT_RIGHT_THRESHOLD 6
-}
-
-# =============================================================================
-# Restore header on exit (always leave code in "all enabled" state)
-# =============================================================================
-
+# ======================== Cleanup on exit ========================
 cleanup() {
-    log "Restoring header to all-enabled state..."
-    reset_all_flags
-    enable_all_flags
-    set_param CRAFT_PHASE_THRESHOLD 4
-    set_param CRAFT_QDSD_SCALE_CAP  4
-    set_param CRAFT_RIGHT_THRESHOLD 4
-    log "Done. Header restored."
+    log "Restoring: flags=ALL ON, params=default, config=default JSON"
+    all_flags_off
+    set_flag CRAFT_PHASE_RESET_ENABLED   true
+    set_flag CRAFT_QDSD_ENABLED          true
+    set_flag CRAFT_RIGHT_STREAK_ENABLED  true
+    set_flag CRAFT_RW_ENABLED            true
+    set_flag CRAFT_STREAK_DECAY_ENABLED  true
+    default_params
+    (cd "$DRAMSIM3_DIR/build" && make -j8) > /dev/null 2>&1 || true
+    # Restore ChampSim to default config (GS)
+    cd "$CHAMPSIM_DIR"
+    python3 config.sh champsim_config.json > /dev/null 2>&1 || true
+    make -j8 > /dev/null 2>&1 || true
+    log "Restored."
 }
 trap cleanup EXIT
 
-# =============================================================================
-# Main
-# =============================================================================
+# ======================== Pre-flight ========================
+[[ -f "$HEADER" ]]           || { echo "ERR: $HEADER not found"; exit 1; }
+[[ -f "$CRAFT_CONFIG_JSON" ]] || { echo "ERR: $CRAFT_CONFIG_JSON not found"; exit 1; }
+[[ -d "$DRAMSIM3_DIR/build" ]] || { echo "ERR: DRAMSim3 build dir missing"; exit 1; }
 
-log "============================================"
-log "CRAFT Ablation Experiment Suite"
-log "============================================"
-log "Phase:        $PHASE"
-log "TRACE_ROOT:   $TRACE_ROOT"
-log "MANIFEST:     $MANIFEST_SRC"
-log "JOBS:         $JOBS"
-log "SKIP_EXISTING:$SKIP_EXISTING"
-log "DRY_RUN:      $DRY_RUN"
-log "Header:       $HEADER"
-log "Master log:   $MASTER_LOG"
-log ""
+log "CRAFT Ablation Runner"
+log "  PHASE=$PHASE  USE_SELECTED=$USE_SELECTED  JOBS=$JOBS  DRY_RUN=$DRY_RUN"
+echo ""
 
 T0=$(date +%s)
 
-# ── Phase 1: Core Ablation ──
-if [[ "$PHASE" == "1" || "$PHASE" == "all" ]]; then
-    log "========== Phase 1: Core Ablation =========="
-    run_one "CRAFT_BASE_1c"     setup_A0   # A0: all flags off (pure CRAFT baseline)
-    run_one "CRAFT_PR_1c"       setup_A1   # A1: Phase Reset only
-    run_one "CRAFT_QDSD_1c"     setup_A2   # A2: QDSD only
-    run_one "CRAFT_RS_1c"       setup_A3   # A3: Right Streak only
-    run_one "CRAFT_RW_1c"       setup_A4   # A4: Read/Write Cost only
-    run_one "CRAFT_SD_1c"       setup_A5   # A5: Streak Decay only
-    run_one "CRAFT_ALL_1c"      setup_A6   # A6: All enhancements
+# ======================== Phase 1: Core Ablation ========================
+if [[ "$PHASE" == *1* ]]; then
+    log "===== Phase 1: Core Ablation (7 experiments) ====="
+
+    # A0: all flags off (pure CRAFT baseline with no enhancements)
+    all_flags_off; default_params
+    run_one "CRAFT_BASE_1c"
+
+    # A1: Phase Reset only
+    all_flags_off; default_params; set_flag CRAFT_PHASE_RESET_ENABLED true
+    run_one "CRAFT_PR_1c"
+
+    # A2: QDSD only
+    all_flags_off; default_params; set_flag CRAFT_QDSD_ENABLED true
+    run_one "CRAFT_QDSD_1c"
+
+    # A3: Right Streak only
+    all_flags_off; default_params; set_flag CRAFT_RIGHT_STREAK_ENABLED true
+    run_one "CRAFT_RS_1c"
+
+    # A4: Read/Write Cost only
+    all_flags_off; default_params; set_flag CRAFT_RW_ENABLED true
+    run_one "CRAFT_RW_1c"
+
+    # A5: Streak Decay only
+    all_flags_off; default_params; set_flag CRAFT_STREAK_DECAY_ENABLED true
+    run_one "CRAFT_SD_1c"
+
+    # A6: All enhancements
+    all_flags_off; default_params
+    set_flag CRAFT_PHASE_RESET_ENABLED  true
+    set_flag CRAFT_QDSD_ENABLED         true
+    set_flag CRAFT_RIGHT_STREAK_ENABLED true
+    set_flag CRAFT_RW_ENABLED           true
+    set_flag CRAFT_STREAK_DECAY_ENABLED true
+    run_one "CRAFT_ALL_1c"
 fi
 
-# ── Phase 2: Interaction Analysis ──
-if [[ "$PHASE" == "2" || "$PHASE" == "all" ]]; then
-    log "========== Phase 2: Interaction Analysis =========="
-    run_one "CRAFT_PR_SD_1c"       setup_B1   # B1: PR + SD
-    run_one "CRAFT_RW_QDSD_1c"     setup_B2   # B2: RW + QDSD
-    run_one "CRAFT_RS_SD_1c"       setup_B3   # B3: RS + SD
-    run_one "CRAFT_CONFLICT_1c"    setup_B4   # B4: PR + QDSD + RW
-    run_one "CRAFT_PRECHARGE_1c"   setup_B5   # B5: RS + RW + SD
+# ======================== Phase 2: Interaction Analysis ========================
+if [[ "$PHASE" == *2* ]]; then
+    log "===== Phase 2: Interaction Analysis (5 experiments) ====="
+
+    # B1: PR + SD
+    all_flags_off; default_params
+    set_flag CRAFT_PHASE_RESET_ENABLED  true
+    set_flag CRAFT_STREAK_DECAY_ENABLED true
+    run_one "CRAFT_PR_SD_1c"
+
+    # B2: RW + QDSD
+    all_flags_off; default_params
+    set_flag CRAFT_RW_ENABLED   true
+    set_flag CRAFT_QDSD_ENABLED true
+    run_one "CRAFT_RW_QDSD_1c"
+
+    # B3: RS + SD
+    all_flags_off; default_params
+    set_flag CRAFT_RIGHT_STREAK_ENABLED true
+    set_flag CRAFT_STREAK_DECAY_ENABLED true
+    run_one "CRAFT_RS_SD_1c"
+
+    # B4: All conflict-path (PR + QDSD + RW)
+    all_flags_off; default_params
+    set_flag CRAFT_PHASE_RESET_ENABLED true
+    set_flag CRAFT_QDSD_ENABLED        true
+    set_flag CRAFT_RW_ENABLED          true
+    run_one "CRAFT_CONFLICT_1c"
+
+    # B5: All precharge-path (RS + RW + SD)
+    all_flags_off; default_params
+    set_flag CRAFT_RIGHT_STREAK_ENABLED true
+    set_flag CRAFT_RW_ENABLED           true
+    set_flag CRAFT_STREAK_DECAY_ENABLED true
+    run_one "CRAFT_PRECHARGE_1c"
 fi
 
-# ── Phase 3: Parameter Sensitivity ──
-if [[ "$PHASE" == "3" || "$PHASE" == "all" ]]; then
-    log "========== Phase 3: Parameter Sensitivity =========="
-    run_one "CRAFT_PR3_1c"       setup_S1   # S1: PHASE_THRESHOLD=3
-    run_one "CRAFT_PR6_1c"       setup_S2   # S2: PHASE_THRESHOLD=6
-    run_one "CRAFT_QDSD_C2_1c"   setup_S3   # S3: QDSD_SCALE_CAP=2
-    run_one "CRAFT_QDSD_C8_1c"   setup_S4   # S4: QDSD_SCALE_CAP=8
-    run_one "CRAFT_RS3_1c"       setup_S5   # S5: RIGHT_THRESHOLD=3
-    run_one "CRAFT_RS6_1c"       setup_S6   # S6: RIGHT_THRESHOLD=6
+# ======================== Phase 3: Parameter Sensitivity ========================
+if [[ "$PHASE" == *3* ]]; then
+    log "===== Phase 3: Parameter Sensitivity (6 experiments) ====="
+
+    # S1: PHASE_THRESHOLD=3
+    all_flags_off; default_params; set_flag CRAFT_PHASE_RESET_ENABLED true
+    set_param CRAFT_PHASE_THRESHOLD 3
+    run_one "CRAFT_PR3_1c"
+
+    # S2: PHASE_THRESHOLD=6
+    all_flags_off; default_params; set_flag CRAFT_PHASE_RESET_ENABLED true
+    set_param CRAFT_PHASE_THRESHOLD 6
+    run_one "CRAFT_PR6_1c"
+
+    # S3: QDSD_SCALE_CAP=2
+    all_flags_off; default_params; set_flag CRAFT_QDSD_ENABLED true
+    set_param CRAFT_QDSD_SCALE_CAP 2
+    run_one "CRAFT_QDSD_C2_1c"
+
+    # S4: QDSD_SCALE_CAP=8
+    all_flags_off; default_params; set_flag CRAFT_QDSD_ENABLED true
+    set_param CRAFT_QDSD_SCALE_CAP 8
+    run_one "CRAFT_QDSD_C8_1c"
+
+    # S5: RIGHT_THRESHOLD=3
+    all_flags_off; default_params; set_flag CRAFT_RIGHT_STREAK_ENABLED true
+    set_param CRAFT_RIGHT_THRESHOLD 3
+    run_one "CRAFT_RS3_1c"
+
+    # S6: RIGHT_THRESHOLD=6
+    all_flags_off; default_params; set_flag CRAFT_RIGHT_STREAK_ENABLED true
+    set_param CRAFT_RIGHT_THRESHOLD 6
+    run_one "CRAFT_RS6_1c"
 fi
 
+# ======================== Final ========================
 T1=$(date +%s)
 ELAPSED=$(( T1 - T0 ))
-HOURS=$(( ELAPSED / 3600 ))
-MINS=$(( (ELAPSED % 3600) / 60 ))
-SECS=$(( ELAPSED % 60 ))
+log "Total time: $((ELAPSED/3600))h $(((ELAPSED%3600)/60))m $((ELAPSED%60))s"
 
-log "============================================"
-log "All ablation experiments complete."
-log "Total time: ${HOURS}h ${MINS}m ${SECS}s"
-log "Results in: $RESULTS_DIR"
-log "Master log: $MASTER_LOG"
-log "============================================"
-
-# ── Generate comparison summary ──
-log ""
-log "To compare results, run:"
-log "  cd $CHAMPSIM_DIR"
-LABELS=("CRAFT_BASE_1c" "CRAFT_PR_1c" "CRAFT_QDSD_1c" "CRAFT_RS_1c" "CRAFT_RW_1c" "CRAFT_SD_1c" "CRAFT_ALL_1c")
-for lbl in "${LABELS[@]}"; do
-    if [[ "$lbl" != "CRAFT_BASE_1c" ]]; then
-        log "  python3 scripts/compare_ipc.py --a results/CRAFT_BASE_1c --b results/$lbl --a-label CRAFT --b-label $lbl"
-    fi
-done
+final_summary
