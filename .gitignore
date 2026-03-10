@@ -31,3 +31,7 @@ __pycache__/
 ddr.txt
 ddr.json
 ddrepoch.json
+
+/logs/
+ablation.log
+*.png
